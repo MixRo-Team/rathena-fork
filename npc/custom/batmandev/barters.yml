@@ -1583,13 +1583,13 @@ Body:
             Item: Evt_Cos_Coin
             Amount: 25
       - Index: 59
-        Item: Druid_Top
+        Item: DruidStone_Top
         RequiredItems:
           - Index: 0
             Item: Evt_Cos_Coin
             Amount: 10
       - Index: 60
-        Item: Karnos_Top3
+        Item: KarnosStone_Top3
         RequiredItems:
           - Index: 0
             Item: Evt_Cos_Coin
@@ -1939,13 +1939,13 @@ Body:
             Item: Evt_Cos_Coin
             Amount: 25
       - Index: 57
-        Item: Druid_Middle
+        Item: DruidStone_Middle
         RequiredItems:
           - Index: 0
             Item: Evt_Cos_Coin
             Amount: 10
       - Index: 58
-        Item: Karnos_Middle3
+        Item: KarnosStone_Middle3
         RequiredItems:
           - Index: 0
             Item: Evt_Cos_Coin
@@ -2289,13 +2289,13 @@ Body:
             Item: Evt_Cos_Coin
             Amount: 25
       - Index: 56
-        Item: Druid_Bottom
+        Item: DruidStone_Bottom
         RequiredItems:
           - Index: 0
             Item: Evt_Cos_Coin
             Amount: 10
       - Index: 57
-        Item: Karnos_Bottom3
+        Item: KarnosStone_Bottom3
         RequiredItems:
           - Index: 0
             Item: Evt_Cos_Coin
@@ -2561,7 +2561,7 @@ Body:
             Item: Evt_Cos_Coin
             Amount: 30
       - Index: 43
-        Item: Karnos_Robe
+        Item: KarnosStone_Robe
         RequiredItems:
           - Index: 0
             Item: Evt_Cos_Coin

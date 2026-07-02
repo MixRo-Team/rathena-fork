@@ -14759,6 +14759,46 @@ Body:
           - Doram_Bottom    # 29670
     Script: |
       bonus2 bSkillCooldown,"SU_CN_METEOR",-1000;
+# Druid, Karnos stone
+  - Combos:
+      - Combo:
+          - Karnos_Robe    # 314848
+          - Karnos_Top3    # 314853
+    Script: |
+      bonus2 bSkillAtk, "KR_THUNDERING_ORB", 10;
+  - Combos:
+      - Combo:
+          - Karnos_Robe    # 314848
+          - Karnos_Middle3    # 314854
+    Script: |
+      bonus2 bSkillAtk, "KR_CLAW_WAVE", 10;
+  - Combos:
+      - Combo:
+          - Karnos_Robe    # 314848
+          - Karnos_Bottom3    # 314855
+    Script: |
+      bonus2 bSkillAtk, "KR_SHARPEN_GUST", 10;
+  - Combos:
+      - Combo:
+          - Karnos_Robe    # 314848
+          - Druid_Top    # 314850
+    Script: |
+      bonus2 bSkillAtk, "KR_NASTY_SLASH", 10;
+      bonus2 bSkillAtk, "KR_TYPHOON_WING", 10;
+  - Combos:
+      - Combo:
+          - Karnos_Robe    # 314848
+          - Druid_Middle    # 314851
+    Script: |
+      bonus2 bSkillAtk, "KR_EARTH_STAMP", 10;
+      bonus2 bSkillAtk, "KR_SHARPEN_HAIL", 10;
+  - Combos:
+      - Combo:
+          - Karnos_Robe    # 314848
+          - Druid_Bottom    # 314852
+    Script: |
+      bonus2 bSkillAtk, "KR_ICE_SPLASH", 10;
+      bonus2 bSkillAtk, "KR_DOUBLE_SLASH", 10;
   - Combos:
       - Combo:
           - Schmidt_Insignia_Str    # 32228

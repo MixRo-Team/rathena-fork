@@ -1582,6 +1582,18 @@ Body:
           - Index: 0
             Item: Evt_Cos_Coin
             Amount: 25
+      - Index: 59
+        Item: Druid_Top
+        RequiredItems:
+          - Index: 0
+            Item: Evt_Cos_Coin
+            Amount: 10
+      - Index: 60
+        Item: Karnos_Top3
+        RequiredItems:
+          - Index: 0
+            Item: Evt_Cos_Coin
+            Amount: 25
   - Name: kkrm_stone_mid
     Items:
       - Index: 0
@@ -1926,6 +1938,18 @@ Body:
           - Index: 0
             Item: Evt_Cos_Coin
             Amount: 25
+      - Index: 57
+        Item: Druid_Middle
+        RequiredItems:
+          - Index: 0
+            Item: Evt_Cos_Coin
+            Amount: 10
+      - Index: 58
+        Item: Karnos_Middle3
+        RequiredItems:
+          - Index: 0
+            Item: Evt_Cos_Coin
+            Amount: 25
   - Name: kkrm_stone_low
     Items:
       - Index: 0
@@ -2264,6 +2288,18 @@ Body:
           - Index: 0
             Item: Evt_Cos_Coin
             Amount: 25
+      - Index: 56
+        Item: Druid_Bottom
+        RequiredItems:
+          - Index: 0
+            Item: Evt_Cos_Coin
+            Amount: 10
+      - Index: 57
+        Item: Karnos_Bottom3
+        RequiredItems:
+          - Index: 0
+            Item: Evt_Cos_Coin
+            Amount: 25
   - Name: kkrm_stone_garment
     Items:
       - Index: 0
@@ -2524,6 +2560,12 @@ Body:
           - Index: 0
             Item: Evt_Cos_Coin
             Amount: 30
+      - Index: 43
+        Item: Karnos_Robe
+        RequiredItems:
+          - Index: 0
+            Item: Evt_Cos_Coin
+            Amount: 20
   - Name: kkrm_stone_dual
     Items:
       - Index: 0

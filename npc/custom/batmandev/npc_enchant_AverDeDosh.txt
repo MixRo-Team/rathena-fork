@@ -130,6 +130,7 @@ kharakorum,225,156,3	script	Aver De Dosh#cos_ect_kkrm	4_WHITETIGER,{
 			1001162, 311915,	// Oboro Stone (Upper)
 			1001165, 311918,	// Summoner Stone (Upper)
 			1001327, 312403,	// Super Novice Stone (Upper)
+			1002627, 314850,	// Druid Stone (Upper)
 			1002630, 314853;	// Karnos Stone (Upper)
 		.@normal_slot = 0;
 		break;
@@ -216,6 +217,7 @@ kharakorum,225,156,3	script	Aver De Dosh#cos_ect_kkrm	4_WHITETIGER,{
 			1001163, 311916,	// Oboro Stone (Middle)
 			1001166, 311919,	// Summoner Stone (Middle)
 			1001328, 312404,	// Super Novice Stone (Middle)
+			1002628, 314851,	// Druid Stone (Middle)
 			1002631, 314854;	// Karnos Stone (Middle)
 		.@normal_slot = 1;
 		break;
@@ -306,6 +308,7 @@ kharakorum,225,156,3	script	Aver De Dosh#cos_ect_kkrm	4_WHITETIGER,{
 			1001164, 311917,	// Oboro Stone (Lower)
 			1001167, 311920,	// Summoner Stone (Lower)
 			1001329, 312405,	// Super Novice Stone (Lower)
+			1002629, 314852,	// Druid Stone (Lower)
 			1002632, 314855;	// Karnos Stone (Lower)
 		.@normal_slot = 2;
 		break;

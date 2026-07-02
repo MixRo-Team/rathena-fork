@@ -90563,6 +90563,66 @@ Body:
       hateffect FOOTPRINT_EF_DIVINE_BLUE,true;
     UnEquipScript: |
       hateffect FOOTPRINT_EF_DIVINE_BLUE,false;
+  - Id: 314848
+    AegisName: Karnos_Robe
+    Name: Karnos Stone (Garment)
+    Type: Card
+    SubType: Enchant
+    Script: |
+      bonus2 bSkillAtk, "KR_CHOP_CHOP", 10;
+      bonus2 bSkillAtk, "KR_FEATHER_SPRINKLE", 10;
+  - Id: 314850
+    AegisName: Druid_Top
+    Name: Druid Stone (Upper)
+    Type: Card
+    SubType: Enchant
+    Script: |
+      bonus bMatk, (3 * getskilllv("DR_NATURE_LOGIC"));
+      bonus bAtk, (2 * getskilllv("DR_BEASTY_NOSE"));
+      bonus bAtk, (2 * getskilllv("DR_SHARPE_EYES"));
+      bonus2 bSkillAtk, "DR_WIND_BOMB", 15;
+      bonus2 bSkillAtk, "DR_AROUND_FLOWER", 15;
+  - Id: 314851
+    AegisName: Druid_Middle
+    Name: Druid Stone (Middle)
+    Type: Card
+    SubType: Enchant
+    Script: |
+      bonus2 bSkillAtk, "DR_ICE_CLOUD", 15;
+      bonus2 bSkillAtk, "DR_LOW_FLIGHT", 15;
+      bonus2 bSkillAtk, "DR_CRUEL_BITE", 15;
+  - Id: 314852
+    AegisName: Druid_Bottom
+    Name: Druid Stone (Lower)
+    Type: Card
+    SubType: Enchant
+    Script: |
+      bonus2 bSkillAtk, "DR_EARTH_FLOWER", 15;
+      bonus2 bSkillAtk, "DR_NOMERCY_CLAW", 15;
+      bonus2 bSkillAtk, "DR_FLICKING_TONADO", 15;
+  - Id: 314853
+    AegisName: Karnos_Top3
+    Name: Karnos Stone (Upper)
+    Type: Card
+    SubType: Enchant
+    Script: |
+      bonus2 bMagicAtkEle, Ele_Water, (2 * getskilllv("KR_NATURE_VIGOUR"));
+      bonus2 bMagicAtkEle, Ele_Wind, (2 * getskilllv("KR_NATURE_VIGOUR"));
+      bonus2 bMagicAtkEle, Ele_Earth, (2 * getskilllv("KR_NATURE_VIGOUR"));
+  - Id: 314854
+    AegisName: Karnos_Middle3
+    Name: Karnos Stone (Middle)
+    Type: Card
+    SubType: Enchant
+    Script: |
+      bonus bShortAtkRate, (1 * getskilllv("KR_WOLF_INSTINCT"));
+  - Id: 314855
+    AegisName: Karnos_Bottom3
+    Name: Karnos Stone (Lower)
+    Type: Card
+    SubType: Enchant
+    Script: |
+      bonus bLongAtkRate, (1 * getskilllv("KR_RAPTORIAL_INSTINCT"));
   - Id: 314889
     AegisName: BP9_Snow_Melee
     Name: Snow Flower of Melee
@@ -101397,9 +101457,39 @@ Body:
     Name: Sacred Blue Light Footprints (Garment)    # !todo check english name
     Type: Etc
     Weight: 100
+  - Id: 1002625
+    AegisName: KarnosStone_Robe
+    Name: Karnos Stone (Garment)
+    Type: Etc
+    Weight: 100
+  - Id: 1002627
+    AegisName: DruidStone_Top
+    Name: Druid Stone (Upper)
+    Type: Etc
+    Weight: 100
+  - Id: 1002628
+    AegisName: DruidStone_Middle
+    Name: Druid Stone (Middle)
+    Type: Etc
+    Weight: 100
+  - Id: 1002629
+    AegisName: DruidStone_Bottom
+    Name: Druid Stone (Lower)
+    Type: Etc
+    Weight: 100
   - Id: 1002630
     AegisName: KarnosStone_Top3
     Name: Karnos Stone (Upper)
+    Type: Etc
+    Weight: 100
+  - Id: 1002631
+    AegisName: KarnosStone_Middle3
+    Name: Karnos Stone (Middle)
+    Type: Etc
+    Weight: 100
+  - Id: 1002632
+    AegisName: KarnosStone_Bottom3
+    Name: Karnos Stone (Lower)
     Type: Etc
     Weight: 100
   - Id: 1002637

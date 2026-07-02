@@ -100,6 +100,15 @@ kharakorum,225,160,3	script	Lace La Zard#cos_ect_kkrm	4_FROG,{
 
 	// 3. [หินเอฟเฟกต์ Visual Effect สำหรับผ้าคลุม] บังคับลงช่อง 4 (Index 3)
 	setarray .@stone_effect[0],
+		1002108, 313955, // Blue Butterfly Footprint (Garment)
+		1002285, 313956, // Purple Butterfly Footprints (Garment)
+		1002394, 313957, // Yellow Butterfly Footprints (Garment)
+		1002294, 314212, // Nyar's Blue Footprints (Garment)
+		1002295, 314213, // Nyar's Purple Footprints (Garment)
+		1002296, 314214, // Divine Light Footprints (Garment)
+		1002642, 314813, // Phoenix Operation Footprints (Garment)
+		1002623, 314846, // Blue Star Footprints (Garment)
+		1002624, 314847, // Sacred Blue Light Footprints (Garment)
 		1001617, 313067; // Puple Star Footprint (Garment)
 	.@effect_slot = 3;
 

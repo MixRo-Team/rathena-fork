@@ -133,6 +133,9 @@ kharakorum,225,156,3	script	Aver De Dosh#cos_ect_kkrm	4_WHITETIGER,{
 			1002627, 314850,	// Druid Stone (Upper)
 			1002630, 314853;	// Karnos Stone (Upper)
 		.@normal_slot = 0;
+		// --- [หินเอฟเฟกต์ส่วนบน] ลงช่อง 4 ---
+		setarray .@stone_effect[0],
+			25058, 29041;	 // Twinkle Effect (Upper)
 		break;
 
 	case EQI_COSTUME_HEAD_MID:
@@ -220,6 +223,18 @@ kharakorum,225,156,3	script	Aver De Dosh#cos_ect_kkrm	4_WHITETIGER,{
 			1002628, 314851,	// Druid Stone (Middle)
 			1002631, 314854;	// Karnos Stone (Middle)
 		.@normal_slot = 1;
+		// --- [หินเอฟเฟกต์ส่วนกลาง] ลงช่อง 4 ---
+		setarray .@stone_effect[0],
+			25224, 29224,	 // White Body Effect (Mid)
+			25225, 29226,	 // Crimson Wave(Mid)
+			25176, 29160,	 // Blue Aura Effect (Mid)
+			25177, 29162,	 // Shadow Effect (Mid)
+			25178, 29161,	 // Pink Glow Effect (Mid)
+			25136, 29142,	 // Electric Effect (Mid)
+			25138, 29144,	 // Shrink Effect (Mid)
+			25059, 29040,	 // Ghost Effect (Mid)
+			1002193, 314094, // Blue Fighting Spirit Effect (Mid)
+			1002194, 314095; // Red Fighting Spirit Effect (Mid)
 		break;
 
 	case EQI_COSTUME_HEAD_LOW:
@@ -311,25 +326,15 @@ kharakorum,225,156,3	script	Aver De Dosh#cos_ect_kkrm	4_WHITETIGER,{
 			1002629, 314852,	// Druid Stone (Lower)
 			1002632, 314855;	// Karnos Stone (Lower)
 		.@normal_slot = 2;
+		// --- [หินเอฟเฟกต์ส่วนล่าง] ลงช่อง 4 ---
+		setarray .@stone_effect[0],
+			25226, 29225,	 // Water Field Effect (Lower)
+			25137, 29143;	 // Green Flare Effect (Lower) 
 		break;
-
-	// 2. จัดกลุ่มหินเอฟเฟกต์ Visual Effect บังคับลงช่อง 4 (Index 3)
-	// (ใช้ร่วมกันได้ทุกส่วนหัว จารเพิ่ม ID หินออร่าตรงนี้ได้เลย)
-	setarray .@stone_effect[0],
-		25226, 29225, // Water Field Effect (Lower)
-		25137, 29143, // Green Flare Effect (Lower)
-		25224, 29224, // White Body Effect (Mid)
-		25225, 29226, // Crimson Wave(Mid)
-		25176, 29160, // Blue Aura Effect (Mid)
-		25177, 29162, // Shadow Effect (Mid)
-		25178, 29161, // Pink Glow Effect (Mid)
-		25136, 29142, // Electric Effect (Mid)
-		25138, 29144, // Shrink Effect (Mid)
-		25059, 29040, // Ghost Effect (Mid)
-		25058, 29041; // Twinkle Effect (Upper)
-	.@effect_slot = 3; 
-	break;
 	}
+
+	// 2. ล็อคเป้าหมายช่องของหิน Effect ให้อยู่ช่องที่ 4 (Index 3) เสมอ
+	.@effect_slot = 3;
 
 	// 3. สแกนกระเป๋า และสร้างเมนูรวม
 	mes "[Aver De Dosh]";
@@ -339,7 +344,7 @@ kharakorum,225,156,3	script	Aver De Dosh#cos_ect_kkrm	4_WHITETIGER,{
 	
 	deletearray .@v_stone; deletearray .@v_ench; deletearray .@v_slot;
 	.@menu$ = ""; .@v_count = 0;
-	
+
 	// ลูปเพิ่มเมนู หินปกติ
 	for (.@i = 0; .@i < getarraysize(.@stone_normal); .@i += 2) {
 		if (countitem(.@stone_normal[.@i]) > 0) {

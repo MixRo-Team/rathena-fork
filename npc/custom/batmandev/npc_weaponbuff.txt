@@ -1,0 +1,65 @@
+// =========================================================
+// NPC: Weapon Buffer (เคลือบธาตุอาวุธ)
+// =========================================================
+kharakorum,172,179,4	script	Weapon Buffer	4_M_MAGICIAN,{
+
+    // --- ตั้งค่าเริ่มต้น (สามารถแก้ไขตรงนี้ได้เลยครับ) ---
+    .@cost = 30000;              // ค่าบริการ Zeny
+    .@duration = 30 * 60000;     // ระยะเวลาบัพ (นาที * 60000 = มิลลิวินาที) ตอนนี้ตั้งไว้ 30 นาที
+    .@level = 5;                 // เลเวลของสกิลบัพ (แนะนำเลเวล 5)
+
+    mes "[Weapon Buffer]";
+    mes "สวัสดีครับ สนใจเคลือบธาตุอาวุธเพื่อเพิ่มพลังโจมตีไหมครับ?";
+    mes "ผมคิดค่าบริการครั้งละ ^0000FF" + .@cost + " Zeny^000000";
+    mes "บัพจะอยู่ได้นาน ^FF0000" + (.@duration / 60000) + "^000000 นาทีครับ";
+    next;
+
+    // เมนูเลือกธาตุ (อัปเดตเพิ่มธาตุมืด)
+    .@menu = select(
+        "• ธาตุไฟ (Fire)",
+        "• ธาตุน้ำ (Water)",
+        "•? ธาตุลม (Wind)",
+        "• ธาตุดิน (Earth)",
+        "• ธาตุศักดิ์สิทธิ์ (Holy)",
+        "• ธาตุพิษ (Poison)",
+        "• ธาตุมืด (Shadow)",
+        "ยกเลิก"
+    );
+
+    // กรณีเลือกยกเลิก (เปลี่ยนเป็นเลข 8 ตามจำนวนเมนู)
+    if (.@menu == 8) {
+        mes "[Weapon Buffer]";
+        mes "ไว้แวะมาใหม่นะครับ ยินดีให้บริการเสมอ";
+        close;
+    }
+
+    // ตรวจสอบเงิน Zeny ว่าพอหรือไม่
+    if (Zeny < .@cost) {
+        mes "[Weapon Buffer]";
+        mes "เงิน Zeny ของคุณไม่พอนะครับ";
+        mes "รบกวนตรวจสอบเงินในกระเป๋าด้วยครับ";
+        close;
+    }
+
+    // หักเงิน Zeny
+    Zeny -= .@cost;
+
+    // ดำเนินการให้บัพธาตุตามที่ผู้เล่นเลือก (อิงจากไฟล์ const.txt)
+    switch(.@menu) {
+        case 1: sc_start SC_FIREWEAPON, .@duration, .@level; .@ele$ = "ไฟ"; break;
+        case 2: sc_start SC_WATERWEAPON, .@duration, .@level; .@ele$ = "น้ำ"; break;
+        case 3: sc_start SC_WINDWEAPON, .@duration, .@level; .@ele$ = "ลม"; break;
+        case 4: sc_start SC_EARTHWEAPON, .@duration, .@level; .@ele$ = "ดิน"; break;
+        case 5: sc_start SC_ASPERSIO, .@duration, .@level; .@ele$ = "ศักดิ์สิทธิ์"; break;
+        case 6: sc_start SC_ENCHANTPOISON, .@duration, .@level; .@ele$ = "พิษ"; break;
+        case 7: sc_start SC_SHADOWWEAPON, .@duration, .@level; .@ele$ = "มืด"; break;
+    }
+
+    // แสดง Effect แสงบัพที่ตัวผู้เล่น
+    specialeffect2 42; 
+    
+    mes "[Weapon Buffer]";
+    mes "เคลือบอาวุธเป็น ^FF0000ธาตุ" + .@ele$ + "^000000 เรียบร้อยแล้วครับ!";
+    mes "ขอให้สนุกกับการเก็บเลเวลนะครับ";
+    close;
+}

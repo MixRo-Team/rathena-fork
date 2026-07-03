@@ -3,40 +3,72 @@
 // =========================================================
 kharakorum,189,148,6	script	Gacha Machine	10545,{
 
-    // --- จัดการ UI ---
+// --- จัดการ UI ---
     clear2(); 
     mes " "; 
     setdialogsize 420, 450; 
     clear2(); 
     setdialogalign DIALOG_ALIGN_LEFT;
     .@dash$ = "^555555--------------------------------------------------------------------^000000";
+    .@col_max = 8; // กำหนดจำนวนคอลัมน์รูปภาพต่อ 1 แถว (แนะนำ 8-10 กำลังสวยครับ)
     
     mes "[Gacha Machine]";
     mes "ยินดีต้อนรับสู่ตู้สุ่มกาชาปอง!";
     mes "รายการไอเทมในตู้ตอนนี้ แบ่งตามหมวดหมู่ครับ:";
     mes .@dash$;
     
-    // ดึงรายชื่อไอเทมจากตารางมาแสดงพร้อมรูปภาพ (ใช้แท็ก ^i[ ])
+    // ==========================================
+    // แสดงรายการไอเทมแบบ Grid (ตาราง)
+    // ==========================================
+    
+    // [1. กลุ่ม Ultra Rare]
     mes "^FF0000[ กลุ่ม Ultra Rare ]^000000 โอกาส " + (.ur_rate/100) + "." + sprintf("%02d", .ur_rate%100) + "%";
+    .@line$ = "";
     for(.@i = 0; .@i < getarraysize(.ur_items); .@i++) {
-        mes " - ^i[" + .ur_items[.@i] + "]";
+        .@line$ = .@line$ + "^i[" + .ur_items[.@i] + "]  ";
+        // ถ้าครบตามจำนวนคอลัมน์ที่กำหนด ให้ปริ้นข้อความแล้วล้างค่าเพื่อขึ้นบรรทัดใหม่
+        if ((.@i + 1) % .@col_max == 0) {
+            mes "   " + .@line$;
+            .@line$ = "";
+        }
     }
+    // ปริ้นเศษที่เหลือ (ถ้ามี)
+    if (.@line$ != "") mes "   " + .@line$;
     
     mes .@dash$;
+    
+    // [2. กลุ่ม Rare]
     mes "^0000FF[ กลุ่ม Rare ]^000000 โอกาส " + (.r_rate/100) + "." + sprintf("%02d", .r_rate%100) + "%";
+    .@line$ = "";
     for(.@i = 0; .@i < getarraysize(.r_items); .@i++) {
-        mes " - ^i[" + .r_items[.@i] + "]";
+        .@line$ = .@line$ + "^i[" + .r_items[.@i] + "]  ";
+        if ((.@i + 1) % .@col_max == 0) {
+            mes "   " + .@line$;
+            .@line$ = "";
+        }
     }
+    if (.@line$ != "") mes "   " + .@line$;
     
     mes .@dash$;
+    
+    // [3. กลุ่ม Normal]
     mes "^000000[ กลุ่ม Normal ]^000000 โอกาสทั่วไป";
+    .@line$ = "";
     for(.@i = 0; .@i < getarraysize(.n_items); .@i++) {
-        mes " - ^i[" + .n_items[.@i] + "]";
+        .@line$ = .@line$ + "^i[" + .n_items[.@i] + "]  ";
+        if ((.@i + 1) % .@col_max == 0) {
+            mes "   " + .@line$;
+            .@line$ = "";
+        }
     }
+    if (.@line$ != "") mes "   " + .@line$;
+    
     mes .@dash$;
     next;
 
-    // เมนูเลือกประเภทสกุลเงิน
+    // ==========================================
+    // เมนูเลือกสุ่ม
+    // ==========================================
     mes "[Gacha Machine]";
     mes "ต้องการใช้ค่าเงินประเภทไหนในการสุ่มครับ?";
     .@pay_type = select(
@@ -46,7 +78,6 @@ kharakorum,189,148,6	script	Gacha Machine	10545,{
     );
     if (.@pay_type == 3) close;
 
-    // เมนูเลือกจำนวนครั้งในการสุ่ม
     next;
     mes "[Gacha Machine]";
     mes "ต้องการสุ่มรวดเดียวกี่ครั้งครับ?";
@@ -88,7 +119,6 @@ kharakorum,189,148,6	script	Gacha Machine	10545,{
             .@is_ur = 0;
         }
 
-        // ระบบรวบยอดไอเทมซ้ำ
         .@idx = inarray(.@win_id, .@prize_id);
         if (.@idx == -1) {
             .@new_idx = getarraysize(.@win_id);
@@ -98,7 +128,6 @@ kharakorum,189,148,6	script	Gacha Machine	10545,{
             .@win_amt[.@idx]++;
         }
 
-        // เก็บรายชื่อไอเทม UR ไว้ประกาศตอนจบ
         if (.@is_ur == 1) {
             .@ur_announce_id[getarraysize(.@ur_announce_id)] = .@prize_id;
         }
@@ -132,7 +161,7 @@ kharakorum,189,148,6	script	Gacha Machine	10545,{
 
     next;
     
-    // --- จัด UI หน้าต่างสรุปผลให้เป็นระเบียบ ---
+    // --- จัด UI หน้าต่างสรุปผล ---
     clear2(); 
     mes " "; 
     setdialogalign DIALOG_ALIGN_LEFT;
@@ -141,10 +170,10 @@ kharakorum,189,148,6	script	Gacha Machine	10545,{
     mes "ยินดีด้วย! นี่คือผลประกอบการจากการสุ่ม " + .@pulls + " ครั้ง:";
     mes .@dash$;
     
-    // แจกของและแสดงรูปไอเทมบนหน้าจอด้วย ^i[ ]
+    // แจกของและแสดงรูปไอเทมบนหน้าจอด้วย ^i[ ] (หน้าสรุปผลใช้แบบบรรทัดเพื่อโชว์จำนวนชิ้น)
     for(.@i = 0; .@i < getarraysize(.@win_id); .@i++) {
         getitem .@win_id[.@i], .@win_amt[.@i];
-        mes " - ^i[" + .@win_id[.@i] + "] จำนวน ^FF0000" + .@win_amt[.@i] + " ชิ้น^000000";
+        mes "   ^i[" + .@win_id[.@i] + "] จำนวน ^FF0000" + .@win_amt[.@i] + " ชิ้น^000000";
     }
     mes .@dash$;
     
@@ -166,25 +195,22 @@ OnInit:
     .ur_rate = 100;
     .r_rate = 2000;
 
-    // [กลุ่ม Ultra Rare]
+    // [กลุ่ม Ultra Rare] จากรายชื่อที่จารกำหนด
     setarray .ur_items[0], 
-        4143, // Maya Card
-        4144, // Phreeoni Card
-        4145; // Eddga Card
+        20800, 5906, 19469, 19409, 19266, 
+        18849, 460003, 480077;
 
-    // [กลุ่ม Rare]
+    // [กลุ่ม Rare] จากรายชื่อที่จารกำหนด
     setarray .r_items[0], 
-        5022, // Apple of Archer
-        2254, // Bone Wand
-        2319; // Mink Coat
+        28717, 28438, 480064, 410185, 28484, 
+        19139, 15283, 22207, 28411, 28379, 
+        20949, 28485, 16051, 19143, 15186, 
+        19274, 28521, 19101, 19407, 32265, 
+        28575;
 
-    // [กลุ่ม Normal]
+    // [กลุ่ม Normal] ไอเทมเกลือทั่วไป
     setarray .n_items[0], 
-        501,  // Red Potion
-        502,  // Orange Potion
-        503,  // Yellow Potion
-        504,  // White Potion
-        505;  // Blue Potion
+        501, 502, 503, 504, 505;
         
     end;
 }

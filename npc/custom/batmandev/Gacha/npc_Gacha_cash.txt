@@ -10,7 +10,7 @@ kharakorum,189,148,6	script	Gacha Machine	10545,{
 MainMenu:
     clear2(); 
     mes " "; 
-    setdialogsize 420, 450; 
+    setdialogsize 380, 450;
     clear2(); 
     setdialogalign DIALOG_ALIGN_LEFT;
     

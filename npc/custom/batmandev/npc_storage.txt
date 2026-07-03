@@ -42,7 +42,7 @@ kharakorum,146,268,4	script	Kafra Employee#khara_base	113,{
             }
             mes "เปิดคลังกิลด์ให้เรียบร้อยแล้วค่ะ";
             close2;
-            openguildstorage; // คำสั่งมาตรฐานสำหรับเปิดคลังกิลด์
+            guildopenstorage; // คำสั่งมาตรฐานสำหรับเปิดคลังกิลด์
             end;
 
         case 4:

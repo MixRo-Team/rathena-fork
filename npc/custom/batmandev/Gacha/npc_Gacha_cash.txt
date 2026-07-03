@@ -10,11 +10,11 @@ kharakorum,189,148,6	script	Gacha Machine	10545,{
 
 // จุดเริ่มต้นของ SPA (เมื่อทำงานเสร็จ จะวนกลับมาที่นี่)
 MainMenu:
-    clear2(); 
-    // ต้องตั้งค่า UI ใหม่ทุกครั้งหลัง clear2();
-    setdialogsize 420, 450; 
-    mes " "; 
-    setdialogalign DIALOG_ALIGN_LEFT;
+	clear2(); 
+	mes " "; 
+	setdialogsize 420, 450; 
+	clear2(); 
+	setdialogalign DIALOG_ALIGN_LEFT;
     mes .@dash$;
     // ดึงยอดสุ่มรวมของเซิร์ฟเวอร์จาก SQL (แยก Zeny และ Cash)
     query_sql("SELECT SUM(played_zeny), SUM(played_cash) FROM `gacha_stats_logs`", .@total_zeny, .@total_cash);

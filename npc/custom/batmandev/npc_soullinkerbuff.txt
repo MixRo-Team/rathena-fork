@@ -1,0 +1,74 @@
+// =========================================================
+// NPC: Soul Linker Buffer (ระบบเช็คอาชีพอัตโนมัติ)
+// Location: kharakorum 168, 179
+// =========================================================
+kharakorum,168,179,4	script	Soul Linker Buffer	4_F_SOULLINKER,{
+
+    // --- ตั้งค่าเริ่มต้น ---
+    .@cost = 5000;               // ค่าบริการ Zeny
+    .@duration = 30 * 60000;     // ระยะเวลาบัพ (นาที * 60000)
+    .@level = 5;                 // เลเวลของบัพ Soul Link
+
+    mes "[Soul Linker]";
+    mes "ยินดีต้อนรับค่ะ ต้องการรับการเชื่อมต่อพลังวิญญาณไหมคะ?";
+    mes "ฉันจะตรวจสอบอาชีพของคุณ และร่ายบัพให้ตรงสายทันทีค่ะ";
+    mes "คิดค่าบริการเพียง ^0000FF" + .@cost + " Zeny^000000 ค่ะ";
+    mes "บัพจะอยู่ได้นาน ^FF0000" + (.@duration / 60000) + "^000000 นาทีนะคะ";
+    next;
+
+    // เมนูยืนยัน
+    if (select("ตกลง:ยกเลิก") == 2) {
+        mes "[Soul Linker]";
+        mes "ไว้แวะมาใช้บริการใหม่ได้ตลอดเวลานะคะ";
+        close;
+    }
+
+    // ตรวจสอบเงิน Zeny ว่าพอหรือไม่
+    if (Zeny < .@cost) {
+        mes "[Soul Linker]";
+        mes "ขออภัยค่ะ เงิน Zeny ของคุณไม่พอนะคะ";
+        close;
+    }
+
+    // --- ระบบตรวจสอบสายอาชีพอัตโนมัติ ---
+    .@eaj = eaclass(Class);
+    .@sc_id = 0;
+
+    switch(.@eaj) {
+        case EAJ_KNIGHT: .@sc_id = SC_KNIGHT; .@job$ = "Knight"; break;
+        case EAJ_CRUSADER: .@sc_id = SC_CRUSADER; .@job$ = "Crusader"; break;
+        case EAJ_WIZARD: .@sc_id = SC_WIZARD; .@job$ = "Wizard"; break;
+        case EAJ_SAGE: .@sc_id = SC_SAGE; .@job$ = "Sage"; break;
+        case EAJ_HUNTER: .@sc_id = SC_HUNTER; .@job$ = "Hunter"; break;
+        case EAJ_ASSASSIN: .@sc_id = SC_ASSASIN; .@job$ = "Assassin"; break;
+        case EAJ_ROGUE: .@sc_id = SC_ROGUE; .@job$ = "Rogue"; break;
+        case EAJ_PRIEST: .@sc_id = SC_PRIEST; .@job$ = "Priest"; break;
+        case EAJ_MONK: .@sc_id = SC_MONK; .@job$ = "Monk"; break;
+        case EAJ_BLACKSMITH: .@sc_id = SC_BLACKSMITH; .@job$ = "Blacksmith"; break;
+        case EAJ_ALCHEMIST: .@sc_id = SC_ALCHEMIST; .@job$ = "Alchemist"; break;
+        case EAJ_BARD:
+        case EAJ_DANCER: .@sc_id = SC_BARDDANCER; .@job$ = "Bard/Dancer"; break;
+        case EAJ_SUPER_NOVICE: .@sc_id = SC_SUPERNOVICE; .@job$ = "Super Novice"; break;
+        case EAJ_STAR_GLADIATOR: .@sc_id = SC_STAR; .@job$ = "Star Gladiator"; break;
+        case EAJ_SOUL_LINKER: .@sc_id = SC_SOULLINKER; .@job$ = "Soul Linker"; break;
+        default:
+            // กรณีอาชีพที่ไม่รองรับบัพโซลิงก์
+            mes "[Soul Linker]";
+            mes "ขออภัยค่ะ สายอาชีพของคุณไม่มีบัพวิญญาณที่รองรับค่ะ";
+            close;
+    }
+
+    // หักเงิน Zeny หลังจากเช็คอาชีพผ่านแล้ว
+    Zeny -= .@cost;
+    
+    // จ่ายบัพ
+    sc_start .@sc_id, .@duration, .@level;
+    
+    // แสดง Effect แสงบัพที่ตัวผู้เล่น
+    specialeffect2 42; 
+    
+    mes "[Soul Linker]";
+    mes "เชื่อมต่อพลังวิญญาณแห่ง ^FF0000" + .@job$ + "^000000 ให้เรียบร้อยแล้วค่ะ!";
+    mes "ขอให้โชคดีกับการผจญภัยนะคะ";
+    close;
+}

@@ -224,9 +224,8 @@ kharakorum,189,148,6	script	Gacha Machine	10545,{
         mes "    ^i[" + .@win_id[.@i] + "] จำนวน ^FF0000" + .@win_amt[.@i] + " ชิ้น^000000";
         mes " ";
         
-        // บันทึกไอเทมที่ได้ลง SQL History
-        query_sql("INSERT INTO `gacha_cashlogs` (char_id, name, item_id, item_name, item_amount, play_time) VALUES (" + .@cid + ", '" + .@pname$ + "', " + .@win_id[.@i] + ", '" + getitemname(.@win_id[.@i]) + "', " + .@win_amt[.@i] + ", NOW())");
-
+        // บันทึกไอเทมที่ได้ลง SQL History แบบปลอดภัย (แก้บั๊กชื่อไอเทมที่มีเครื่องหมาย ')
+        query_sql("INSERT INTO `gacha_cashlogs` (char_id, name, item_id, item_name, item_amount, play_time) VALUES (" + .@cid + ", '" + escape_sql(.@pname$) + "', " + .@win_id[.@i] + ", '" + escape_sql(getitemname(.@win_id[.@i])) + "', " + .@win_amt[.@i] + ", NOW())");
         // ประกาศตามสี
         if (.@win_color[.@i] == 1) { // Ultra Rare (Red)
             announce "[Gacha]: ผู้เล่น [" + .@pname$ + "] สุ่มได้รับ " + getitemname(.@win_id[.@i]) + " จำนวน " + .@win_amt[.@i] + " ชิ้น! (Ultra Rare)", bc_all, 0xFF0000;

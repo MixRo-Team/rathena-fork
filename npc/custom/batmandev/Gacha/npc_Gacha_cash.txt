@@ -1,0 +1,190 @@
+// =========================================================
+// NPC: Gacha Machine (UI หรูหรา จัดหน้าซ้าย + คลีนสัญลักษณ์)
+// =========================================================
+kharakorum,189,148,6	script	Gacha Machine	111,{
+
+    // --- จัดการ UI ---
+    clear2(); 
+    mes " "; 
+    setdialogsize 420, 450; 
+    clear2(); 
+    setdialogalign DIALOG_ALIGN_LEFT;
+    .@dash$ = "^555555--------------------------------------------------------------------^000000";
+    
+    mes "[Gacha Machine]";
+    mes "ยินดีต้อนรับสู่ตู้สุ่มกาชาปอง!";
+    mes "รายการไอเทมในตู้ตอนนี้ แบ่งตามหมวดหมู่ครับ:";
+    mes .@dash$;
+    
+    // ดึงรายชื่อไอเทมจากตารางมาแสดงพร้อมรูปภาพ (ใช้แท็ก ^i[ ])
+    mes "^FF0000[ กลุ่ม Ultra Rare ]^000000 โอกาส " + (.ur_rate/100) + "." + sprintf("%02d", .ur_rate%100) + "%";
+    for(.@i = 0; .@i < getarraysize(.ur_items); .@i++) {
+        mes " - ^i[" + .ur_items[.@i] + "]";
+    }
+    
+    mes .@dash$;
+    mes "^0000FF[ กลุ่ม Rare ]^000000 โอกาส " + (.r_rate/100) + "." + sprintf("%02d", .r_rate%100) + "%";
+    for(.@i = 0; .@i < getarraysize(.r_items); .@i++) {
+        mes " - ^i[" + .r_items[.@i] + "]";
+    }
+    
+    mes .@dash$;
+    mes "^000000[ กลุ่ม Normal ]^000000 โอกาสทั่วไป";
+    for(.@i = 0; .@i < getarraysize(.n_items); .@i++) {
+        mes " - ^i[" + .n_items[.@i] + "]";
+    }
+    mes .@dash$;
+    next;
+
+    // เมนูเลือกประเภทสกุลเงิน
+    mes "[Gacha Machine]";
+    mes "ต้องการใช้ค่าเงินประเภทไหนในการสุ่มครับ?";
+    .@pay_type = select(
+        "สุ่มด้วย Zeny (" + .zeny_cost + " Z/ครั้ง)",
+        "สุ่มด้วย Cash (" + .cash_cost + " C/ครั้ง)",
+        "ปิดหน้าต่าง"
+    );
+    if (.@pay_type == 3) close;
+
+    // เมนูเลือกจำนวนครั้งในการสุ่ม
+    next;
+    mes "[Gacha Machine]";
+    mes "ต้องการสุ่มรวดเดียวกี่ครั้งครับ?";
+    .@pull_sel = select("สุ่ม 1 ครั้ง","สุ่ม 10 ครั้ง","สุ่ม 100 ครั้ง (คุ้มสุด!)","ยกเลิก");
+    if (.@pull_sel == 4) close;
+
+    // คำนวณจำนวนครั้งและราคารวม
+    .@pulls = (.@pull_sel == 1) ? 1 : ((.@pull_sel == 2) ? 10 : 100);
+    .@total_zeny = .zeny_cost * .@pulls;
+    .@total_cash = .cash_cost * .@pulls;
+
+    // ตรวจสอบเงินก่อนดำเนินการ
+    if (.@pay_type == 1) {
+        if (Zeny < .@total_zeny) {
+            mes "^FF0000Zeny ของคุณไม่พอครับ!^000000 (ต้องการ " + .@total_zeny + " Zeny)";
+            close;
+        }
+    } else {
+        if (#CASHPOINTS < .@total_cash) {
+            mes "^FF0000Cash Point ของคุณไม่พอครับ!^000000 (ต้องการ " + .@total_cash + " Cash)";
+            close;
+        }
+    }
+
+    // ==========================================
+    // ระบบสุ่มและรวบยอดไอเทม
+    // ==========================================
+    for(.@i = 0; .@i < .@pulls; .@i++) {
+        .@roll = rand(1, 10000); 
+        
+        if (.@roll <= .ur_rate) {
+            .@prize_id = .ur_items[rand(getarraysize(.ur_items))];
+            .@is_ur = 1;
+        } else if (.@roll <= (.ur_rate + .r_rate)) {
+            .@prize_id = .r_items[rand(getarraysize(.r_items))];
+            .@is_ur = 0;
+        } else {
+            .@prize_id = .n_items[rand(getarraysize(.n_items))];
+            .@is_ur = 0;
+        }
+
+        // ระบบรวบยอดไอเทมซ้ำ
+        .@idx = inarray(.@win_id, .@prize_id);
+        if (.@idx == -1) {
+            .@new_idx = getarraysize(.@win_id);
+            .@win_id[.@new_idx] = .@prize_id;
+            .@win_amt[.@new_idx] = 1;
+        } else {
+            .@win_amt[.@idx]++;
+        }
+
+        // เก็บรายชื่อไอเทม UR ไว้ประกาศตอนจบ
+        if (.@is_ur == 1) {
+            .@ur_announce_id[getarraysize(.@ur_announce_id)] = .@prize_id;
+        }
+    }
+
+    // ==========================================
+    // ระบบตรวจสอบน้ำหนักกระเป๋า
+    // ==========================================
+    .@weight_pass = 1;
+    for(.@i = 0; .@i < getarraysize(.@win_id); .@i++) {
+        if (checkweight(.@win_id[.@i], .@win_amt[.@i]) == 0) {
+            .@weight_pass = 0;
+            break;
+        }
+    }
+    
+    if (.@weight_pass == 0) {
+        next;
+        mes "[Gacha Machine]";
+        mes "^FF0000น้ำหนักหรือช่องเก็บของในกระเป๋าของคุณไม่พอครับ!^000000";
+        mes "กรุณาเคลียร์ของให้ว่าง แล้วกลับมาสุ่มใหม่นะครับ";
+        mes "^0000FF(ระบบยังไม่ได้หักเงินของคุณ)^000000";
+        close;
+    }
+
+    // ==========================================
+    // ระบบหักเงิน แจกของ และประกาศแจ็คพอต
+    // ==========================================
+    if (.@pay_type == 1) Zeny -= .@total_zeny;
+    else #CASHPOINTS -= .@total_cash;
+
+    next;
+    
+    // --- จัด UI หน้าต่างสรุปผลให้เป็นระเบียบ ---
+    clear2(); 
+    mes " "; 
+    setdialogalign DIALOG_ALIGN_LEFT;
+    
+    mes "[Gacha Machine]";
+    mes "ยินดีด้วย! นี่คือผลประกอบการจากการสุ่ม " + .@pulls + " ครั้ง:";
+    mes .@dash$;
+    
+    // แจกของและแสดงรูปไอเทมบนหน้าจอด้วย ^i[ ]
+    for(.@i = 0; .@i < getarraysize(.@win_id); .@i++) {
+        getitem .@win_id[.@i], .@win_amt[.@i];
+        mes " - ^i[" + .@win_id[.@i] + "] จำนวน ^FF0000" + .@win_amt[.@i] + " ชิ้น^000000";
+    }
+    mes .@dash$;
+    
+    // ประกาศแจ็คพอต
+    for(.@i = 0; .@i < getarraysize(.@ur_announce_id); .@i++) {
+        announce "แจ็คพอตแตก! ผู้เล่น [" + strcharinfo(0) + "] สุ่มกาชาปองได้รับ " + getitemname(.@ur_announce_id[.@i]) + " (Ultra Rare)!", bc_all|bc_blue;
+    }
+    
+    close;
+
+// =========================================================
+// การตั้งค่า NPC (โหลดครั้งเดียวตอนเปิดเซิร์ฟ)
+// =========================================================
+OnInit:
+    
+    .zeny_cost = 100000;
+    .cash_cost = 100;
+
+    .ur_rate = 100;
+    .r_rate = 2000;
+
+    // [กลุ่ม Ultra Rare]
+    setarray .ur_items[0], 
+        4143, // Maya Card
+        4144, // Phreeoni Card
+        4145; // Eddga Card
+
+    // [กลุ่ม Rare]
+    setarray .r_items[0], 
+        5022, // Apple of Archer
+        2254, // Bone Wand
+        2319; // Mink Coat
+
+    // [กลุ่ม Normal]
+    setarray .n_items[0], 
+        501,  // Red Potion
+        502,  // Orange Potion
+        503,  // Yellow Potion
+        504,  // White Potion
+        505;  // Blue Potion
+        
+    end;
+}

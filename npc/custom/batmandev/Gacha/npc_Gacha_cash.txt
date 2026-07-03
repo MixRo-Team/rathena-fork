@@ -1,16 +1,18 @@
 // =========================================================
-// NPC: Gacha Machine (SQL Database, Top 20, Weekly Rewards, Color Announce)
+// NPC: Gacha Machine (SPA Mode, Spaced Grid, Comma Numbers, SQL Fix)
 // Location: kharakorum,189,148,6 (Sprite: 10545)
 // =========================================================
 kharakorum,189,148,6	script	Gacha Machine	10545,{
 
-    clear2(); 
-    mes " "; 
     setdialogsize 420, 450; 
-    clear2(); 
-    setdialogalign DIALOG_ALIGN_LEFT;
     .@dash$ = "^555555--------------------------------------------------------------------^000000";
     .@col_max = 6;
+
+// จุดเริ่มต้นของ SPA (เมื่อทำงานเสร็จ จะวนกลับมาที่นี่)
+MainMenu:
+    clear2(); 
+    mes " "; 
+    setdialogalign DIALOG_ALIGN_LEFT;
     
     // ดึงยอดสุ่มรวมของเซิร์ฟเวอร์จาก SQL
     query_sql("SELECT SUM(played) FROM `gacha_cashplayer_logs`", .@server_total);
@@ -18,12 +20,46 @@ kharakorum,189,148,6	script	Gacha Machine	10545,{
 
     mes "[Gacha Machine]";
     mes "ยินดีต้อนรับสู่ตู้สุ่มกาชาปอง!";
-    mes "ยอดสุ่มรวมทั้งเซิร์ฟเวอร์: ^0000FF" + .@server_total + "^000000 ครั้ง";
+    mes "ยอดสุ่มรวมทั้งเซิร์ฟเวอร์: ^0000FF" + callfunc("F_InsertComma", .@server_total) + "^000000 ครั้ง";
     mes .@dash$;
     
     // ==========================================
+    // แสดงรายการไอเทมในตู้แบบ Grid (เพิ่มระยะห่าง)
+    // ==========================================
+    mes "^FF0000[ กลุ่ม Ultra Rare ]^000000"; mes " ";
+    .@line$ = "";
+    for(.@i = 0; .@i < getarraysize(.ur_items); .@i++) {
+        // เพิ่ม Space 3 เคาะ ซ้าย-ขวา ของเส้นคั่น ให้รูปห่างกันสวยงาม
+        if (.@line$ != "") .@line$ = .@line$ + "   ^888888|^000000   "; 
+        .@line$ = .@line$ + "^i[" + .ur_items[.@i] + "]";
+        if ((.@i + 1) % .@col_max == 0) { mes "    " + .@line$; .@line$ = ""; if (.@i + 1 < getarraysize(.ur_items)) mes " "; }
+    }
+    if (.@line$ != "") mes "    " + .@line$; mes " "; mes .@dash$;
+    
+    mes "^0000FF[ กลุ่ม Rare ]^000000"; mes " ";
+    .@line$ = "";
+    for(.@i = 0; .@i < getarraysize(.r_items); .@i++) {
+        if (.@line$ != "") .@line$ = .@line$ + "   ^888888|^000000   ";
+        .@line$ = .@line$ + "^i[" + .r_items[.@i] + "]";
+        if ((.@i + 1) % .@col_max == 0) { mes "    " + .@line$; .@line$ = ""; if (.@i + 1 < getarraysize(.r_items)) mes " "; }
+    }
+    if (.@line$ != "") mes "    " + .@line$; mes " "; mes .@dash$;
+    
+    mes "^000000[ กลุ่ม Normal ]^000000"; mes " ";
+    .@line$ = "";
+    for(.@i = 0; .@i < getarraysize(.n_items); .@i++) {
+        if (.@line$ != "") .@line$ = .@line$ + "   ^888888|^000000   ";
+        .@line$ = .@line$ + "^i[" + .n_items[.@i] + "]";
+        if ((.@i + 1) % .@col_max == 0) { mes "    " + .@line$; .@line$ = ""; if (.@i + 1 < getarraysize(.n_items)) mes " "; }
+    }
+    if (.@line$ != "") mes "    " + .@line$; mes " "; mes .@dash$;
+    next;
+
+    // ==========================================
     // เมนูหลัก
     // ==========================================
+    mes "[Gacha Machine]";
+    mes "กรุณาเลือกรายการที่ต้องการครับ";
     .@main_menu = select(
         "สุ่มกาชาปอง",
         "ดูอันดับ Top 20 ประจำสัปดาห์",
@@ -34,10 +70,10 @@ kharakorum,189,148,6	script	Gacha Machine	10545,{
     if (.@main_menu == 4) close;
 
     // ==========================================
-    // ดูอันดับ Top 20 (ดึงจาก SQL แบบ Real-time)
+    // เมนู: ดูอันดับ Top 20
     // ==========================================
     if (.@main_menu == 2) {
-        next;
+        next; clear2(); mes " "; setdialogalign DIALOG_ALIGN_LEFT;
         mes "[Gacha Leaderboard]";
         mes "ทำเนียบนักสุ่มกาชาปองสูงสุด 20 อันดับแรก";
         mes "รีเซ็ตและแจกรางวัลทุกคืนวันอาทิตย์ (00:00 น.)";
@@ -49,119 +85,100 @@ kharakorum,189,148,6	script	Gacha Machine	10545,{
             mes "ยังไม่มีข้อมูลในสัปดาห์นี้ครับ";
         } else {
             for(.@i = 0; .@i < getarraysize(.@top_name$); .@i++) {
-                if (.@i == 0) mes "^FF0000[ 1st ] " + .@top_name$[.@i] + " (" + .@top_score[.@i] + " ครั้ง)^000000";
-                else if (.@i == 1) mes "^FFD700[ 2nd ] " + .@top_name$[.@i] + " (" + .@top_score[.@i] + " ครั้ง)^000000";
-                else if (.@i == 2) mes "^C0C0C0[ 3rd ] " + .@top_name$[.@i] + " (" + .@top_score[.@i] + " ครั้ง)^000000";
-                else mes (.@i+1) + ". " + .@top_name$[.@i] + " (" + .@top_score[.@i] + " ครั้ง)";
+                .@score_str$ = callfunc("F_InsertComma", .@top_score[.@i]);
+                if (.@i == 0) mes "^FF0000[ 1st ] " + .@top_name$[.@i] + " (" + .@score_str$ + " ครั้ง)^000000";
+                else if (.@i == 1) mes "^FFD700[ 2nd ] " + .@top_name$[.@i] + " (" + .@score_str$ + " ครั้ง)^000000";
+                else if (.@i == 2) mes "^C0C0C0[ 3rd ] " + .@top_name$[.@i] + " (" + .@score_str$ + " ครั้ง)^000000";
+                else mes (.@i+1) + ". " + .@top_name$[.@i] + " (" + .@score_str$ + " ครั้ง)";
             }
         }
         mes .@dash$;
-        close;
+        next; goto MainMenu; // กลับสู่เมนูหลัก
     }
 
     // ==========================================
-    // รับรางวัลประจำสัปดาห์ (เช็คจาก SQL)
+    // เมนู: รับรางวัลประจำสัปดาห์
     // ==========================================
     if (.@main_menu == 3) {
-        next;
+        next; clear2(); mes " "; setdialogalign DIALOG_ALIGN_LEFT;
         query_sql("SELECT id, number, reward_id, reward_amount FROM `gacha_cashplayer_winners` WHERE char_id = " + getcharid(0) + " AND claim = 0", .@win_id_db, .@win_no, .@rw_id, .@rw_amt);
         
         mes "[Gacha Machine]";
         if (getarraysize(.@win_id_db) == 0) {
             mes "คุณไม่มีรางวัลที่สามารถรับได้ในขณะนี้ครับ";
             mes "(หรือคุณอาจจะกดรับไปแล้ว)";
-            close;
+            next; goto MainMenu;
         }
 
         mes "ยินดีด้วย! คุณได้รับรางวัลอันดับที่ " + .@win_no[0] + " ประจำสัปดาห์!";
-        mes "ได้รับ: ^FF0000" + getitemname(.@rw_id[0]) + " จำนวน " + .@rw_amt[0] + " ชิ้น^000000";
+        mes "ได้รับ: ^FF0000" + getitemname(.@rw_id[0]) + " จำนวน " + callfunc("F_InsertComma", .@rw_amt[0]) + " ชิ้น^000000";
         next;
         
-        // อัปเดตสถานะว่ารับแล้ว และแจกของ
         query_sql("UPDATE `gacha_cashplayer_winners` SET claim = 1 WHERE id = " + .@win_id_db[0]);
         getitem .@rw_id[0], .@rw_amt[0];
         
+        clear2(); mes " "; setdialogalign DIALOG_ALIGN_LEFT;
         mes "[Gacha Machine]";
         mes "แจกของรางวัลเข้าตัวละครเรียบร้อยแล้วครับ!";
-        close;
+        next; goto MainMenu;
     }
 
     // ==========================================
-    // เข้าสู่ระบบการสุ่ม
+    // เมนู: เข้าสู่ระบบการสุ่ม
     // ==========================================
-    next;
+    next; clear2(); mes " "; setdialogalign DIALOG_ALIGN_LEFT;
     
-    // โชว์รายการไอเทมในตู้แบบ Grid
-    mes "^FF0000[ กลุ่ม Ultra Rare ]^000000"; mes " ";
-    .@line$ = "";
-    for(.@i = 0; .@i < getarraysize(.ur_items); .@i++) {
-        if (.@line$ != "") .@line$ = .@line$ + " ^888888|^000000 ";
-        .@line$ = .@line$ + "^i[" + .ur_items[.@i] + "]";
-        if ((.@i + 1) % .@col_max == 0) { mes "    " + .@line$; .@line$ = ""; if (.@i + 1 < getarraysize(.ur_items)) mes " "; }
-    }
-    if (.@line$ != "") mes "    " + .@line$; mes " "; mes .@dash$;
-    
-    mes "^0000FF[ กลุ่ม Rare ]^000000"; mes " ";
-    .@line$ = "";
-    for(.@i = 0; .@i < getarraysize(.r_items); .@i++) {
-        if (.@line$ != "") .@line$ = .@line$ + " ^888888|^000000 ";
-        .@line$ = .@line$ + "^i[" + .r_items[.@i] + "]";
-        if ((.@i + 1) % .@col_max == 0) { mes "    " + .@line$; .@line$ = ""; if (.@i + 1 < getarraysize(.r_items)) mes " "; }
-    }
-    if (.@line$ != "") mes "    " + .@line$; mes " "; mes .@dash$;
-    
-    mes "^000000[ กลุ่ม Normal ]^000000"; mes " ";
-    .@line$ = "";
-    for(.@i = 0; .@i < getarraysize(.n_items); .@i++) {
-        if (.@line$ != "") .@line$ = .@line$ + " ^888888|^000000 ";
-        .@line$ = .@line$ + "^i[" + .n_items[.@i] + "]";
-        if ((.@i + 1) % .@col_max == 0) { mes "    " + .@line$; .@line$ = ""; if (.@i + 1 < getarraysize(.n_items)) mes " "; }
-    }
-    if (.@line$ != "") mes "    " + .@line$; mes " "; mes .@dash$;
-    next;
-
-    // เลือกประเภทการจ่ายเงิน
     mes "[Gacha Machine]";
     mes "ต้องการใช้ค่าเงินประเภทไหนในการสุ่มครับ?";
     .@pay_type = select(
-        "สุ่มด้วย Zeny (" + .zeny_cost + " Z/ครั้ง)",
-        "สุ่มด้วย Cash (" + .cash_cost + " C/ครั้ง)",
-        "ปิดหน้าต่าง"
+        "สุ่มด้วย Zeny (" + callfunc("F_InsertComma", .zeny_cost) + " Z/ครั้ง)",
+        "สุ่มด้วย Cash (" + callfunc("F_InsertComma", .cash_cost) + " C/ครั้ง)",
+        "ย้อนกลับ"
     );
-    if (.@pay_type == 3) close;
+    if (.@pay_type == 3) { next; goto MainMenu; }
 
-    next;
+    next; clear2(); mes " "; setdialogalign DIALOG_ALIGN_LEFT;
     mes "[Gacha Machine]";
     mes "ต้องการสุ่มรวดเดียวกี่ครั้งครับ?";
-    .@pull_sel = select("สุ่ม 1 ครั้ง","สุ่ม 10 ครั้ง","สุ่ม 100 ครั้ง (คุ้มสุด!)","ยกเลิก");
-    if (.@pull_sel == 4) close;
+    .@pull_sel = select("สุ่ม 1 ครั้ง","สุ่ม 10 ครั้ง","สุ่ม 100 ครั้ง (คุ้มสุด!)","ย้อนกลับ");
+    if (.@pull_sel == 4) { next; goto MainMenu; }
 
     .@pulls = (.@pull_sel == 1) ? 1 : ((.@pull_sel == 2) ? 10 : 100);
     .@total_zeny = .zeny_cost * .@pulls;
     .@total_cash = .cash_cost * .@pulls;
 
     if (.@pay_type == 1) {
-        if (Zeny < .@total_zeny) { mes "^FF0000Zeny ของคุณไม่พอครับ!^000000"; close; }
+        if (Zeny < .@total_zeny) { 
+            mes "^FF0000Zeny ของคุณไม่พอครับ!^000000"; 
+            mes "ต้องการ Zeny ทั้งสิ้น: " + callfunc("F_InsertComma", .@total_zeny) + " Z";
+            next; goto MainMenu; 
+        }
     } else {
-        if (#CASHPOINTS < .@total_cash) { mes "^FF0000Cash Point ของคุณไม่พอครับ!^000000"; close; }
+        if (#CASHPOINTS < .@total_cash) { 
+            mes "^FF0000Cash Point ของคุณไม่พอครับ!^000000"; 
+            mes "ต้องการ Cash ทั้งสิ้น: " + callfunc("F_InsertComma", .@total_cash) + " C";
+            next; goto MainMenu; 
+        }
     }
 
     // คำนวณการสุ่ม (ใน Memory)
+    deletearray .@win_id[0], getarraysize(.@win_id);
+    deletearray .@win_amt[0], getarraysize(.@win_amt);
+    deletearray .@win_color[0], getarraysize(.@win_color);
+
     for(.@i = 0; .@i < .@pulls; .@i++) {
         .@roll = rand(1, 10000); 
-        
         if (.@roll <= .ur_rate) {
             .@prize_id = .ur_items[rand(getarraysize(.ur_items))];
-            .@color = 1; // Ultra Rare (Red)
+            .@color = 1; 
         } else if (.@roll <= (.ur_rate + .r_rate)) {
             .@prize_id = .r_items[rand(getarraysize(.r_items))];
-            .@color = 2; // Rare (Gold)
+            .@color = 2; 
         } else {
             .@prize_id = .n_items[rand(getarraysize(.n_items))];
-            .@color = 3; // Normal (Blue)
+            .@color = 3; 
         }
 
-        // รวบยอดไอเทมซ้ำ
         .@idx = inarray(.@win_id, .@prize_id);
         if (.@idx == -1) {
             .@new_idx = getarraysize(.@win_id);
@@ -179,92 +196,84 @@ kharakorum,189,148,6	script	Gacha Machine	10545,{
         if (checkweight(.@win_id[.@i], .@win_amt[.@i]) == 0) { .@weight_pass = 0; break; }
     }
     if (.@weight_pass == 0) {
-        next; mes "^FF0000กระเป๋าหรือน้ำหนักของคุณเต็มครับ! กรุณาเคลียร์ของก่อน^000000"; close;
+        next; clear2(); mes " "; setdialogalign DIALOG_ALIGN_LEFT;
+        mes "^FF0000กระเป๋าหรือน้ำหนักของคุณเต็มครับ! กรุณาเคลียร์ของก่อน^000000"; 
+        next; goto MainMenu;
     }
 
     // หักเงิน
     if (.@pay_type == 1) Zeny -= .@total_zeny;
     else #CASHPOINTS -= .@total_cash;
 
-    // ==========================================
-    // อัปเดตข้อมูลลง SQL (ทำครั้งเดียวเพื่อลดอาการแลค)
-    // ==========================================
+    // อัปเดต SQL
     .@cid = getcharid(0);
     .@aid = getcharid(3);
     .@pname$ = strcharinfo(0);
 
-    // 1. อัปเดตตาราง Player Logs (ประวัติรวม)
     query_sql("SELECT COUNT(char_id) FROM `gacha_cashplayer_logs` WHERE char_id = " + .@cid, .@log_exist);
     if (!.@log_exist) {
-        query_sql("INSERT INTO `gacha_cashplayer_logs` (account_id, char_id, player_name, played) VALUES (" + .@aid + "," + .@cid + ",'" + .@pname$ + "'," + .@pulls + ")");
+        query_sql("INSERT INTO `gacha_cashplayer_logs` (account_id, char_id, player_name, played) VALUES (" + .@aid + "," + .@cid + ",'" + escape_sql(.@pname$) + "'," + .@pulls + ")");
     } else {
         query_sql("UPDATE `gacha_cashplayer_logs` SET played = played + " + .@pulls + " WHERE char_id = " + .@cid);
     }
 
-    // 2. อัปเดตตาราง Ranking
     query_sql("SELECT COUNT(char_id) FROM `gacha_cashplayer_ranking` WHERE char_id = " + .@cid, .@rank_exist);
     if (!.@rank_exist) {
-        query_sql("INSERT INTO `gacha_cashplayer_ranking` (account_id, char_id, player_name, score) VALUES (" + .@aid + "," + .@cid + ",'" + .@pname$ + "'," + .@pulls + ")");
+        query_sql("INSERT INTO `gacha_cashplayer_ranking` (account_id, char_id, player_name, score) VALUES (" + .@aid + "," + .@cid + ",'" + escape_sql(.@pname$) + "'," + .@pulls + ")");
     } else {
-        query_sql("UPDATE `gacha_cashplayer_ranking` SET score = score + " + .@pulls + ", player_name = '" + .@pname$ + "' WHERE char_id = " + .@cid);
+        query_sql("UPDATE `gacha_cashplayer_ranking` SET score = score + " + .@pulls + ", player_name = '" + escape_sql(.@pname$) + "' WHERE char_id = " + .@cid);
     }
 
-    // ==========================================
-    // แจกของ & ประกาศ & บันทึก Log ลง DB
-    // ==========================================
-    next;
-    clear2(); mes " "; setdialogalign DIALOG_ALIGN_LEFT;
+    // แสดงผลและแจกของ
+    next; clear2(); mes " "; setdialogalign DIALOG_ALIGN_LEFT;
     
     mes "[Gacha Machine]";
-    mes "ยินดีด้วย! นี่คือผลประกอบการจากการสุ่ม " + .@pulls + " ครั้ง:";
+    mes "ยินดีด้วย! นี่คือผลประกอบการจากการสุ่ม " + callfunc("F_InsertComma", .@pulls) + " ครั้ง:";
     mes .@dash$; mes " ";
     
     for(.@i = 0; .@i < getarraysize(.@win_id); .@i++) {
         getitem .@win_id[.@i], .@win_amt[.@i];
-        mes "    ^i[" + .@win_id[.@i] + "] จำนวน ^FF0000" + .@win_amt[.@i] + " ชิ้น^000000";
+        mes "    ^i[" + .@win_id[.@i] + "] จำนวน ^FF0000" + callfunc("F_InsertComma", .@win_amt[.@i]) + " ชิ้น^000000";
         mes " ";
         
-        // บันทึกไอเทมที่ได้ลง SQL History แบบปลอดภัย (แก้บั๊กชื่อไอเทมที่มีเครื่องหมาย ')
+        // บันทึก Log แจกของ (มี escape_sql ป้องกันชื่อไอเทม Error)
         query_sql("INSERT INTO `gacha_cashlogs` (char_id, name, item_id, item_name, item_amount, play_time) VALUES (" + .@cid + ", '" + escape_sql(.@pname$) + "', " + .@win_id[.@i] + ", '" + escape_sql(getitemname(.@win_id[.@i])) + "', " + .@win_amt[.@i] + ", NOW())");
-        // ประกาศตามสี
-        if (.@win_color[.@i] == 1) { // Ultra Rare (Red)
-            announce "[Gacha]: ผู้เล่น [" + .@pname$ + "] สุ่มได้รับ " + getitemname(.@win_id[.@i]) + " จำนวน " + .@win_amt[.@i] + " ชิ้น! (Ultra Rare)", bc_all, 0xFF0000;
-        } else if (.@win_color[.@i] == 2) { // Rare (Gold)
-            announce "[Gacha]: ผู้เล่น [" + .@pname$ + "] สุ่มได้รับ " + getitemname(.@win_id[.@i]) + " จำนวน " + .@win_amt[.@i] + " ชิ้น! (Rare)", bc_all, 0xFFD700;
-        } else { // Normal (Blue)
-            announce "[Gacha]: ผู้เล่น [" + .@pname$ + "] สุ่มได้รับ " + getitemname(.@win_id[.@i]) + " จำนวน " + .@win_amt[.@i] + " ชิ้น! (Normal)", bc_all, 0x0088FF;
+
+        if (.@win_color[.@i] == 1) { 
+            announce "[Gacha]: ผู้เล่น [" + .@pname$ + "] สุ่มได้รับ " + getitemname(.@win_id[.@i]) + " จำนวน " + callfunc("F_InsertComma", .@win_amt[.@i]) + " ชิ้น! (Ultra Rare)", bc_all, 0xFF0000;
+        } else if (.@win_color[.@i] == 2) { 
+            announce "[Gacha]: ผู้เล่น [" + .@pname$ + "] สุ่มได้รับ " + getitemname(.@win_id[.@i]) + " จำนวน " + callfunc("F_InsertComma", .@win_amt[.@i]) + " ชิ้น! (Rare)", bc_all, 0xFFD700;
+        } else { 
+            announce "[Gacha]: ผู้เล่น [" + .@pname$ + "] สุ่มได้รับ " + getitemname(.@win_id[.@i]) + " จำนวน " + callfunc("F_InsertComma", .@win_amt[.@i]) + " ชิ้น! (Normal)", bc_all, 0x0088FF;
         }
     }
     mes .@dash$;
-    close;
+    next; goto MainMenu; // สุ่มเสร็จ วนกลับไปเมนูหลัก
 
 // =========================================================
 // สคริปต์ตัดรอบและแจกรางวัล (ทำงานทุกวันอาทิตย์ข้ามไปวันจันทร์ 00:00)
 // =========================================================
 OnClock0000:
-    if (gettime(DT_DAYOFWEEK) != 1) end; // ถ้าไม่ใช่วันจันทร์ (1) ให้หยุดทำงาน
+    if (gettime(DT_DAYOFWEEK) != 1) end; 
 
     query_sql("SELECT account_id, char_id, player_name, score FROM `gacha_cashplayer_ranking` ORDER BY score DESC LIMIT 3", .@top_aid, .@top_cid, .@top_name$, .@top_score);
     
     if (getarraysize(.@top_aid) > 0) {
         for (.@j = 0; .@j < getarraysize(.@top_aid); .@j++) {
-            // ตั้งค่าไอเทมรางวัลอันดับ 1 - 3 (จารสามารถเปลี่ยนรหัสไอเทมตรงนี้ได้เลย)
-            if (.@j == 0) { .@rwid = 4143; .@rwamt = 1; } // ที่ 1: Maya Card
-            else if (.@j == 1) { .@rwid = 5022; .@rwamt = 1; } // ที่ 2: Apple of Archer
-            else { .@rwid = 501; .@rwamt = 100; } // ที่ 3: Red Potion 100 ขวด
+            if (.@j == 0) { .@rwid = 4143; .@rwamt = 1; } 
+            else if (.@j == 1) { .@rwid = 5022; .@rwamt = 1; } 
+            else { .@rwid = 501; .@rwamt = 100; } 
 
-            // ยิงข้อมูลลงตาราง Winners
-            query_sql("INSERT INTO `gacha_cashplayer_winners` (account_id, char_id, player_name, score, number, reward_id, reward_amount, claim) VALUES (" + .@top_aid[.@j] + "," + .@top_cid[.@j] + ",'" + .@top_name$[.@j] + "'," + .@top_score[.@j] + "," + (.@j+1) + "," + .@rwid + "," + .@rwamt + ",0)");
+            query_sql("INSERT INTO `gacha_cashplayer_winners` (account_id, char_id, player_name, score, number, reward_id, reward_amount, claim) VALUES (" + .@top_aid[.@j] + "," + .@top_cid[.@j] + ",'" + escape_sql(.@top_name$[.@j]) + "'," + .@top_score[.@j] + "," + (.@j+1) + "," + .@rwid + "," + .@rwamt + ",0)");
         }
         announce "[Gacha]: ตัดรอบประจำสัปดาห์! ผู้ที่ได้อันดับ 1-3 สามารถมารับรางวัลได้ที่ตู้กาชาปองเลยครับ!", bc_all, 0xFFD700;
     }
     
-    // รีเซ็ตตารางอันดับ
     query_sql("TRUNCATE TABLE `gacha_cashplayer_ranking`");
     end;
 
 // =========================================================
-// การตั้งค่าระบบ & สร้างตาราง SQL อัตโนมัติ (โหลดเมื่อเปิดเซิร์ฟ)
+// การตั้งค่าระบบ
 // =========================================================
 OnInit:
     .zeny_cost = 100000;
@@ -272,14 +281,10 @@ OnInit:
     .ur_rate = 100;   // 1.00%
     .r_rate = 2000;   // 20.00%
 
-    // [กลุ่ม Ultra Rare]
     setarray .ur_items[0], 20800, 5906, 19469, 19409, 19266, 18849, 460003, 480077;
-    // [กลุ่ม Rare] 
     setarray .r_items[0], 28717, 28438, 480064, 410185, 28484, 19139, 15283, 22207, 28411, 28379, 20949, 28485, 16051, 19143, 15186, 19274, 28521, 19101, 19407, 32265, 28575;
-    // [กลุ่ม Normal] 
     setarray .n_items[0], 501, 502, 503, 504, 505;
 
-    // สร้างตารางอัตโนมัติ (หากยังไม่มีในฐานข้อมูล)
     query_sql("CREATE TABLE IF NOT EXISTS `gacha_cashlogs` (`id` INT(12) NOT NULL AUTO_INCREMENT, `char_id` INT(11) NOT NULL, `name` VARCHAR(30) NOT NULL, `item_id` INT(10) NOT NULL, `item_name` VARCHAR(255) NOT NULL, `item_amount` INT(4) NOT NULL, `play_time` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;");
     query_sql("CREATE TABLE IF NOT EXISTS `gacha_cashplayer_logs` (`id` int(7) NOT NULL AUTO_INCREMENT, `account_id` int(11) NOT NULL, `char_id` int(11) NOT NULL, `player_name` varchar(255) NOT NULL, `played` int(7) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;");
     query_sql("CREATE TABLE IF NOT EXISTS `gacha_cashplayer_ranking` (`id` int(7) NOT NULL AUTO_INCREMENT, `account_id` int(11) NOT NULL, `char_id` int(11) NOT NULL, `player_name` varchar(255) NOT NULL, `score` int(7) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;");

@@ -115,7 +115,7 @@ kharakorum,225,160,3	script	Lace La Zard#cos_ect_kkrm	4_FROG,{
 		1001909, 313560, // Panda Color Footprint Effect (Garment)
 		1002286, 314066, // ROS 2025 Footprint (Garment)
 		1002239, 314171, // Footprint (2D) (Garment)
-		1002240, 314172, // Bouncing Toothless Footprints (Garment)
+		1002240, 314172; // Bouncing Toothless Footprints (Garment)
 	.@effect_slot = 3;
 
 	// 4. สแกนกระเป๋า และสร้างเมนูรวม

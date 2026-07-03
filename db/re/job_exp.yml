@@ -639,7 +639,7 @@ Body:
       Star_Emperor2: true
       Baby_Star_Emperor2: true
       Karnos: true
-    MaxBaseLevel: 200
+    MaxBaseLevel: 185
     BaseExp:
       - Level: 1
         Exp: 658
@@ -1010,36 +1010,36 @@ Body:
       - Level: 184
         Exp: 417912574
       - Level: 185
-        Exp: 430449951
-      - Level: 186
-        Exp: 443363449
-      - Level: 187
-        Exp: 456664352
-      - Level: 188
-        Exp: 470364282
-      - Level: 189
-        Exp: 484475210
-      - Level: 190
-        Exp: 499009466
-      - Level: 191
-        Exp: 513979749
-      - Level: 192
-        Exp: 529399141
-      - Level: 193
-        Exp: 545281115
-      - Level: 194
-        Exp: 561639548
-      - Level: 195
-        Exp: 578488734
-      - Level: 196
-        Exp: 595843396
-      - Level: 197
-        Exp: 613718697
-      - Level: 198
-        Exp: 632130257
-      - Level: 199
-        Exp: 651094164
-      - Level: 200
+#        Exp: 430449951
+#      - Level: 186
+#        Exp: 443363449
+#      - Level: 187
+#        Exp: 456664352
+#      - Level: 188
+#        Exp: 470364282
+#      - Level: 189
+#        Exp: 484475210
+#      - Level: 190
+#        Exp: 499009466
+#      - Level: 191
+#        Exp: 513979749
+#      - Level: 192
+#        Exp: 529399141
+#      - Level: 193
+#        Exp: 545281115
+#      - Level: 194
+#        Exp: 561639548
+#      - Level: 195
+#        Exp: 578488734
+#      - Level: 196
+#        Exp: 595843396
+#      - Level: 197
+#        Exp: 613718697
+#      - Level: 198
+#        Exp: 632130257
+#      - Level: 199
+#        Exp: 651094164
+#      - Level: 200
         Exp: 999999999
   - Jobs:
       Dragon_Knight: true
@@ -1624,7 +1624,7 @@ Body:
   - Jobs:
       Summoner: true
       Baby_Summoner: true
-    MaxBaseLevel: 200
+    MaxBaseLevel: 185
     BaseExp:
       - Level: 1
         Exp: 55
@@ -1995,36 +1995,36 @@ Body:
       - Level: 184
         Exp: 441694525
       - Level: 185
-        Exp: 455828749
-      - Level: 186
-        Exp: 470415269
-      - Level: 187
-        Exp: 485468558
-      - Level: 188
-        Exp: 501003552
-      - Level: 189
-        Exp: 517035666
-      - Level: 190
-        Exp: 533580807
-      - Level: 191
-        Exp: 550655393
-      - Level: 192
-        Exp: 568276365
-      - Level: 193
-        Exp: 586461209
-      - Level: 194
-        Exp: 605227968
-      - Level: 195
-        Exp: 624595263
-      - Level: 196
-        Exp: 644582311
-      - Level: 197
-        Exp: 665208945
-      - Level: 198
-        Exp: 686495631
-      - Level: 199
-        Exp: 708463491
-      - Level: 200
+#        Exp: 455828749
+#      - Level: 186
+#        Exp: 470415269
+#      - Level: 187
+#        Exp: 485468558
+#      - Level: 188
+#        Exp: 501003552
+#      - Level: 189
+#        Exp: 517035666
+#      - Level: 190
+#        Exp: 533580807
+#      - Level: 191
+#        Exp: 550655393
+#      - Level: 192
+#        Exp: 568276365
+#      - Level: 193
+#        Exp: 586461209
+#      - Level: 194
+#        Exp: 605227968
+#      - Level: 195
+#        Exp: 624595263
+#      - Level: 196
+#        Exp: 644582311
+#      - Level: 197
+#        Exp: 665208945
+#      - Level: 198
+#        Exp: 686495631
+#      - Level: 199
+#        Exp: 708463491
+#      - Level: 200
         Exp: 999999999
   - Jobs:
       Novice: true
@@ -2649,7 +2649,7 @@ Body:
       Baby_Royal_Guard2: true
       Baby_Ranger2: true
       Baby_Mechanic2: true
-    MaxJobLevel: 70
+    MaxJobLevel: 65
     JobExp:
       - Level: 1
         Exp: 12800
@@ -2780,16 +2780,16 @@ Body:
       - Level: 64
         Exp: 559396372
       - Level: 65
-        Exp: 632361116
-      - Level: 66
-        Exp: 705325860
-      - Level: 67
-        Exp: 778290604
-      - Level: 68
-        Exp: 851255348
-      - Level: 69
-        Exp: 924220092
-      - Level: 70
+#        Exp: 632361116
+#      - Level: 66
+#        Exp: 705325860
+#      - Level: 67
+#        Exp: 778290604
+#      - Level: 68
+#        Exp: 851255348
+#      - Level: 69
+#        Exp: 924220092
+#      - Level: 70
         Exp: 999999999
   - Jobs:
       Dragon_Knight: true
@@ -3402,7 +3402,7 @@ Body:
   - Jobs:
       Super_Novice_E: true
       Super_Baby_E: true
-    MaxJobLevel: 70
+    MaxJobLevel: 65
     JobExp:
       - Level: 1
         Exp: 12800
@@ -3533,16 +3533,16 @@ Body:
       - Level: 64
         Exp: 559396372
       - Level: 65
-        Exp: 632361116
-      - Level: 66
-        Exp: 705325860
-      - Level: 67
-        Exp: 778290604
-      - Level: 68
-        Exp: 851255348
-      - Level: 69
-        Exp: 924220092
-      - Level: 70
+#        Exp: 632361116
+#      - Level: 66
+#        Exp: 705325860
+#      - Level: 67
+#        Exp: 778290604
+#      - Level: 68
+#        Exp: 851255348
+#      - Level: 69
+#        Exp: 924220092
+#      - Level: 70
         Exp: 999999999
   - Jobs:
       Kagerou: true
@@ -3559,7 +3559,7 @@ Body:
       Baby_Star_Emperor2: true
       Karnos: true
       Baby_Karnos: true
-    MaxJobLevel: 70
+    MaxJobLevel: 65
     JobExp:
       - Level: 1
         Exp: 12800
@@ -3690,16 +3690,16 @@ Body:
       - Level: 64
         Exp: 559396372
       - Level: 65
-        Exp: 632361116
-      - Level: 66
-        Exp: 705325860
-      - Level: 67
-        Exp: 778290604
-      - Level: 68
-        Exp: 851255348
-      - Level: 69
-        Exp: 924220092
-      - Level: 70
+#        Exp: 632361116
+#      - Level: 66
+#        Exp: 705325860
+#      - Level: 67
+#        Exp: 778290604
+#      - Level: 68
+#        Exp: 851255348
+#      - Level: 69
+#        Exp: 924220092
+#      - Level: 70
         Exp: 999999999
   - Jobs:
       Summoner: true

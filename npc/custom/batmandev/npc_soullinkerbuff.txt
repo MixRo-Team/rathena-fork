@@ -1,8 +1,9 @@
 // =========================================================
-// NPC: Soul Linker Buffer (ระบบเช็คอาชีพอัตโนมัติ)
+// NPC: Soul Linker Buffer (ระบบเช็คอาชีพอัตโนมัติ แก้ไขบั๊ก)
 // Location: kharakorum 168, 179
 // =========================================================
-kharakorum,168,179,4	script	Soul Linker Buffer	4_F_SOULLINKER,{
+// หมายเหตุ: เปลี่ยน Sprite จาก 4_F_SOULLINKER เป็น 114 (Kafra) เพื่อป้องกัน Warning
+kharakorum,168,179,4	script	Soul Linker Buffer	114,{
 
     // --- ตั้งค่าเริ่มต้น ---
     .@cost = 5000;               // ค่าบริการ Zeny
@@ -46,8 +47,10 @@ kharakorum,168,179,4	script	Soul Linker Buffer	4_F_SOULLINKER,{
         case EAJ_MONK: .@sc_id = SC_MONK; .@job$ = "Monk"; break;
         case EAJ_BLACKSMITH: .@sc_id = SC_BLACKSMITH; .@job$ = "Blacksmith"; break;
         case EAJ_ALCHEMIST: .@sc_id = SC_ALCHEMIST; .@job$ = "Alchemist"; break;
-        case EAJ_BARD:
-        case EAJ_DANCER: .@sc_id = SC_BARDDANCER; .@job$ = "Bard/Dancer"; break;
+        
+        // --- แก้ไขจุด Error ตรงนี้: ใช้ EAJ_BARDDANCER ---
+        case EAJ_BARDDANCER: .@sc_id = SC_BARDDANCER; .@job$ = "Bard/Dancer"; break;
+        
         case EAJ_SUPER_NOVICE: .@sc_id = SC_SUPERNOVICE; .@job$ = "Super Novice"; break;
         case EAJ_STAR_GLADIATOR: .@sc_id = SC_STAR; .@job$ = "Star Gladiator"; break;
         case EAJ_SOUL_LINKER: .@sc_id = SC_SOULLINKER; .@job$ = "Soul Linker"; break;

@@ -74,7 +74,7 @@ MainMenu:
     // เมนู: ดูอันดับ Top 20 (Zeny)
     // ==========================================
     if (.@main_menu == 2) {
-        next; clear2(); mes " "; setdialogsize 420, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
+        next; clear2(); mes " "; setdialogsize 380, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
         
         mes "[Gacha Leaderboard - ^0000FFZeny^000000]";
         mes "ทำเนียบนักสุ่มกาชาปองสูงสุด 20 อันดับแรก (หมวด Zeny)";
@@ -102,7 +102,7 @@ MainMenu:
     // เมนู: ดูอันดับ Top 20 (Cash)
     // ==========================================
     if (.@main_menu == 3) {
-        next; clear2(); mes " "; setdialogsize 420, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
+        next; clear2(); mes " "; setdialogsize 380, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
         
         mes "[Gacha Leaderboard - ^008800Cash^000000]";
         mes "ทำเนียบนักสุ่มกาชาปองสูงสุด 20 อันดับแรก (หมวด Cash)";
@@ -130,14 +130,43 @@ MainMenu:
     // เมนู: รับรางวัลประจำสัปดาห์
     // ==========================================
     if (.@main_menu == 4) {
-        next; clear2(); mes " "; setdialogsize 420, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
+        next; clear2(); mes " "; setdialogsize 380, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
         
+        // 1. เคลียร์ Array ทิ้งเสมอ ป้องกันข้อมูลเก่าค้างจนเกิดบัครับของซ้ำ
+        deletearray .@win_id_db[0], getarraysize(.@win_id_db);
+        deletearray .@win_no[0], getarraysize(.@win_no);
+        deletearray .@rw_id[0], getarraysize(.@rw_id);
+        deletearray .@rw_amt[0], getarraysize(.@rw_amt);
+        deletearray .@rw_type[0], getarraysize(.@rw_type);
+
         query_sql("SELECT id, number, reward_id, reward_amount, type FROM `gacha_weekly_winners` WHERE char_id = " + getcharid(0) + " AND claim = 0", .@win_id_db, .@win_no, .@rw_id, .@rw_amt, .@rw_type);
         
         mes "[Gacha Machine]";
         if (getarraysize(.@win_id_db) == 0) {
             mes "คุณไม่มีรางวัลที่สามารถรับได้ในขณะนี้ครับ";
             mes "(หรือคุณอาจจะกดรับไปแล้ว)";
+            next; goto MainMenu;
+        }
+
+        // 2. ใช้ getinventorylist เช็คช่องว่างกระเป๋า เพื่อความแม่นยำสูง
+        getinventorylist;
+        .@inv_used = getarraysize(@inventorylist_id);
+        if (.@inv_used + getarraysize(.@win_id_db) > 100) { // ลิมิตช่องกระเป๋ามาตรฐาน RO คือ 100 ช่อง
+            mes "^FF0000ช่องเก็บของในกระเป๋าของคุณมีไม่พอครับ!^000000";
+            mes "คุณมีของรางวัลรอรับอยู่: " + getarraysize(.@win_id_db) + " ชิ้น";
+            mes "แต่ช่องกระเป๋าคุณเหลือเพียง: " + (100 - .@inv_used) + " ช่อง";
+            mes "กรุณาเคลียร์ช่องเก็บของแล้วมารับใหม่ครับ";
+            next; goto MainMenu;
+        }
+
+        // 3. ตรวจสอบน้ำหนักเพิ่มเติม ป้องกันของเด้งตกพื้น
+        .@weight_pass = 1;
+        for(.@i = 0; .@i < getarraysize(.@win_id_db); .@i++) {
+            if (checkweight(.@rw_id[.@i], .@rw_amt[.@i]) == 0) { .@weight_pass = 0; break; }
+        }
+        if (.@weight_pass == 0) {
+            mes "^FF0000น้ำหนักกระเป๋าของคุณจะเกินกำหนดครับ!^000000";
+            mes "กรุณาเคลียร์น้ำหนักตัวละครแล้วมารับรางวัลใหม่ครับ";
             next; goto MainMenu;
         }
 
@@ -152,12 +181,13 @@ MainMenu:
         mes .@dash$;
         next;
         
+        // 4. อัปเดต SQL ว่ากดรับแล้ว ก่อนที่จะให้ไอเทม (ป้องกันหลุดตอนได้ของ)
         for(.@i = 0; .@i < getarraysize(.@win_id_db); .@i++) {
             query_sql("UPDATE `gacha_weekly_winners` SET claim = 1 WHERE id = " + .@win_id_db[.@i]);
             getitem .@rw_id[.@i], .@rw_amt[.@i];
         }
         
-        clear2(); mes " "; setdialogsize 420, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
+        clear2(); mes " "; setdialogsize 380, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
         mes "[Gacha Machine]";
         mes "แจกของรางวัลเข้าตัวละครเรียบร้อยแล้วครับ!";
         next; goto MainMenu;
@@ -166,7 +196,7 @@ MainMenu:
     // ==========================================
     // เมนู: เข้าสู่ระบบการสุ่ม
     // ==========================================
-    next; clear2(); mes " "; setdialogsize 420, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
+    next; clear2(); mes " "; setdialogsize 380, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
     
     mes "[Gacha Machine]";
     mes "ต้องการใช้ค่าเงินประเภทไหนในการสุ่มครับ?";
@@ -177,7 +207,7 @@ MainMenu:
     );
     if (.@pay_type == 3) { next; goto MainMenu; }
 
-    next; clear2(); mes " "; setdialogsize 420, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
+    next; clear2(); mes " "; setdialogsize 380, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
     
     mes "[Gacha Machine]";
     mes "ต้องการสุ่มรวดเดียวกี่ครั้งครับ?";
@@ -228,7 +258,7 @@ MainMenu:
         if (checkweight(.@win_id[.@i], .@win_amt[.@i]) == 0) { .@weight_pass = 0; break; }
     }
     if (.@weight_pass == 0) {
-        next; clear2(); mes " "; setdialogsize 420, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
+        next; clear2(); mes " "; setdialogsize 380, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
         mes "^FF0000กระเป๋าหรือน้ำหนักของคุณเต็มครับ! กรุณาเคลียร์ของก่อน^000000"; 
         next; goto MainMenu;
     }
@@ -262,7 +292,7 @@ MainMenu:
     }
 
     // แสดงผลและแจกของ
-    next; clear2(); mes " "; setdialogsize 420, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
+    next; clear2(); mes " "; setdialogsize 380, 450; clear2(); setdialogalign DIALOG_ALIGN_LEFT;
     
     mes "[Gacha Machine]";
     mes "ยินดีด้วย! นี่คือผลประกอบการจากการสุ่ม " + callfunc("F_InsertComma", .@pulls) + " ครั้ง:";

@@ -23,31 +23,21 @@ kharakorum,156,196,4	script	Refine Master	448,{
 
 	switch(.@select) {
 		case 1:
-			mes .@npc_name$;
-			mes "ลากอุปกรณ์ที่ต้องการเสริมแกร่งใส่เตาหลอมได้เลย!";
-			close2; 
-			refineui(); // เปิดหน้าต่างตีบวก
+			// เปิดหน้าต่างตีบวกทันที ไม่ต้องใช้ close2;
+			refineui(); 
 			end;
 
 		case 2:
-			mes .@npc_name$;
-			mes "เชิญเลือกดูวัตถุดิบที่เจ้าต้องการแลกเปลี่ยนได้เลย!";
-			close2;
-			callshop "barter_refine_1", 1; // ดึงข้อมูลจาก Name: barter_refine_1
+			// เปิดร้านค้าทันที
+			callshop "barter_refine_1", 1; 
 			end;
 
 		case 3:
-			mes .@npc_name$;
-			mes "เชิญเลือกดูวัตถุดิบที่เจ้าต้องการแลกเปลี่ยนได้เลย!";
-			close2;
-			callshop "barter_refine_2", 1; // ดึงข้อมูลจาก Name: barter_refine_2
+			callshop "barter_refine_2", 1; 
 			end;
 
 		case 4:
-			mes .@npc_name$;
-			mes "เชิญเลือกดูวัตถุดิบที่เจ้าต้องการแลกเปลี่ยนได้เลย!";
-			close2;
-			callshop "barter_refine_3", 1; // ดึงข้อมูลจาก Name: barter_refine_3
+			callshop "barter_refine_3", 1; 
 			end;
 
 		case 5:

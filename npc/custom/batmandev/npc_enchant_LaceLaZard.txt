@@ -75,6 +75,11 @@ kharakorum,225,160,3	script	Lace La Zard#cos_ect_kkrm	4_FROG,{
 		1000296, 310257,	// RuneknightStone_Robe2
 		1000300, 310261,	// GeneticStone_Robe2
 		1000304, 310265,	// WanderMinsStone_Robe2
+		1001326, 312402,	// Super Novice Stone (Garment)
+		1000922, 311426,	// Spell Magic Attack Stone (Garment)
+		1001053, 311469,	// Melee Physical Attack Stone (Garment)
+		1001054, 311470,	// Range Physical Attack Stone (Garment)
+		1001171, 311924,	// Resist Defense Stone (Garment)
 		1002625, 314848;	// Karnos Stone (Garment)
 		.@normal_slot = 0;
 

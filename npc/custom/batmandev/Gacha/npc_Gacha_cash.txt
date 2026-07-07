@@ -354,9 +354,9 @@ OnInit:
     .ur_rate = 100;   
     .r_rate = 2000;   
 
-    setarray .ur_items[0], 20800, 5906, 19469, 19409, 19266, 18849, 460003, 480077;
-    setarray .r_items[0], 28717, 28438, 480064, 410185, 28484, 19139, 15283, 22207, 28411, 28379, 20949, 28485, 16051, 19143, 15186, 19274, 28521, 19101, 19407, 32265, 28575;
-    setarray .n_items[0], 501, 502, 503, 504, 505;
+    setarray .ur_items[0], , , , , , , , ;
+    setarray .r_items[0], , , , , , , , , , , , , , , , , , , , , ;
+    setarray .n_items[0], , , , , ;
 
     // สร้างตาราง
     query_sql("CREATE TABLE IF NOT EXISTS `gacha_cashlogs` (`id` INT(12) NOT NULL AUTO_INCREMENT, `char_id` INT(11) NOT NULL, `name` VARCHAR(30) NOT NULL, `item_id` INT(10) NOT NULL, `item_name` VARCHAR(255) NOT NULL, `item_amount` INT(4) NOT NULL, `play_time` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;");

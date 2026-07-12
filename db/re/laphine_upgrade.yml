@@ -157,7 +157,7 @@ Body:
     MaximumRefine: 9
     CardsAllowed: true
     TargetItems:
-      - Item: S_Armor
+      - Item: T_Str1_Armor_S
       - Item: T_Dex1_Weapon_S
       - Item: T_Luk1_Shield_S
       - Item: T_Agi1_Shoes_S
@@ -963,7 +963,7 @@ Body:
     MinimumRefine: 7
     MaximumRefine: 10
     TargetItems:
-      - Item: S_Armor
+      - Item: T_Str1_Armor_S
       - Item: T_Dex1_Weapon_S
       - Item: T_Luk1_Shield_S
       - Item: T_Agi1_Shoes_S
@@ -1699,7 +1699,7 @@ Body:
     MaximumRefine: 8
     CardsAllowed: true
     TargetItems:
-      - Item: S_Armor
+      - Item: T_Str1_Armor_S
       - Item: T_Dex1_Weapon_S
       - Item: T_Luk1_Shield_S
       - Item: T_Agi1_Shoes_S

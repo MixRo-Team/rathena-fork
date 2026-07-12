@@ -104,7 +104,7 @@ L_Main:
 				close;
 			}
 			set SkillPoint, 0; // เคลียร์พ้อยทิ้ง
-			skillall;          // อัพสกิลเต็ม
+			atcommand "@allskill";          // อัพสกิลเต็ม
 			mes .NPCName$;
 			mes "คุณได้รับสกิลครบทุกสกิลแล้ว";
 			close;
@@ -116,11 +116,10 @@ L_Main:
 			mes "[Druid Class Master]";
 			mes "โปรดเลือกสายอาชีพพิเศษครับ:";
 			next;
-			switch(select("~ Druid: ~ Karnos: ~ Alitea: ~ ย้อนกลับ")) {
+			switch(select("~ Druid: ~ Karnos: ~ ย้อนกลับ")) {
 				case 1: .@jid = 4351; break;
 				case 2: .@jid = 4353; break;
-				case 3: .@jid = 4355; break;
-				case 4: goto L_Main;
+				case 3: goto L_Main;
 			}
 			mes "[Druid Class Master]";
 			mes "ต้องการเปลี่ยนเป็น ^0055FF"+jobname(.@jid)+"^000000 ใช่ไหมครับ?";

@@ -372,7 +372,7 @@ Body:
       Clown: true
       Gypsy: true
       Paladin2: true
-    MaxBaseLevel: 99
+    MaxBaseLevel: 150
     BaseExp:
       - Level: 1
         Exp: 658
@@ -571,7 +571,109 @@ Body:
       - Level: 98
         Exp: 1258714
       - Level: 99
-        Exp: 9999999
+        Exp: 1272747
+      - Level: 100
+        Exp: 1354202
+      - Level: 101
+        Exp: 1440870
+      - Level: 102
+        Exp: 1533085
+      - Level: 103
+        Exp: 1631202
+      - Level: 104
+        Exp: 1735598
+      - Level: 105
+        Exp: 1846676
+      - Level: 106
+        Exp: 1964863
+      - Level: 107
+        Exp: 2090614
+      - Level: 108
+        Exp: 2224413
+      - Level: 109
+        Exp: 2366775
+      - Level: 110
+        Exp: 2518248
+      - Level: 111
+        Exp: 2679415
+      - Level: 112
+        Exp: 2850897
+      - Level: 113
+        Exp: 3033354
+      - Level: 114
+        Exp: 3227488
+      - Level: 115
+        Exp: 3434047
+      - Level: 116
+        Exp: 3653826
+      - Level: 117
+        Exp: 3887670
+      - Level: 118
+        Exp: 4136480
+      - Level: 119
+        Exp: 4401214
+      - Level: 120
+        Exp: 4755467
+      - Level: 121
+        Exp: 5138234
+      - Level: 122
+        Exp: 5551810
+      - Level: 123
+        Exp: 5998675
+      - Level: 124
+        Exp: 6481508
+      - Level: 125
+        Exp: 7003204
+      - Level: 126
+        Exp: 7566891
+      - Level: 127
+        Exp: 8175950
+      - Level: 128
+        Exp: 8834032
+      - Level: 129
+        Exp: 9545083
+      - Level: 130
+        Exp: 10313366
+      - Level: 131
+        Exp: 11143488
+      - Level: 132
+        Exp: 12040427
+      - Level: 133
+        Exp: 13009560
+      - Level: 134
+        Exp: 14056699
+      - Level: 135
+        Exp: 15188122
+      - Level: 136
+        Exp: 16410613
+      - Level: 137
+        Exp: 17731503
+      - Level: 138
+        Exp: 19158711
+      - Level: 139
+        Exp: 20700795
+      - Level: 140
+        Exp: 22367001
+      - Level: 141
+        Exp: 24167320
+      - Level: 142
+        Exp: 26112547
+      - Level: 143
+        Exp: 28214345
+      - Level: 144
+        Exp: 30485317
+      - Level: 145
+        Exp: 32939080
+      - Level: 146
+        Exp: 35590346
+      - Level: 147
+        Exp: 38455012
+      - Level: 148
+        Exp: 41550255
+      - Level: 149
+        Exp: 44894635
+      - Level: 150
+        Exp: 99999999
   - Jobs:
       Rune_Knight: true
       Warlock: true
@@ -1624,7 +1726,7 @@ Body:
   - Jobs:
       Summoner: true
       Baby_Summoner: true
-    MaxBaseLevel: 185
+    MaxBaseLevel: 150
     BaseExp:
       - Level: 1
         Exp: 55
@@ -1925,76 +2027,76 @@ Body:
       - Level: 149
         Exp: 43700657
       - Level: 150
-        Exp: 47021907
-      - Level: 151
-        Exp: 50595572
-      - Level: 152
-        Exp: 54440835
-      - Level: 153
-        Exp: 58578338
-      - Level: 154
-        Exp: 63030292
-      - Level: 155
-        Exp: 67820594
-      - Level: 156
-        Exp: 72974960
-      - Level: 157
-        Exp: 78521056
-      - Level: 158
-        Exp: 84488657
-      - Level: 159
-        Exp: 90909795
-      - Level: 160
-        Exp: 97818939
-      - Level: 161
-        Exp: 105253178
-      - Level: 162
-        Exp: 113252420
-      - Level: 163
-        Exp: 121859604
-      - Level: 164
-        Exp: 131120934
-      - Level: 165
-        Exp: 141086125
-      - Level: 166
-        Exp: 151808670
-      - Level: 167
-        Exp: 163346129
-      - Level: 168
-        Exp: 175760435
-      - Level: 169
-        Exp: 189118228
-      - Level: 170
-        Exp: 203491213
-      - Level: 171
-        Exp: 218956546
-      - Level: 172
-        Exp: 235597243
-      - Level: 173
-        Exp: 253502633
-      - Level: 174
-        Exp: 272768834
-      - Level: 175
-        Exp: 293499265
-      - Level: 176
-        Exp: 315805209
-      - Level: 177
-        Exp: 339806405
-      - Level: 178
-        Exp: 365631692
-      - Level: 179
-        Exp: 377331906
-      - Level: 180
-        Exp: 389406527
-      - Level: 181
-        Exp: 401867536
-      - Level: 182
-        Exp: 414727297
-      - Level: 183
-        Exp: 427998570
-      - Level: 184
-        Exp: 441694525
-      - Level: 185
+#        Exp: 47021907
+#      - Level: 151
+#        Exp: 50595572
+#      - Level: 152
+#        Exp: 54440835
+#      - Level: 153
+#        Exp: 58578338
+#      - Level: 154
+#        Exp: 63030292
+#      - Level: 155
+#        Exp: 67820594
+#      - Level: 156
+#        Exp: 72974960
+#      - Level: 157
+#        Exp: 78521056
+#      - Level: 158
+#        Exp: 84488657
+#      - Level: 159
+#        Exp: 90909795
+#      - Level: 160
+#        Exp: 97818939
+#      - Level: 161
+#        Exp: 105253178
+#      - Level: 162
+#        Exp: 113252420
+#      - Level: 163
+#        Exp: 121859604
+#      - Level: 164
+#        Exp: 131120934
+#      - Level: 165
+#        Exp: 141086125
+#      - Level: 166
+#        Exp: 151808670
+#      - Level: 167
+#        Exp: 163346129
+#      - Level: 168
+#        Exp: 175760435
+#      - Level: 169
+#        Exp: 189118228
+#      - Level: 170
+#        Exp: 203491213
+#      - Level: 171
+#        Exp: 218956546
+#      - Level: 172
+#        Exp: 235597243
+#      - Level: 173
+#        Exp: 253502633
+#      - Level: 174
+#        Exp: 272768834
+#      - Level: 175
+#        Exp: 293499265
+#      - Level: 176
+#        Exp: 315805209
+#      - Level: 177
+#        Exp: 339806405
+#      - Level: 178
+#        Exp: 365631692
+#      - Level: 179
+#        Exp: 377331906
+#      - Level: 180
+#        Exp: 389406527
+#      - Level: 181
+#        Exp: 401867536
+#      - Level: 182
+#        Exp: 414727297
+#      - Level: 183
+#        Exp: 427998570
+#      - Level: 184
+#        Exp: 441694525
+#      - Level: 185
 #        Exp: 455828749
 #      - Level: 186
 #        Exp: 470415269
@@ -2025,7 +2127,7 @@ Body:
 #      - Level: 199
 #        Exp: 708463491
 #      - Level: 200
-        Exp: 999999999
+        Exp: 99999999
   - Jobs:
       Novice: true
       Baby: true

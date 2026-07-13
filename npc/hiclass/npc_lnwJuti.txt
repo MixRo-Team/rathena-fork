@@ -8,7 +8,7 @@ prontera,162,194,4	script	เทพเจ้าจุติ	4_M_FAIRYAVANT,{
 	
 	// --- ตั้งค่าทรัพยากรเมื่อหมดโควต้าฟรี (ครั้งที่ 50 เป็นต้นไป) ---
 	.@CostZeny = 1000000;  // จำนวนเงิน Zeny
-	.@CostItem = 61502;      // ID ไอเทม (เปลี่ยนเลข 61502 เป็น ID เหรียญของเซิร์ฟจารได้เลย)
+	.@CostItem = 61502;    // แก้ไข ID ไอเทมตามที่จารต้องการแล้วครับ
 	.@CostAmount = 20;     // จำนวนไอเทมที่ใช้
 
 L_Main:
@@ -16,14 +16,12 @@ L_Main:
 	mes "ท่านจุติไปแล้วทั้งหมด ^FF0000" + JutiCount + "^000000 ครั้ง";
 	mes "---";
 	
-	// แสดงเงื่อนไขการทำงานให้ผู้เล่นเข้าใจง่าย
 	mes "^0055FF[ เงื่อนไขการจุติ ]^000000";
 	mes "- Base Level จะกลับไปเป็น 1";
-	mes "- ^bb0000สเตตัสเดิมจะไม่ถูกรีเซ็ต^000000";
+	mes "- ^bb0000สเตตัส, Job, สกิลเดิมจะไม่หายไปไหน^000000";
 	mes "- ได้รับโบนัส Status Point ^00bb00" + .@BonusPoint + " แต้ม^000000";
 	mes "---";
 	
-	// ตรวจสอบและแสดงโปรโมชั่นหรือค่าธรรมเนียม
 	if (JutiCount < .@FreeLimit) {
 		mes "^00FF00** โปรโมชั่น: จุติฟรี (เหลืออีก " + (.@FreeLimit - JutiCount) + " ครั้ง) **^000000";
 	} else {
@@ -35,7 +33,7 @@ L_Main:
 
 	switch(select(" ~ จุติเลเวล: ~ เปิดระบบจุติเลเวลออโต้: ~ ปิดระบบจุติเลเวลออโต้")) {
 		
-		case 1: // ================= เมนู จุติเลเวล (กดเอง) =================
+		case 1: 
 			if (BaseLevel < .@MaxLevel) {
 				mes "[ เทพเจ้าจุติ ]";
 				mes "เลเวลของท่านยังไม่ถึง " + .@MaxLevel + " ครับ";
@@ -56,7 +54,6 @@ L_Main:
 				close;
 			}
 
-			// หักทรัพยากรกรณีเกินโควต้าฟรี (เช็คทั้ง Zeny และ Item)
 			if (JutiCount >= .@FreeLimit) {
 				if (Zeny < .@CostZeny || countitem(.@CostItem) < .@CostAmount) {
 					mes "[ เทพเจ้าจุติ ]";
@@ -67,17 +64,49 @@ L_Main:
 				delitem .@CostItem, .@CostAmount; 
 			}
 
-			// เริ่มกระบวนการจุติ
-			resetlvl(1);                  // รีเซ็ต Base Level ไปที่ 1
-			StatusPoint += .@BonusPoint;  // แจกแต้มโบนัสให้ตัวละคร
-			JutiCount++;                  // บวกจำนวนรอบการจุติเพิ่ม 1
-			specialeffect2 EF_ANGEL2;     // แสดงเอฟเฟกต์เทวดาตอนเปลี่ยนคลาส
+			// ==========================================
+			// --- เทคนิคแอบจำค่าเดิม ก่อนเซิร์ฟเวอร์จะรีเซ็ต ---
+			// ==========================================
+			.@mem_str = readparam(bStr);
+			.@mem_agi = readparam(bAgi);
+			.@mem_vit = readparam(bVit);
+			.@mem_int = readparam(bInt);
+			.@mem_dex = readparam(bDex);
+			.@mem_luk = readparam(bLuk);
+			.@mem_job = JobLevel;
+			.@mem_spt = SkillPoint;
+
+			// สั่งลดเลเวล (ซึ่งจะทำให้เซิร์ฟบังคับรีเซ็ตสเตตัสกลับเป็น 1)
+			atcommand "@baselvl -" + (BaseLevel - 1);
+
+			// ==========================================
+			// --- คืนค่าทั้งหมดให้กลับมาเป็นเหมือนเดิม ---
+			// ==========================================
+			// 1. คืนค่าจ๊อบ
+			if (JobLevel < .@mem_job) { atcommand "@joblvl +" + (.@mem_job - JobLevel); }
+			
+			// 2. คืนค่าสเตตัส (บวกส่วนต่างกลับเข้าไปให้เท่ากับของเดิมเป๊ะๆ)
+			if (readparam(bStr) < .@mem_str) { atcommand "@str " + (.@mem_str - readparam(bStr)); }
+			if (readparam(bAgi) < .@mem_agi) { atcommand "@agi " + (.@mem_agi - readparam(bAgi)); }
+			if (readparam(bVit) < .@mem_vit) { atcommand "@vit " + (.@mem_vit - readparam(bVit)); }
+			if (readparam(bInt) < .@mem_int) { atcommand "@int " + (.@mem_int - readparam(bInt)); }
+			if (readparam(bDex) < .@mem_dex) { atcommand "@dex " + (.@mem_dex - readparam(bDex)); }
+			if (readparam(bLuk) < .@mem_luk) { atcommand "@luk " + (.@mem_luk - readparam(bLuk)); }
+			
+			// 3. คืนค่าสกิลพ้อยที่ค้างอยู่ (ถ้ามี)
+			if (SkillPoint < .@mem_spt) { SkillPoint = .@mem_spt; }
+
+			// 4. แจกโบนัสสเตตัสจุติ
+			StatusPoint += .@BonusPoint;  
+			JutiCount++;                  
+			percentheal 100, 100;         
+			specialeffect2 EF_ANGEL2;     
 			
 			mes "[ เทพเจ้าจุติ ]";
 			mes "จุติสำเร็จ! ท่านได้รับ Status Point เพิ่ม ^00bb00" + .@BonusPoint + " แต้ม^000000";
 			close;
 
-		case 2: // ================= เปิดระบบออโต้ =================
+		case 2: 
 			AutoJuti = 1;
 			mes "[ เทพเจ้าจุติ ]";
 			mes "เปิดระบบจุติเลเวลออโต้แล้ว";
@@ -85,7 +114,7 @@ L_Main:
 			mes "หลังจากนั้นจะหักทรัพยากรปกติ)*";
 			close;
 
-		case 3: // ================= ปิดระบบออโต้ =================
+		case 3: 
 			AutoJuti = 0;
 			mes "[ เทพเจ้าจุติ ]";
 			mes "ปิดระบบจุติเลเวลออโต้แล้ว";
@@ -97,22 +126,18 @@ L_Main:
 // --- ระบบเบื้องหลังการจุติอัตโนมัติ (Auto Juti) ---
 // ==========================================
 -	script	Auto_Juti_System	-1,{
-OnPCBaseUpEvent:
-	// ตรวจสอบสถานะการเปิดออโต้
+OnPCBaseLvUpEvent:
 	if (AutoJuti == 0) end;
 
-	// ต้องตั้งค่าตรงนี้ให้ตรงกับ NPC หลัก
 	.@MaxLevel = 150;
 	.@FreeLimit = 50;
 	.@BonusPoint = 500;
 	.@CostZeny = 1000000;
-	.@CostItem = 61502;      // แก้ ID ให้ตรงกับ NPC หลัก
+	.@CostItem = 61502;    // แก้ไขให้ตรงกับด้านบนแล้วครับ
 	.@CostAmount = 20;
 
-	// เงื่อนไข: เลเวลยังไม่ถึงจุดจุติ ให้ข้ามไป
 	if (BaseLevel < .@MaxLevel) end;
 
-	// เงื่อนไข: ถ้ารอบจุติเกินโควต้าฟรี ให้หักทรัพยากร
 	if (JutiCount >= .@FreeLimit) {
 		if (Zeny < .@CostZeny || countitem(.@CostItem) < .@CostAmount) {
 			dispbottom "[เทพเจ้าจุติ] ทรัพยากรไม่พอสำหรับการจุติ ระบบได้ทำการปิดออโต้ชั่วคราว!";
@@ -123,13 +148,35 @@ OnPCBaseUpEvent:
 		delitem .@CostItem, .@CostAmount;
 	}
 
-	// เริ่มกระบวนการจุติออโต้ (ไม่รีสเตตัส ไม่รีสกิล)
-	resetlvl(1);
+	// ==========================================
+	// --- เทคนิคแอบจำค่าเดิม (สำหรับระบบ Auto) ---
+	// ==========================================
+	.@mem_str = readparam(bStr);
+	.@mem_agi = readparam(bAgi);
+	.@mem_vit = readparam(bVit);
+	.@mem_int = readparam(bInt);
+	.@mem_dex = readparam(bDex);
+	.@mem_luk = readparam(bLuk);
+	.@mem_job = JobLevel;
+	.@mem_spt = SkillPoint;
+
+	atcommand "@baselvl -" + (BaseLevel - 1);
+
+	// คืนค่าทั้งหมด
+	if (JobLevel < .@mem_job) { atcommand "@joblvl +" + (.@mem_job - JobLevel); }
+	if (readparam(bStr) < .@mem_str) { atcommand "@str " + (.@mem_str - readparam(bStr)); }
+	if (readparam(bAgi) < .@mem_agi) { atcommand "@agi " + (.@mem_agi - readparam(bAgi)); }
+	if (readparam(bVit) < .@mem_vit) { atcommand "@vit " + (.@mem_vit - readparam(bVit)); }
+	if (readparam(bInt) < .@mem_int) { atcommand "@int " + (.@mem_int - readparam(bInt)); }
+	if (readparam(bDex) < .@mem_dex) { atcommand "@dex " + (.@mem_dex - readparam(bDex)); }
+	if (readparam(bLuk) < .@mem_luk) { atcommand "@luk " + (.@mem_luk - readparam(bLuk)); }
+	if (SkillPoint < .@mem_spt) { SkillPoint = .@mem_spt; }
+	
 	StatusPoint += .@BonusPoint; 
 	JutiCount++;
+	percentheal 100, 100;
 	specialeffect2 EF_ANGEL2;
 	
-	// แจ้งเตือนข้อความให้ผู้เล่นเห็นในช่องแชท
 	dispbottom "[เทพเจ้าจุติ] จุติอัตโนมัติสำเร็จ! (รอบที่ " + JutiCount + " | ได้โบนัส " + .@BonusPoint + " แต้ม)";
 	end;
 }

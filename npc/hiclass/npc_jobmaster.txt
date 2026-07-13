@@ -88,23 +88,23 @@ function	Job_Options	{
 }
 
 // ==========================================
-// --- เมนูหลัก (ส่วนที่เพิ่มเข้ามาใหม่) ---
+// --- เมนูหลักของเซิร์ฟเวอร์ ---
 // ==========================================
 L_Main:
 	mes .NPCName$;
 	mes "ยินดีต้อนรับสู่บริการเปลี่ยนอาชีพครับ";
 	mes "โปรดเลือกเมนูที่ต้องการ:";
 	next;
-	switch(select("~ รับสกิลเต็ม: ~ เปลี่ยนอาชีพพื้นฐาน: ~ สายพิเศษ Druid: ~ ^FF0000ยกเลิก^000000")) {
+	switch(select("~ รับสกิลเต็ม: ~ เปลี่ยนอาชีพ: ~ สายพิเศษ Druid: ~ ^FF0000ยกเลิก^000000")) {
 		
 		case 1: // รับสกิลเต็ม และเคลียร์พ้อยที่เหลือทิ้ง
-			if (Class == Job_Novice || Class == Job_Novice_High || Class == Job_Baby) {
+			/*if (Class == Job_Novice || Class == Job_Novice_High || Class == Job_Baby) {
 				mes .NPCName$;
 				mes "กรุณาเปลี่ยนอาชีพก่อนรับสกิลครับ";
 				close;
-			}
-			set SkillPoint, 0; // เคลียร์พ้อยทิ้ง
-			atcommand "@allskill";          // อัพสกิลเต็ม
+			}*/
+			set SkillPoint, 0;     // เคลียร์พ้อยทิ้ง
+			atcommand "@allskill"; // อัพสกิลเต็ม
 			mes .NPCName$;
 			mes "คุณได้รับสกิลครบทุกสกิลแล้ว";
 			close;
@@ -113,28 +113,65 @@ L_Main:
 			goto L_JobChange_Normal;
 
 		case 3: // สายพิเศษ
-			mes "[Druid Class Master]";
-			mes "โปรดเลือกสายอาชีพพิเศษครับ:";
-			next;
-			switch(select("~ Druid: ~ Karnos: ~ ย้อนกลับ")) {
-				case 1: .@jid = 4351; break;
-				case 2: .@jid = 4353; break;
-				case 3: goto L_Main;
-			}
-			mes "[Druid Class Master]";
-			mes "ต้องการเปลี่ยนเป็น ^0055FF"+jobname(.@jid)+"^000000 ใช่ไหมครับ?";
-			if(select("~ ใช่ครับ: ~ ยกเลิก") == 1) {
-				jobchange .@jid;
-				specialeffect2 EF_ANGEL2;
-				mes "[Druid Class Master]";
-				mes "ยินดีด้วย คุณได้เป็น "+jobname(.@jid)+" แล้ว!";
-				close;
-			}
-			goto L_Main;
+			goto L_SpecialClass;
 
 		case 4: // ยกเลิก
 			close;
 	}
+
+// ==========================================
+// --- ระบบเปลี่ยนอาชีพ สายพิเศษ (Druid/Karnos) ---
+// ==========================================
+L_SpecialClass:
+	mes "[Druid Class Master]";
+	mes "โปรดเลือกสายอาชีพพิเศษครับ:";
+	next;
+	switch(select("~ เปลี่ยนเป็น Druid: ~ เปลี่ยนเป็น Karnos: ~ ย้อนกลับ")) {
+		
+		case 1: // เปลี่ยนเป็น Druid
+			if (JobLevel < 10) {
+				mes "[Druid Class Master]";
+				mes "คุณสมบัติไม่ผ่าน!";
+				mes "ต้องมี ^00bb00Job Level 10^000000 ขึ้นไป ถึงจะเปลี่ยนเป็น Druid ได้ครับ";
+				close;
+			}
+			if (Class == 4351 || Class == 4353) {
+				mes "[Druid Class Master]";
+				mes "คุณเป็นสายพิเศษอยู่แล้วครับ";
+				close;
+			}
+			.@jid = 4351; 
+			break;
+
+		case 2: // เปลี่ยนเป็น Karnos
+			if (Class != 4351) {
+				mes "[Druid Class Master]";
+				mes "ต้องเป็นอาชีพ ^0055FFDruid^000000 ก่อนถึงจะเปลี่ยนสายนี้ได้ครับ";
+				close;
+			}
+			if (BaseLevel < 99 || JobLevel < 70) {
+				mes "[Druid Class Master]";
+				mes "คุณสมบัติไม่ผ่าน!";
+				mes "ต้องมี ^bb0000Base Level 99^000000 และ ^00bb00Job Level 70^000000 ขึ้นไปครับ";
+				close;
+			}
+			.@jid = 4353; 
+			break;
+
+		case 3: // ย้อนกลับ
+			goto L_Main;
+	}
+	
+	mes "[Druid Class Master]";
+	mes "ต้องการเปลี่ยนเป็น ^0055FF"+jobname(.@jid)+"^000000 ใช่ไหมครับ?";
+	if(select("~ ใช่ครับ: ~ ยกเลิก") == 1) {
+		jobchange .@jid;
+		specialeffect2 EF_ANGEL2;
+		mes "[Druid Class Master]";
+		mes "ยินดีด้วย คุณได้เป็น "+jobname(.@jid)+" แล้ว!";
+		close;
+	}
+	goto L_Main;
 
 // ==========================================
 // --- ระบบเปลี่ยนอาชีพปกติ (โค้ดเดิม) ---
@@ -411,17 +448,17 @@ function	Get_Job_Equip	{
 
 OnInit:
 	.NPCName$ = "[Job Master]";
-	
-	.FourthClass = true;				
-	.FourthExpanded = true;				
-	.ThirdClass = true;					
+
+	.FourthClass = false;				// ปิดคลาส 4 ตามที่จารบอก (จุติไฮคลาส)
+	.FourthExpanded = false;				
+	.ThirdClass = false;					
 	.RebirthClass = true;				
 	.SecondExpanded = true;				
-	.BabyNovice = true;					
-	.BabyClass = true;					
-	.BabyThird = true;					
-	.BabyExpanded = true;				
-	.BabySummoner = true;				
+	.BabyNovice = false;					
+	.BabyClass = false;					
+	.BabyThird = false;					
+	.BabyExpanded = false;				
+	.BabySummoner = false;				
 	.LastJob = true;					
 	.SkillPointCheck = true;			
 	.Platinum = true;					
@@ -436,7 +473,7 @@ OnInit:
 	setarray .Req_Exp_SNOVI[0],99,99; 	
 	setarray .Req_SHandler[0],200,60;	
 	.SNovice = 45;						
-	
+
 	if( PACKETVER < 20161207 ) {
 		if( .BabyExpanded )
 			debugmes "jobmaster: BabyExpanded is disabled due to outdated PACKETVER.";

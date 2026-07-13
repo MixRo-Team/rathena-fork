@@ -1,0 +1,84 @@
+prontera,154,190,4	script	Healer & Buff	EP20_JORGAN_HEALER,{
+	
+	// ==========================================
+	// 1. ระบบดีเลย์ (Cooldown 5 วินาที)
+	// ==========================================
+	if (@buff_delay > gettimetick(2)) {
+		dispbottom "[ Healer ] : กรุณารออีก " + (@buff_delay - gettimetick(2)) + " วินาที ถึงจะกดรับบัพซ้ำได้ครับ";
+		end;
+	}
+	@buff_delay = gettimetick(2) + 5;
+
+	// ==========================================
+	// 2. ฟื้นฟูเลือด มานา ล้างสถานะ ซ่อม และส่องของ 
+	// ==========================================
+	percentheal 100, 100;    
+	specialeffect2 312; // Effect 1: Heal Effect
+	
+	sc_end SC_POISON; sc_end SC_SILENCE; sc_end SC_STUN; sc_end SC_CONFUSION; 
+	sc_end SC_BLIND; sc_end SC_CURSE; sc_end SC_SLOWDOWN; sc_end SC_FEAR; 
+	sc_end SC_HALLUCINATION; sc_end SC_STONE; sc_end SC_FREEZE;
+	
+	repairall;      
+	identifyall;    
+
+	// ==========================================
+	// 3. แจกบัพจัดเต็ม (30 นาที) พร้อม 10 Effect!
+	// ==========================================
+	
+	// --- บัพพระ ---
+	sc_start SC_BLESSING, 1800000, 10;
+	specialeffect2 42; // Effect 2: Blessing
+	sc_start SC_INC_AGI, 1800000, 10;
+	specialeffect2 37; // Effect 3: AGI Up
+	sc_start SC_KYRIE, 1800000, 10;
+	sc_start SC_MAGNIFICAT, 1800000, 5;
+	sc_start SC_GLORIA, 1800000, 5;
+	sc_start SC_IMPOSITIO, 1800000, 5;
+	sc_start SC_ASSUMPTIO, 1800000, 5;
+	specialeffect2 375; // Effect 4: Assumptio
+
+	// --- บัพพ่อค้า ---
+	sc_start SC_ADRENALINE, 1800000, 5;
+	sc_start SC_WEAPONPERFECT, 1800000, 5;
+	sc_start SC_OVERTHRUST, 1800000, 5;
+	sc_start SC_MAXIMIZEPOWER, 1800000, 5;
+	specialeffect2 98; // Effect 5: Adrenaline Rush
+
+	// --- บัพธนู ---
+	sc_start SC_WINDWALK, 1800000, 10;
+	sc_start SC_TRUESIGHT, 1800000, 10;
+	specialeffect2 386; // Effect 6: True Sight
+
+	// --- บัพเคลือบ FCP ---
+	sc_start SC_CP_WEAPON, 1800000, 5;
+	sc_start SC_CP_SHIELD, 1800000, 5;
+	sc_start SC_CP_ARMOR, 1800000, 5;
+	sc_start SC_CP_HELM, 1800000, 5;
+	specialeffect2 300; // Effect 7: Chemical Protection
+
+	// --- บัพนักดนตรี ---
+	sc_start SC_POEMBRAGI, 1800000, 10;
+	sc_start SC_APPLEIDUN, 1800000, 10;
+	sc_start SC_ASSASSINCROSS, 1800000, 10;
+	sc_start SC_SERVICEFORYOU, 1800000, 10;
+	specialeffect2 288; // Effect 8: Poem of Bragi
+
+	// --- บัพโซลลิ้งเกอร์ ---
+	sc_start SC_KAIZEL, 1800000, 7;
+	sc_start SC_KAITE, 1800000, 7;
+	sc_start SC_KAUPE, 1800000, 7;
+	specialeffect2 503; // Effect 9: Soul Link Word
+
+	// --- บัพอาหาร (Status +10) ---
+	sc_start SC_FOOD_STR, 1800000, 10;
+	sc_start SC_FOOD_AGI, 1800000, 10;
+	sc_start SC_FOOD_VIT, 1800000, 10;
+	sc_start SC_FOOD_INT, 1800000, 10;
+	sc_start SC_FOOD_DEX, 1800000, 10;
+	sc_start SC_FOOD_LUK, 1800000, 10;
+	specialeffect2 593; // Effect 10: Food Effect
+
+	dispbottom "[ Healer ] : ฟื้นฟูและรับบัพครบเซ็ต 30 นาที เรียบร้อยแล้วครับ!";
+	end;
+}

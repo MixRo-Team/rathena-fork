@@ -57,12 +57,18 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 	sc_start SC_CP_HELM, 1800000, 5;
 	specialeffect2 300; // Effect 7: Chemical Protection
 
-	// --- บัพนักดนตรี ---
-	sc_start SC_POEMBRAGI, 1800000, 10;
-	sc_start SC_APPLEIDUN, 1800000, 10;
-	sc_start SC_ASSASSINCROSS, 1800000, 10;
-	sc_start SC_SERVICEFORYOU, 1800000, 10;
-	specialeffect2 288; // Effect 8: Poem of Bragi
+	// --- บัพนักดนตรี (Bard / Dancer) ---
+	sc_start SC_POEMBRAGI, 1800000, 10;      // ลดร่าย
+	sc_start SC_APPLEIDUN, 1800000, 10;      // เพิ่ม MaxHP
+	sc_start SC_ASSASSINCROSS, 1800000, 10;  // เพิ่ม ASPD
+	sc_start SC_SERVICEFORYOU, 1800000, 10;  // เพิ่ม Status
+	sc_start SC_WHISTLE, 1800000, 10;        // เพิ่ม Flee
+	sc_start SC_HUMMING, 1800000, 10;        // เพิ่ม Hit
+	sc_start SC_FORTUNEKISS, 1800000, 10;    // เพิ่ม Crit
+	specialeffect2 288; // Effect บัพนักดนตรี
+	specialeffect2 286; // Effect Whistle
+	specialeffect2 291; // Effect Humming
+	specialeffect2 293; // Effect Fortune's Kiss
 
 	// --- บัพโซลลิ้งเกอร์ ---
 	sc_start SC_KAIZEL, 1800000, 7;

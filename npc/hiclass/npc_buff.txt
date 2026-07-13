@@ -1,4 +1,4 @@
-prontera,154,190,4	script	Healer & Buff	EP20_JORGAN_HEALER,{
+prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 	
 	// ==========================================
 	// 1. ระบบดีเลย์ (Cooldown 5 วินาที)

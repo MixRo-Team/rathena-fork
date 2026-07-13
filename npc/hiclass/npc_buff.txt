@@ -10,21 +10,6 @@
 prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 	
 	// ==========================================
-	//  ระบบพื้นฐานที่ได้รับทุกคน (ล้างบัพ/ฮีล/ซ่อม)
-	// ==========================================
-	repairall;
-	identifyall;
-	callfunc "F_GetPlatinumSkills";
-	
-	sc_end SC_STONE; sc_end SC_FREEZE; sc_end SC_SLEEP; sc_end SC_CURSE;
-	sc_end SC_SILENCE; sc_end SC_CONFUSION; sc_end SC_BLIND; sc_end SC_BLEEDING;
-	sc_end SC_DECREASEAGI; sc_end SC_POISON; sc_end SC_HALLUCINATION; 
-	sc_end SC_STRIPWEAPON; sc_end SC_STRIPARMOR; sc_end SC_STRIPHELM; sc_end SC_STRIPSHIELD;
-	sc_end SC_CHANGEUNDEAD; sc_end SC_ORCISH; sc_end SC_BERSERK; sc_end SC_SKE;
-	sc_end SC_SWOO; sc_end SC_SKA; sc_end SC_LEXAETERNA; sc_end SC_VENOMBLEED;
-	sc_end SC_DPOISON; sc_end SC_BURNING;
-	
-	// ==========================================
 	// 1. ตรวจสอบ Cooldown (หน่วง 5 วินาที)
 	// ==========================================
 	if (gettimetick(2) < #BuffDelay) {
@@ -116,7 +101,20 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 
 		dispbottom "[ Buff Master ] : ท่านได้รับบัพ 30 นาทีเรียบร้อยแล้ว";
 	}
-
+	// ==========================================
+	//  ระบบพื้นฐานที่ได้รับทุกคน (ล้างบัพ/ฮีล/ซ่อม)
+	// ==========================================
+	repairall;
+	identifyall;
+	callfunc "F_GetPlatinumSkills";
+	
+	sc_end SC_STONE; sc_end SC_FREEZE; sc_end SC_SLEEP; sc_end SC_CURSE;
+	sc_end SC_SILENCE; sc_end SC_CONFUSION; sc_end SC_BLIND; sc_end SC_BLEEDING;
+	sc_end SC_DECREASEAGI; sc_end SC_POISON; sc_end SC_HALLUCINATION; 
+	sc_end SC_STRIPWEAPON; sc_end SC_STRIPARMOR; sc_end SC_STRIPHELM; sc_end SC_STRIPSHIELD;
+	sc_end SC_CHANGEUNDEAD; sc_end SC_ORCISH; sc_end SC_BERSERK; sc_end SC_SKE;
+	sc_end SC_SWOO; sc_end SC_SKA; sc_end SC_LEXAETERNA; sc_end SC_VENOMBLEED;
+	sc_end SC_DPOISON; sc_end SC_BURNING;
 	percentheal 100,100;
 	specialeffect2 312; // Effect Heal
 

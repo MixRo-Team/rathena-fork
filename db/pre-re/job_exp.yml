@@ -361,7 +361,7 @@ Body:
       Clown: true
       Gypsy: true
       Paladin2: true
-    MaxBaseLevel: 99
+    MaxBaseLevel: 150
     BaseExp:
       - Level: 1
         Exp: 10
@@ -559,8 +559,110 @@ Body:
         Exp: 174405000
       - Level: 98
         Exp: 343210000
-      - Level: 99
-        Exp: 99999999
+- Level: 99
+        Exp: 400000000
+      - Level: 100
+        Exp: 450000000
+      - Level: 101
+        Exp: 500000000
+      - Level: 102
+        Exp: 550000000
+      - Level: 103
+        Exp: 600000000
+      - Level: 104
+        Exp: 650000000
+      - Level: 105
+        Exp: 700000000
+      - Level: 106
+        Exp: 750000000
+      - Level: 107
+        Exp: 800000000
+      - Level: 108
+        Exp: 850000000
+      - Level: 109
+        Exp: 900000000
+      - Level: 110
+        Exp: 950000000
+      - Level: 111
+        Exp: 1000000000
+      - Level: 112
+        Exp: 1050000000
+      - Level: 113
+        Exp: 1100000000
+      - Level: 114
+        Exp: 1150000000
+      - Level: 115
+        Exp: 1200000000
+      - Level: 116
+        Exp: 1250000000
+      - Level: 117
+        Exp: 1300000000
+      - Level: 118
+        Exp: 1350000000
+      - Level: 119
+        Exp: 1400000000
+      - Level: 120
+        Exp: 1450000000
+      - Level: 121
+        Exp: 1500000000
+      - Level: 122
+        Exp: 1550000000
+      - Level: 123
+        Exp: 1600000000
+      - Level: 124
+        Exp: 1650000000
+      - Level: 125
+        Exp: 1700000000
+      - Level: 126
+        Exp: 1750000000
+      - Level: 127
+        Exp: 1800000000
+      - Level: 128
+        Exp: 1850000000
+      - Level: 129
+        Exp: 1900000000
+      - Level: 130
+        Exp: 1950000000
+      - Level: 131
+        Exp: 2000000000
+      - Level: 132
+        Exp: 2050000000
+      - Level: 133
+        Exp: 2100000000
+      - Level: 134
+        Exp: 2150000000
+      - Level: 135
+        Exp: 2200000000
+      - Level: 136
+        Exp: 2250000000
+      - Level: 137
+        Exp: 2300000000
+      - Level: 138
+        Exp: 2350000000
+      - Level: 139
+        Exp: 2400000000
+      - Level: 140
+        Exp: 2450000000
+      - Level: 141
+        Exp: 2500000000
+      - Level: 142
+        Exp: 2550000000
+      - Level: 143
+        Exp: 2600000000
+      - Level: 144
+        Exp: 2650000000
+      - Level: 145
+        Exp: 2700000000
+      - Level: 146
+        Exp: 2750000000
+      - Level: 147
+        Exp: 2800000000
+      - Level: 148
+        Exp: 2850000000
+      - Level: 149
+        Exp: 2900000000
+      - Level: 150
+        Exp: 9999999999
   - Jobs:
       Novice: true
       Baby: true

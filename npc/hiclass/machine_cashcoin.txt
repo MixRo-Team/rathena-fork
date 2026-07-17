@@ -13,7 +13,7 @@
 // ==========================================
 // ตัว NPC หลัก (ตู้ Cash Coin)
 // ==========================================
-prontera,144,196,2	script	[ Cash Coin ]	811,{
+prontera,144,196,2	script	[ Cash Coin ]	2_VENDING_MACHINE1,{
 Start:
 	mes "^FF3300[ Cash Coin ]^000000";
 	mes "ยินดีต้อนรับสู่ตู้ Cash Coin";

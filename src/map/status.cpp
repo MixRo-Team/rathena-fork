@@ -5051,15 +5051,62 @@ int32 status_calc_pc_sub(map_session_data* sd, uint8 opt)
 	if (pc_checkskill(sd, SU_SOULATTACK) > 0 && !sd->sc.getSCE(SC_SOULATTACK))
 		sc_start(sd, sd, SC_SOULATTACK, 100, 1, INFINITE_TICK);
 
-	// --- Custom %ATK for Pre-Renewal (Juti 800) ---
-	if (sd->bonus.atk_rate) {
-		status->batk += status->batk * sd->bonus.atk_rate / 100;
-		status->rhw.atk += status->rhw.atk * sd->bonus.atk_rate / 100;
-		status->rhw.atk2 += status->rhw.atk2 * sd->bonus.atk_rate / 100;
-		status->lhw.atk += status->lhw.atk * sd->bonus.atk_rate / 100;
-		status->lhw.atk2 += status->lhw.atk2 * sd->bonus.atk_rate / 100;
+	// -------------------------------------------------------------------------
+	// --- Custom %ATK & %MATK + Class 4 Stats (Pre-Re อิงสมดุล Renewal) ---
+	// -------------------------------------------------------------------------
+
+	// 1. ดึงโบนัส %ATK และ %MATK จากอุปกรณ์มาเป็นฐาน
+	int custom_atk_rate = sd->bonus.atk_rate;
+	int custom_matk_rate = sd->bonus.matk_rate; // ใช้ได้ถ้าจารใช้ bonus bMatkRate
+
+	// 2. คำนวณ Class 4 สไตล์ Renewal (อิงจากอัตราส่วน Official)
+	if (sd->status.pow > 0) {
+		sd->battle_status.batk += sd->status.pow;       // 1 POW = +1 ATK
+		custom_atk_rate += sd->status.pow / 3;          // 3 POW = +1% ATK (แทน P.Atk)
 	}
-	// ------------------------------------------------------
+
+	if (sd->status.spl > 0) {
+		sd->battle_status.matk_min += sd->status.spl;   // 1 SPL = +1 MATK
+		sd->battle_status.matk_max += sd->status.spl;
+		custom_matk_rate += sd->status.spl / 3;         // 3 SPL = +1% MATK (แทน S.Matk)
+	}
+
+	if (sd->status.con > 0) {
+		sd->battle_status.hit += sd->status.con;        // 1 CON = +1 HIT
+		sd->battle_status.flee += sd->status.con;       // 1 CON = +1 FLEE
+		custom_atk_rate += sd->status.con / 5;          // 5 CON = +1% ATK
+		custom_matk_rate += sd->status.con / 5;         // 5 CON = +1% MATK
+	}
+
+	if (sd->status.sta > 0) {
+		sd->battle_status.def2 += sd->status.sta;       // 1 STA = +1 Soft DEF
+		sd->battle_status.def += sd->status.sta / 3;    // 3 STA = +1 Hard DEF (แทน RES)
+	}
+
+	if (sd->status.wis > 0) {
+		sd->battle_status.mdef2 += sd->status.wis;      // 1 WIS = +1 Soft MDEF
+		sd->battle_status.mdef += sd->status.wis / 3;   // 3 WIS = +1 Hard MDEF (แทน MRES)
+	}
+
+	if (sd->status.crt > 0) {
+		// 3 CRT = +1% Critical Chance
+		sd->battle_status.cri += (sd->status.crt / 3) * 10; 
+	}
+
+	// 3. เอา %ATK และ %MATK ที่รวมแล้ว ไปคูณดาเมจสุทธิ
+	if (custom_atk_rate > 0) {
+		sd->battle_status.batk += sd->battle_status.batk * custom_atk_rate / 100;
+		sd->battle_status.rhw.atk += sd->battle_status.rhw.atk * custom_atk_rate / 100;
+		sd->battle_status.rhw.atk2 += sd->battle_status.rhw.atk2 * custom_atk_rate / 100;
+		sd->battle_status.lhw.atk += sd->battle_status.lhw.atk * custom_atk_rate / 100;
+		sd->battle_status.lhw.atk2 += sd->battle_status.lhw.atk2 * custom_atk_rate / 100;
+	}
+
+	if (custom_matk_rate > 0) {
+		sd->battle_status.matk_min += sd->battle_status.matk_min * custom_matk_rate / 100;
+		sd->battle_status.matk_max += sd->battle_status.matk_max * custom_matk_rate / 100;
+	}
+	// -------------------------------------------------------------------------
 
 	calculating = 0;
 

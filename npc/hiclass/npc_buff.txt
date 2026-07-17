@@ -21,11 +21,14 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 	// 2. แยกสายรับบัพ VIP กับ ผู้เล่นธรรมดา
 	// ==========================================
 	if (getgroupid() >= 5) { 
-		
+
 		// ------------------------------------
 		// กรณีเป็นผู้เล่น VIP
 		// ------------------------------------
-		
+		specialeffect EF_HOLY_LIGHT;          // เอฟเฟกต์แสงศักดิ์สิทธิ์
+		sc_start SC_EXPBOOST, 1800000, 1;        // Exp Boost
+		sc_start SC_ITEMBOOST, 1800000, 1;       // Drop Boost
+
 		// บัพจัดเต็ม VIP (30 นาที = 1800000 ms)
 		sc_start SC_STRFood,1800000,7;
 		sc_start SC_AGIFood,1800000,7;

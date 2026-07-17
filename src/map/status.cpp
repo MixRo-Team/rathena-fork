@@ -5051,6 +5051,16 @@ int32 status_calc_pc_sub(map_session_data* sd, uint8 opt)
 	if (pc_checkskill(sd, SU_SOULATTACK) > 0 && !sd->sc.getSCE(SC_SOULATTACK))
 		sc_start(sd, sd, SC_SOULATTACK, 100, 1, INFINITE_TICK);
 
+	// --- Custom %ATK for Pre-Renewal (Juti 800) ---
+	if (sd->bonus.atk_rate) {
+		status->batk += status->batk * sd->bonus.atk_rate / 100;
+		status->rhw.atk += status->rhw.atk * sd->bonus.atk_rate / 100;
+		status->rhw.atk2 += status->rhw.atk2 * sd->bonus.atk_rate / 100;
+		status->lhw.atk += status->lhw.atk * sd->bonus.atk_rate / 100;
+		status->lhw.atk2 += status->lhw.atk2 * sd->bonus.atk_rate / 100;
+	}
+	// ------------------------------------------------------
+
 	calculating = 0;
 
 	return 0;

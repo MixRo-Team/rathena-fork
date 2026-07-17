@@ -5057,7 +5057,7 @@ int32 status_calc_pc_sub(map_session_data* sd, uint8 opt)
 
 	// 1. ดึงโบนัส %ATK และ %MATK จากอุปกรณ์มาเป็นฐาน
 	int custom_atk_rate = sd->bonus.atk_rate;
-	int custom_matk_rate = sd->bonus.matk_rate; // ใช้ได้ถ้าจารใช้ bonus bMatkRate
+	int custom_matk_rate = sd->matk_rate; // ใช้ได้ถ้าจารใช้ bonus bMatkRate
 
 	// 2. คำนวณ Class 4 สไตล์ Renewal (อิงจากอัตราส่วน Official)
 	if (sd->status.pow > 0) {

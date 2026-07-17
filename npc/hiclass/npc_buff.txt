@@ -45,8 +45,8 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		specialeffect EF_POTION_BERSERK; 
 		sc_start SC_HITFOOD, 1800000, 10;      // เพิ่ม Hit
 		sc_start SC_FLEEFOOD, 1800000, 10;     // เพิ่ม Flee
-		sc_start SC_BATKFOOD, 1800000, 10;     // เพิ่ม ATK (Base ATK)
-		sc_start SC_MATKFOOD, 1800000, 10;     // เพิ่ม MATK
+		sc_start SC_ATKPOTION, 1800000, 10;   // เพิ่มค่า ATK
+		sc_start SC_MATKPOTION, 1800000, 10;  // เพิ่มค่า MATK
 		sc_start SC_TRUESIGHT, 1800000, 10;      // True Sight
 
 		// --- 2. บัฟสกิลอาชีพ (เน้นเอฟเฟกต์วิ้งๆ ของ Blessing) ---
@@ -97,8 +97,8 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		specialeffect EF_POTION_BERSERK; 
 		sc_start SC_HITFOOD, 1800000, 10;      // เพิ่ม Hit
 		sc_start SC_FLEEFOOD, 1800000, 10;     // เพิ่ม Flee
-		sc_start SC_BATKFOOD, 1800000, 10;     // เพิ่ม ATK (Base ATK)
-		sc_start SC_MATKFOOD, 1800000, 10;     // เพิ่ม MATK
+		sc_start SC_ATKPOTION, 1800000, 10;   // เพิ่มค่า ATK
+		sc_start SC_MATKPOTION, 1800000, 10;  // เพิ่มค่า MATK
 		sc_start SC_TRUESIGHT, 1800000, 10;      // True Sight
 
 		// --- 2. บัฟสกิลอาชีพ (เน้นเอฟเฟกต์วิ้งๆ ของ Blessing) ---

@@ -34,44 +34,81 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		sc_start SC_DEXFood,1800000,7;
 		sc_start SC_LUKFood,1800000,7;
 		specialeffect2 593;
-
-		// --- บัพโซลลิ้งเกอร์ ---
+//
+//		// --- บัพโซลลิ้งเกอร์ ---
 		sc_start SC_KAIZEL, 1800000, 7;
 		sc_start SC_KAITE, 1800000, 7;
 		sc_start SC_KAUPE, 1800000, 7;
 		specialeffect2 503; // Effect 9: Soul Link Word
+//
+//		// --- บัพนักดนตรี (Bard / Dancer) ---
+//		sc_start SC_APPLEIDUN, 1800000, 10;      // เพิ่ม MaxHP
+//		sc_start SC_ASSASSINCROSS, 1800000, 10;  // เพิ่ม ASPD
+//		sc_start SC_WHISTLE, 1800000, 10;        // เพิ่ม Flee
+//		sc_start SC_HUMMING, 1800000, 10;        // เพิ่ม Hit
+//		sc_start SC_FORTUNEKISS, 1800000, 10;    // เพิ่ม Crit
+//		specialeffect2 288; // Effect บัพนักดนตรี
+//		specialeffect2 286; // Effect Whistle
+//		specialeffect2 291; // Effect Humming
+//		specialeffect2 293; // Effect Fortune's Kiss
+//
+//		// --- บัพธนู ---
+//		sc_start SC_WINDWALK, 1800000, 10;
+//
+//		sc_start SC_BLESSING, 1800000, 10; specialeffect2 42; 
+//		sc_start SC_INC_AGI, 1800000, 10; specialeffect2 37; 
+//		sc_start SC_ANGELUS, 1800000, 10;
+//		sc_start SC_GLORIA, 1800000, 5;
+//		sc_start SC_MAGNIFICAT, 1800000, 5;
+//
+//		sc_start SC_POEMBRAGI, 1800000, 5; // Poem of Bragi (เลเวล 5), 30 นาที
+//		sc_start SC_SERVICE4U, 1800000, 1; // Service for You (เลเวล 1), 30 นาที
+//
+//		sc_start SC_ADRENALINE, 1800000, 5; specialeffect2 98;
+//		sc_start SC_TRUESIGHT, 1800000, 10; specialeffect2 386;
+//
+//		sc_start SC_CP_WEAPON, 1800000, 5; 
+//		sc_start SC_CP_SHIELD, 1800000, 5; 
+//		sc_start SC_CP_ARMOR, 1800000, 5; 
+//		sc_start SC_CP_HELM, 1800000, 5; 
+//		specialeffect2 300; 
 
-		// --- บัพนักดนตรี (Bard / Dancer) ---
-		sc_start SC_APPLEIDUN, 1800000, 10;      // เพิ่ม MaxHP
-		sc_start SC_ASSASSINCROSS, 1800000, 10;  // เพิ่ม ASPD
-		sc_start SC_WHISTLE, 1800000, 10;        // เพิ่ม Flee
-		sc_start SC_HUMMING, 1800000, 10;        // เพิ่ม Hit
-		sc_start SC_FORTUNEKISS, 1800000, 10;    // เพิ่ม Crit
-		specialeffect2 288; // Effect บัพนักดนตรี
-		specialeffect2 286; // Effect Whistle
-		specialeffect2 291; // Effect Humming
-		specialeffect2 293; // Effect Fortune's Kiss
+		// --- 1. บัฟอาหารและสเตตัส (เน้นเอฟเฟกต์เพิ่มพลัง) ---
+		specialeffect EF_POTION_BERSERK; 
+		sc_start SC_FOOD_HIT, 1800000, 10;       // เพิ่ม Hit
+		sc_start SC_FOOD_FLEE, 1800000, 10;      // เพิ่ม Flee
+		sc_start SC_FOOD_ATK, 1800000, 10;       // เพิ่ม ATK
+		sc_start SC_FOOD_MATK, 1800000, 10;      // เพิ่ม MATK
+		sc_start SC_TRUESIGHT, 1800000, 10;      // True Sight
+		
+		// --- 2. บัฟสกิลอาชีพ (เน้นเอฟเฟกต์วิ้งๆ ของ Blessing) ---
+		specialeffect EF_BLESSING;
+		sc_start SC_ENDURE, 1800000, 10;         // Endure
+		sc_start SC_WINDWALK, 1800000, 10;       // Wind Walk
+		sc_start SC_BLESSING, 1800000, 10;       // Blessing
+		sc_start SC_INC_AGI, 1800000, 10;        // Increase Agility
+		sc_start SC_IMPOSITIO, 1800000, 5;       // Impositio Manus
+		sc_start SC_GLORIA, 1800000, 5;          // Gloria
+		sc_start SC_ANGELUS, 1800000, 10;        // Angelus
 
-		// --- บัพธนู ---
-		sc_start SC_WINDWALK, 1800000, 10;
+		// --- 3. บัฟกลุ่ม Chemical Protection (เน้นเอฟเฟกต์โล่ป้องกัน) ---
+		specialeffect EF_SHIELD;
+		sc_start SC_WEAPONPERFECTION, 1800000, 10; // Weapon Perfection
+		sc_start SC_CP_WEAPON, 1800000, 5;   // Chemical Protection Weapon
+		sc_start SC_CP_SHIELD, 1800000, 5;   // Chemical Protection Shield
+		sc_start SC_CP_ARMOR, 1800000, 5;    // Chemical Protection Armor
+		sc_start SC_CP_HELM, 1800000, 5;     // Chemical Protection Helm
+		sc_start SC_KYRIE, 1800000, 10;      // Kyrie Eleison
+		sc_start SC_SLOWPOISON, 1800000, 10; // Slow Poison
 
-		sc_start SC_BLESSING, 1800000, 10; specialeffect2 42; 
-		sc_start SC_INC_AGI, 1800000, 10; specialeffect2 37; 
-		sc_start SC_ANGELUS, 1800000, 10;
-		sc_start SC_GLORIA, 1800000, 5;
-		sc_start SC_MAGNIFICAT, 1800000, 5;
-
-		sc_start SC_POEMBRAGI, 1800000, 5; // Poem of Bragi (เลเวล 5), 30 นาที
-		sc_start SC_SERVICE4U, 1800000, 1; // Service for You (เลเวล 1), 30 นาที
-
-		sc_start SC_ADRENALINE, 1800000, 5; specialeffect2 98;
-		sc_start SC_TRUESIGHT, 1800000, 10; specialeffect2 386;
-
-		sc_start SC_CP_WEAPON, 1800000, 5; 
-		sc_start SC_CP_SHIELD, 1800000, 5; 
-		sc_start SC_CP_ARMOR, 1800000, 5; 
-		sc_start SC_CP_HELM, 1800000, 5; 
-		specialeffect2 300; 
+		// --- 4. บัฟสนับสนุนอาชีพ (เน้นเอฟเฟกต์ดนตรีและเวทย์) ---
+		specialeffect EF_MUSIC;
+		sc_start SC_BRAGI, 1800000, 5;           // Poem of Bragi
+		sc_start SC_SERVICE, 1800000, 5;         // Service for You
+		
+		specialeffect EF_HEAL;
+		sc_start SC_SUFFRAGIUM, 1800000, 3;      // Suffragium
+		sc_start SC_MAGNIFICAT, 1800000, 5;      // Magnificat
 
 		specialeffect2 EF_ANGEL2;
 		dispbottom "[ Buff Master ] : ท่านได้รับบัพ VIP 30 นาทีเรียบร้อยแล้ว";
@@ -81,23 +118,67 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		// ------------------------------------
 		// กรณีเป็นผู้เล่นธรรมดา (Normal)
 		// ------------------------------------
-		sc_start SC_BLESSING, 1800000, 10; specialeffect2 42; 
-		sc_start SC_INC_AGI, 1800000, 10; specialeffect2 37; 
-		sc_start SC_ANGELUS, 1800000, 10;
-		sc_start SC_GLORIA, 1800000, 5;
-		sc_start SC_MAGNIFICAT, 1800000, 5;
+//		sc_start SC_BLESSING, 1800000, 10; specialeffect2 42; 
+//		sc_start SC_INC_AGI, 1800000, 10; specialeffect2 37; 
+//		sc_start SC_ANGELUS, 1800000, 10;
+//		sc_start SC_GLORIA, 1800000, 5;
+//		sc_start SC_MAGNIFICAT, 1800000, 5;
+//
+//		sc_start SC_POEMBRAGI, 1800000, 5; // Poem of Bragi (เลเวล 5), 30 นาที
+//		sc_start SC_SERVICE4U, 1800000, 1; // Service for You (เลเวล 1), 30 นาที
+//
+//		sc_start SC_ADRENALINE, 1800000, 5; specialeffect2 98;
+//		sc_start SC_TRUESIGHT, 1800000, 10; specialeffect2 386;
+//
+//		sc_start SC_CP_WEAPON, 1800000, 5; 
+//		sc_start SC_CP_SHIELD, 1800000, 5; 
+//		sc_start SC_CP_ARMOR, 1800000, 5; 
+//		sc_start SC_CP_HELM, 1800000, 5; 
+//		specialeffect2 300; 
 
-		sc_start SC_POEMBRAGI, 1800000, 5; // Poem of Bragi (เลเวล 5), 30 นาที
-		sc_start SC_SERVICE4U, 1800000, 1; // Service for You (เลเวล 1), 30 นาที
+//		// --- บัพโซลลิ้งเกอร์ ---
+		sc_start SC_KAIZEL, 1800000, 7;
+		sc_start SC_KAITE, 1800000, 7;
+		sc_start SC_KAUPE, 1800000, 7;
+		specialeffect2 503; // Effect 9: Soul Link Word
 
-		sc_start SC_ADRENALINE, 1800000, 5; specialeffect2 98;
-		sc_start SC_TRUESIGHT, 1800000, 10; specialeffect2 386;
+		// --- 1. บัฟอาหารและสเตตัส (เน้นเอฟเฟกต์เพิ่มพลัง) ---
+		specialeffect EF_POTION_BERSERK; 
+		sc_start SC_FOOD_HIT, 1800000, 10;       // เพิ่ม Hit
+		sc_start SC_FOOD_FLEE, 1800000, 10;      // เพิ่ม Flee
+		sc_start SC_FOOD_ATK, 1800000, 10;       // เพิ่ม ATK
+		sc_start SC_FOOD_MATK, 1800000, 10;      // เพิ่ม MATK
+		sc_start SC_TRUESIGHT, 1800000, 10;      // True Sight
+		
+		// --- 2. บัฟสกิลอาชีพ (เน้นเอฟเฟกต์วิ้งๆ ของ Blessing) ---
+		specialeffect EF_BLESSING;
+		sc_start SC_ENDURE, 1800000, 10;         // Endure
+		sc_start SC_WINDWALK, 1800000, 10;       // Wind Walk
+		sc_start SC_BLESSING, 1800000, 10;       // Blessing
+		sc_start SC_INC_AGI, 1800000, 10;        // Increase Agility
+		sc_start SC_IMPOSITIO, 1800000, 5;       // Impositio Manus
+		sc_start SC_GLORIA, 1800000, 5;          // Gloria
+		sc_start SC_ANGELUS, 1800000, 10;        // Angelus
 
-		sc_start SC_CP_WEAPON, 1800000, 5; 
-		sc_start SC_CP_SHIELD, 1800000, 5; 
-		sc_start SC_CP_ARMOR, 1800000, 5; 
-		sc_start SC_CP_HELM, 1800000, 5; 
-		specialeffect2 300; 
+		// --- 3. บัฟกลุ่ม Chemical Protection (เน้นเอฟเฟกต์โล่ป้องกัน) ---
+		specialeffect EF_SHIELD;
+		sc_start SC_WEAPONPERFECTION, 1800000, 10; // Weapon Perfection
+		sc_start SC_CP_WEAPON, 1800000, 5;   // Chemical Protection Weapon
+		sc_start SC_CP_SHIELD, 1800000, 5;   // Chemical Protection Shield
+		sc_start SC_CP_ARMOR, 1800000, 5;    // Chemical Protection Armor
+		sc_start SC_CP_HELM, 1800000, 5;     // Chemical Protection Helm
+		sc_start SC_KYRIE, 1800000, 10;      // Kyrie Eleison
+		sc_start SC_SLOWPOISON, 1800000, 10; // Slow Poison
+
+		// --- 4. บัฟสนับสนุนอาชีพ (เน้นเอฟเฟกต์ดนตรีและเวทย์) ---
+		specialeffect EF_MUSIC;
+		sc_start SC_BRAGI, 1800000, 5;           // Poem of Bragi
+		sc_start SC_SERVICE, 1800000, 5;         // Service for You
+		
+		specialeffect EF_HEAL;
+		sc_start SC_SUFFRAGIUM, 1800000, 3;      // Suffragium
+		sc_start SC_MAGNIFICAT, 1800000, 5;      // Magnificat
+
 
 		dispbottom "[ Buff Master ] : ท่านได้รับบัพ 30 นาทีเรียบร้อยแล้ว";
 	}

@@ -1,0 +1,125 @@
+/*
+  _____              __              ____       ___         
+ / ___/_____ _____  / /  ___  ___  / __ \___  / (_)__  ___  
+/ (_ / __/ // / _ \/ _ \/ _ \/ _ \/ /_/ / _ \/ / / _ \/ -_)
+\___/_/  \_, / .__/_//_/\___/_//_/\____/_//_/_/_/_//_/\__/  
+        /___/_/                                             
+
+*/
+// ชื่อ NPC: Buff Master
+prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
+	
+	// ==========================================
+	// 1. ตรวจสอบ Cooldown (หน่วง 5 วินาที)
+	// ==========================================
+	if (gettimetick(2) < #BuffDelay) {
+		dispbottom "[ Buff Master ] : ใจเย็นๆ รออีก " + (#BuffDelay - gettimetick(2)) + " วินาที ถึงจะรับพลังใหม่ได้";
+		end;
+	}
+
+	// ==========================================
+	// 2. แยกสายรับบัพ VIP กับ ผู้เล่นธรรมดา
+	// ==========================================
+	if (getgroupid() >= 5) { 
+		
+		// ------------------------------------
+		// กรณีเป็นผู้เล่น VIP
+		// ------------------------------------
+		
+		// บัพจัดเต็ม VIP (30 นาที = 1800000 ms)
+		sc_start SC_STRFood,1800000,7;
+		sc_start SC_AGIFood,1800000,7;
+		sc_start SC_VITFood,1800000,7;
+		sc_start SC_INTFood,1800000,7;
+		sc_start SC_DEXFood,1800000,7;
+		sc_start SC_LUKFood,1800000,7;
+		specialeffect2 593;
+
+		// --- บัพโซลลิ้งเกอร์ ---
+		sc_start SC_KAIZEL, 1800000, 7;
+		sc_start SC_KAITE, 1800000, 7;
+		sc_start SC_KAUPE, 1800000, 7;
+		specialeffect2 503; // Effect 9: Soul Link Word
+
+		// --- บัพนักดนตรี (Bard / Dancer) ---
+		sc_start SC_APPLEIDUN, 1800000, 10;      // เพิ่ม MaxHP
+		sc_start SC_ASSASSINCROSS, 1800000, 10;  // เพิ่ม ASPD
+		sc_start SC_WHISTLE, 1800000, 10;        // เพิ่ม Flee
+		sc_start SC_HUMMING, 1800000, 10;        // เพิ่ม Hit
+		sc_start SC_FORTUNEKISS, 1800000, 10;    // เพิ่ม Crit
+		specialeffect2 288; // Effect บัพนักดนตรี
+		specialeffect2 286; // Effect Whistle
+		specialeffect2 291; // Effect Humming
+		specialeffect2 293; // Effect Fortune's Kiss
+
+		// --- บัพธนู ---
+		sc_start SC_WINDWALK, 1800000, 10;
+
+		sc_start SC_BLESSING, 1800000, 10; specialeffect2 42; 
+		sc_start SC_INC_AGI, 1800000, 10; specialeffect2 37; 
+		sc_start SC_ANGELUS, 1800000, 10;
+		sc_start SC_GLORIA, 1800000, 5;
+		sc_start SC_MAGNIFICAT, 1800000, 5;
+
+		sc_start SC_POEMBRAGI, 1800000, 5; // Poem of Bragi (เลเวล 5), 30 นาที
+		sc_start SC_SERVICE4U, 1800000, 1; // Service for You (เลเวล 1), 30 นาที
+
+		sc_start SC_ADRENALINE, 1800000, 5; specialeffect2 98;
+		sc_start SC_TRUESIGHT, 1800000, 10; specialeffect2 386;
+
+		sc_start SC_CP_WEAPON, 1800000, 5; 
+		sc_start SC_CP_SHIELD, 1800000, 5; 
+		sc_start SC_CP_ARMOR, 1800000, 5; 
+		sc_start SC_CP_HELM, 1800000, 5; 
+		specialeffect2 300; 
+
+		specialeffect2 EF_ANGEL2;
+		dispbottom "[ Buff Master ] : ท่านได้รับบัพ VIP 30 นาทีเรียบร้อยแล้ว";
+
+	} else { 
+		
+		// ------------------------------------
+		// กรณีเป็นผู้เล่นธรรมดา (Normal)
+		// ------------------------------------
+		sc_start SC_BLESSING, 1800000, 10; specialeffect2 42; 
+		sc_start SC_INC_AGI, 1800000, 10; specialeffect2 37; 
+		sc_start SC_ANGELUS, 1800000, 10;
+		sc_start SC_GLORIA, 1800000, 5;
+		sc_start SC_MAGNIFICAT, 1800000, 5;
+
+		sc_start SC_POEMBRAGI, 1800000, 5; // Poem of Bragi (เลเวล 5), 30 นาที
+		sc_start SC_SERVICE4U, 1800000, 1; // Service for You (เลเวล 1), 30 นาที
+
+		sc_start SC_ADRENALINE, 1800000, 5; specialeffect2 98;
+		sc_start SC_TRUESIGHT, 1800000, 10; specialeffect2 386;
+
+		sc_start SC_CP_WEAPON, 1800000, 5; 
+		sc_start SC_CP_SHIELD, 1800000, 5; 
+		sc_start SC_CP_ARMOR, 1800000, 5; 
+		sc_start SC_CP_HELM, 1800000, 5; 
+		specialeffect2 300; 
+
+		dispbottom "[ Buff Master ] : ท่านได้รับบัพ 30 นาทีเรียบร้อยแล้ว";
+	}
+	// ==========================================
+	//  ระบบพื้นฐานที่ได้รับทุกคน (ล้างบัพ/ฮีล/ซ่อม)
+	// ==========================================
+	repairall;
+	identifyall;
+	callfunc "F_GetPlatinumSkills";
+	
+	sc_end SC_STONE; sc_end SC_FREEZE; sc_end SC_SLEEP; sc_end SC_CURSE;
+	sc_end SC_SILENCE; sc_end SC_CONFUSION; sc_end SC_BLIND; sc_end SC_BLEEDING;
+	sc_end SC_DECREASEAGI; sc_end SC_POISON; sc_end SC_HALLUCINATION; 
+	sc_end SC_STRIPWEAPON; sc_end SC_STRIPARMOR; sc_end SC_STRIPHELM; sc_end SC_STRIPSHIELD;
+	sc_end SC_CHANGEUNDEAD; sc_end SC_ORCISH; sc_end SC_BERSERK; sc_end SC_SKE;
+	sc_end SC_SWOO; sc_end SC_SKA; sc_end SC_LEXAETERNA; sc_end SC_VENOMBLEED;
+	sc_end SC_DPOISON; sc_end SC_BURNING;
+	percentheal 100,100;
+	specialeffect2 312; // Effect Heal
+
+	// เซ็ตเวลาหน่วงหลังกดรับบัพ
+	set #BuffDelay, gettimetick(2) + 5;
+	end;
+
+}

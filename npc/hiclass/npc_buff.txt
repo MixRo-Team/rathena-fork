@@ -103,8 +103,8 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 
 		// --- 4. บัฟสนับสนุนอาชีพ (เน้นเอฟเฟกต์ดนตรีและเวทย์) ---
 		specialeffect EF_MUSIC;
-		sc_start SC_BRAGI, 1800000, 5;           // Poem of Bragi
-		sc_start SC_SERVICE, 1800000, 5;         // Service for You
+		sc_start SC_POEMBRAGI, 1800000, 5;           // Poem of Bragi
+		sc_start SC_SERVICE4U, 1800000, 1;         // Service for You
 		
 		specialeffect EF_HEAL;
 		sc_start SC_SUFFRAGIUM, 1800000, 3;      // Suffragium
@@ -172,8 +172,8 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 
 		// --- 4. บัฟสนับสนุนอาชีพ (เน้นเอฟเฟกต์ดนตรีและเวทย์) ---
 		specialeffect EF_MUSIC;
-		sc_start SC_BRAGI, 1800000, 5;           // Poem of Bragi
-		sc_start SC_SERVICE, 1800000, 5;         // Service for You
+		sc_start SC_POEMBRAGI, 1800000, 5;           // Poem of Bragi
+		sc_start SC_SERVICE4U, 1800000, 1;         // Service for You
 		
 		specialeffect EF_HEAL;
 		sc_start SC_SUFFRAGIUM, 1800000, 3;      // Suffragium

@@ -1,0 +1,211 @@
+// ==========================================
+// ร้านค้า Dummy สำหรับแสดงผลไอเทมแต่ละหมวดหมู่
+// ==========================================
+-	shop	cash_cat1	-1,501:-1
+-	shop	cash_cat2	-1,501:-1
+-	shop	cash_cat3	-1,501:-1
+-	shop	cash_cat4	-1,501:-1
+-	shop	cash_cat5	-1,501:-1
+-	shop	cash_cat6	-1,501:-1
+-	shop	cash_cat7	-1,501:-1
+-	shop	cash_cat8	-1,501:-1
+
+// ==========================================
+// ตัว NPC หลัก (ตู้ Cash Coin)
+// ==========================================
+prontera,144,196,2	script	[ Cash Coin ]	811,{
+Start:
+	mes "^FF3300[ Cash Coin ]^000000";
+	mes "ยินดีต้อนรับสู่ตู้ Cash Coin";
+	mes "เลือกหมวดหมู่ไอเทมที่คุณต้องการได้เลยครับ";
+	next;
+	
+	// เมนูหมวดหมู่แบบในภาพที่ 1
+	set .@cat, select("- ทั่วไป:- อาวุธตีคน:- อาวุธตีบอส:- หมวก:- ส่วนหู:- ส่วนปาก:- เครื่องประดับ:- ชุดสวมใส่");
+	
+	// ดึง Shop หลอกมาแสดงผลตามหมวดที่เลือก
+	callshop "cash_cat"+.@cat, 1;
+	npcshopattach "cash_cat"+.@cat;
+	end;
+
+OnBuyItem:
+	.@item = @bought_nameid;
+
+	// ==========================================
+	// 1. ตั้งค่า ราคา และ เงื่อนไข ของไอเทมแต่ละชิ้น
+	// ==========================================
+	.@rate_true = 100; // ค่าเริ่มต้น โอกาสสำเร็จ 100%
+	.@zeny_use = 0;
+	.@cash_use = 0;
+	deletearray .@item_quest;
+	deletearray .@amount_quest;
+
+	switch(.@item) {
+		
+		// ตัวอย่าง: ถ้าผู้เล่นเลือกหมวก STR Invisible Cap (สมมติ ID 5022)
+		case 5022: 
+			.@cash_use = 1000;
+			.@rate_true = 100;
+			// ถ้าอยากให้ใช้ไอเทมอื่นคราฟด้วย ให้ลบ // สองบรรทัดล่างออก
+			// setarray .@item_quest[0], 909, 1300085; // รหัสไอเทมวัตถุดิบ
+			// setarray .@amount_quest[0], 10, 5;      // จำนวนวัตถุดิบ
+			break;
+
+		// ตัวอย่าง: ไอเทมทั่วไป
+		case 1234:
+			.@cash_use = 500;
+			.@zeny_use = 10000;
+			break;
+
+		default:
+			mes "^FF3300[ Cash Coin ]^000000";
+			mes "ไอเทมนี้ยังไม่ได้ตั้งค่าราคาครับ กรุณาแจ้ง GM";
+			close;
+	}
+
+	// ==========================================
+	// 2. หน้าต่างแสดงผลความต้องการ (UI แบบภาพที่ 3)
+	// ==========================================
+	mes "รายการ ที่เลือกคุณได้เลือก: ^0000FF" + getitemname(.@item) + "^000000";
+	mes "รายการที่ คุณต้องมีเพื่อแลกเปลี่ยน:";
+
+	.@can_craft = 1;
+
+	// เช็ค Cash Points
+	if (.@cash_use > 0) {
+		if (#CASHPOINTS >= .@cash_use) {
+			mes "^009900• " + callfunc("F_InsertComma", .@cash_use) + " Cash Points (" + callfunc("F_InsertComma", #CASHPOINTS) + "/" + callfunc("F_InsertComma", .@cash_use) + ")^000000";
+		} else {
+			mes "^FF0000• " + callfunc("F_InsertComma", .@cash_use) + " Cash Points (" + callfunc("F_InsertComma", #CASHPOINTS) + "/" + callfunc("F_InsertComma", .@cash_use) + ")^000000";
+			.@can_craft = 0;
+		}
+	}
+
+	// เช็ค Zeny
+	if (.@zeny_use > 0) {
+		if (Zeny >= .@zeny_use) {
+			mes "^009900• " + callfunc("F_InsertComma", .@zeny_use) + " Zeny (" + callfunc("F_InsertComma", Zeny) + "/" + callfunc("F_InsertComma", .@zeny_use) + ")^000000";
+		} else {
+			mes "^FF0000• " + callfunc("F_InsertComma", .@zeny_use) + " Zeny (" + callfunc("F_InsertComma", Zeny) + "/" + callfunc("F_InsertComma", .@zeny_use) + ")^000000";
+			.@can_craft = 0;
+		}
+	}
+
+	// เช็ค ไอเทมวัตถุดิบเสริม (ถ้ามี)
+	for ( .@i = 0; .@i < getarraysize(.@item_quest); .@i ++ ) {
+		.@have = countitem(.@item_quest[.@i]);
+		if (.@have >= .@amount_quest[.@i]) {
+			mes "^009900• " + getitemname(.@item_quest[.@i]) + " (" + callfunc("F_InsertComma", .@have) + "/" + callfunc("F_InsertComma", .@amount_quest[.@i]) + ") ea^000000";
+		} else {
+			mes "^FF0000• " + getitemname(.@item_quest[.@i]) + " (" + callfunc("F_InsertComma", .@have) + "/" + callfunc("F_InsertComma", .@amount_quest[.@i]) + ") ea^000000";
+			.@can_craft = 0;
+		}
+	}
+
+	if (.@rate_true < 100) {
+		mes " ";
+		mes "^FF9900โอกาสแลกเปลี่ยนสำเร็จ: " + .@rate_true + "%^000000";
+	}
+
+	next;
+
+	// ==========================================
+	// 3. เมนู Action (UI แบบภาพที่ 4)
+	// ==========================================
+	.@menu$ = "- แลกเปลี่ยน " + getitemname(.@item) + ":- ทดลองใส่:- ยกเลิก";
+	switch(select(.@menu$)) {
+		
+		case 1: // แลกเปลี่ยน
+			if (!.@can_craft) {
+				mes "^FF3300[ Cash Coin ]^000000";
+				mes "คุณมีวัตถุดิบ หรือ Cash Points ไม่เพียงพอ!";
+				close;
+			}
+
+			// สุ่มเปอร์เซ็นต์ (ถ้าตั้งเรท 100 ไว้ก็ผ่านฉลุย)
+			.@r = rand(1, 100);
+			if (.@r > .@rate_true) {
+				// กรณีแตก หักของและเงิน (แก้ตรงนี้ถ้าไม่อยากให้หักเงินตอนแตก)
+				if (.@cash_use > 0) { #CASHPOINTS -= .@cash_use; }
+				if (.@zeny_use > 0) { Zeny -= .@zeny_use; }
+				for ( .@i = 0; .@i < getarraysize(.@item_quest); .@i ++ ) { delitem .@item_quest[.@i], .@amount_quest[.@i]; }
+				
+				mes "^FF3300[ Cash Coin ]^000000";
+				mes "เสียใจด้วย การแลกเปลี่ยนไอเทม ^FF0000ล้มเหลว^000000";
+				specialeffect2 155;
+				close;
+			}
+
+			// กรณีสำเร็จ หักของและให้ไอเทม
+			if (.@cash_use > 0) { #CASHPOINTS -= .@cash_use; }
+			if (.@zeny_use > 0) { Zeny -= .@zeny_use; }
+			for ( .@i = 0; .@i < getarraysize(.@item_quest); .@i ++ ) { delitem .@item_quest[.@i], .@amount_quest[.@i]; }
+			
+			// รับไอเทมปกติ
+			getitem .@item, 1;
+			
+			/*
+			// ----- ระบบ Random Option จากโค้ดเดิมของจาร -----
+			// ถ้าจารต้องการสุ่ม Option เข้าอาวุธแบบโค้ดเก่า ให้ลบ getitem ด้านบนทิ้ง
+			// แล้วเอา /* และ */ ที่ครอบโค้ดชุดนี้ออกครับ
+			.@randomoption = rand(1,48);
+			if(.@randomoption == 1){ .@opt01 = 259; .@val01 = rand(1,5); } // ATK%
+			// ... (จารสามารถใส่เงื่อนไขสุ่ม Option แบบเดิมมาแทรกตรงนี้ได้เลย)
+			setarray .@OptID[0],.@opt01,300,300,300,300;
+			setarray .@OptVal[0],.@val01,0,0,0,0;
+			getitem3 .@item, 1, 1, 0, 0, 0, 0, 0, 0, .@OptID, .@OptVal, 0;
+			// ------------------------------------------------
+			*/
+
+			specialeffect2 154;
+			mes "^FF3300[ Cash Coin ]^000000";
+			mes "ยินดีด้วย คุณได้รับ ^009900" + getitemname(.@item) + "^000000";
+			if (.@rate_true < 100) { announce "["+strnpcinfo(0)+"] : ยินดีด้วย คุณ "+strcharinfo(0)+" ได้รับ "+getitemname(.@item)+" สำเร็จ!", bc_all, 0xFFFF00; }
+			close;
+
+		case 2: // ทดลองใส่
+			mes "^FF3300[ Cash Coin ]^000000";
+			mes "คุณสามารถตรวจสอบไอเทมได้ด้วยคำสั่งนี้ครับ";
+			mes "^0000FF@iteminfo " + .@item + "^000000";
+			// หมายเหตุ: การบังคับให้ผู้เล่นลองใส่ไอเทมผ่าน NPC ต้องพึ่งพาระบบ Fitting Room ใน Source Code 
+			// หากเซิร์ฟจารยังไม่มีระบบ Fitting UI ผมแนะนำให้ใช้คำสั่ง @iteminfo ไปก่อนครับ
+			close;
+
+		case 3: // ยกเลิก
+			close;
+	}
+	end;
+
+OnInit:
+	// ==========================================
+	// ตั้งค่ารายการไอเทมที่จะนำไปโชว์ในร้านค้าหลอก
+	// ==========================================
+	// รูปแบบ: npcshopadditem "ชื่อร้าน", รหัสไอเทม, -1 (ใส่ -1 เพื่อซ่อนราคา Zeny);
+
+	// หมวด 1: ทั่วไป
+	npcshopadditem "cash_cat1", 1234, -1; 
+	// npcshopadditem "cash_cat1", 1235, -1; // เพิ่มชิ้นต่อไปแบบนี้ได้เลย
+
+	// หมวด 2: อาวุธตีคน
+	// npcshopadditem "cash_cat2", 1114, -1;
+
+	// หมวด 3: อาวุธตีบอส
+	// npcshopadditem "cash_cat3", 1129, -1;
+
+	// หมวด 4: หมวก
+	npcshopadditem "cash_cat4", 5022, -1;
+
+	// หมวด 5: ส่วนหู
+	// npcshopadditem "cash_cat5", 2202, -1;
+
+	// หมวด 6: ส่วนปาก
+	// npcshopadditem "cash_cat6", 2220, -1;
+
+	// หมวด 7: เครื่องประดับ
+	// npcshopadditem "cash_cat7", 2601, -1;
+
+	// หมวด 8: ชุดสวมใส่
+	// npcshopadditem "cash_cat8", 2352, -1;
+
+	end;
+}

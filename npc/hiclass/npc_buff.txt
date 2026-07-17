@@ -68,6 +68,8 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		sc_start SC_CP_HELM, 1800000, 5;     // Chemical Protection Helm
 		sc_start SC_KYRIE, 1800000, 10;      // Kyrie Eleison
 		sc_start SC_SLOWPOISON, 1800000, 10; // Slow Poison
+		sc_start SC_ASSUMPTIO, 1800000, 5;      // เพิ่มพลังป้องกัน (Def/Mdef)
+		sc_start SC_ENERGYCOAT, 1800000, 5;     // ลดดาเมจ (ซับ SP)
 
 		// --- 4. บัฟสนับสนุนอาชีพ (เน้นเอฟเฟกต์ดนตรีและเวทย์) ---
 		specialeffect EF_MUSIC;
@@ -77,6 +79,12 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		specialeffect EF_HEAL;
 		sc_start SC_SUFFRAGIUM, 1800000, 3;      // Suffragium
 		sc_start SC_MAGNIFICAT, 1800000, 5;      // Magnificat
+		sc_start SC_CARTBOOST, 1800000, 5;      // เพิ่มความเร็วในการเดิน
+
+		// --- บัฟเสริมพลังโจมตี (ATK/ASPD) ---
+		specialeffect EF_FIREWORKS;             // เอฟเฟกต์พลุไฟดูดุดัน
+		sc_start SC_OVERTHRUST, 1800000, 5;     // เพิ่ม ATK พลังทำลาย
+		sc_start SC_ADRENALINE, 1800000, 5;     // เพิ่มความเร็วการโจมตี (ASPD)
 
 		specialeffect2 EF_ANGEL2;
 		dispbottom "[ Buff Master ] : ท่านได้รับบัพ VIP 30 นาทีเรียบร้อยแล้ว";

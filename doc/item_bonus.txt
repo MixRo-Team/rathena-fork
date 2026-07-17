@@ -511,3 +511,34 @@ bonus bClassChange,n;     		Gives a n/100% chance to change the attacked monster
 bonus bAddStealRate,n;    		Increases success rate of Steal skill by n/100%
 bonus bNoMadoFuel;			Nullify Magic Gear Fuel requirement for skills.
 bonus bNoWalkDelay;				Give infinite Endure.
+
+============================================================
+| [CUSTOM JUTI 800] - Pre-Renewal Activated & Modified     |
+============================================================
+// Description:
+// The following bonuses have been manually unlocked and 
+// re-balanced specifically for Pre-Renewal mode in src/map/pc.cpp 
+// and src/map/status.cpp.
+
+[ Unlocked %ATK & %MATK for Pre-Renewal ]
+-----------------------------------------
+bonus bAtkRate,n;		ATK + n% (Unlocked in pc.cpp. Calculated in status_calc_pc_)
+bonus bMatkRate,n;		Magical attack power + n% (Calculated via sd->matk_rate)
+// NOTE: These bonuses now multiply the final Base ATK/MATK perfectly in Pre-Re.
+
+
+[ Class 4 Trait Stats - Repurposed for Pre-Renewal ]
+----------------------------------------------------
+// Description:
+// Trait stats (POW, SPL, etc.) are originally for Renewal. 
+// They have been repurposed to provide classic stats scaling 
+// for the Juti 800 server balance.
+
+bonus bPow,n;			POW + n (1 POW = +1 Base ATK | 3 POW = +1% ATK)
+bonus bSpl,n;			SPL + n (1 SPL = +1 Base MATK | 3 SPL = +1% MATK)
+bonus bCon,n;			CON + n (1 CON = +1 HIT and +1 FLEE | 5 CON = +1% ATK and +1% MATK)
+bonus bSta,n;			STA + n (1 STA = +1 Soft DEF | 3 STA = +1 Hard DEF)
+bonus bWis,n;			WIS + n (1 WIS = +1 Soft MDEF | 3 WIS = +1 Hard MDEF)
+bonus bCrt,n;			CRT + n (3 CRT = +1% Critical Chance)
+
+// =========================================================

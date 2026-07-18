@@ -1,22 +1,22 @@
 // ==========================================
-// ระบบคุมสถานะ VIP อัตโนมัติ (ใส่ไว้ใน scripts_custom.conf)
+// ระบบคุมสถานะ VIP 7 วัน แบบเดี่ยว (Standalone)
 // ==========================================
 -	script	VIP_Manager	-1,{
 
 OnPCLoginEvent:
 OnPCStatCalcEvent:
-	// ตรวจสอบว่าเวลา VIP ยังเหลืออยู่ และสถานะยังไม่ติดบัฟ
-	if (#VIP_TIME > gettimetick(2) && !isstatusactive(SC_VIP_7D)) {
+	// ตรวจสอบว่าเวลา VIP ยังเหลืออยู่ และยังไม่มีบัฟติดตัว
+	if (#VIP_TIME > gettimetick(2) && !sc_check(SC_VIP_7D)) {
 		// คำนวณเวลาที่เหลือเป็นมิลลิวินาที
 		.@time_left = (#VIP_TIME - gettimetick(2)) * 1000;
 		sc_start SC_VIP_7D, .@time_left, 0;
 	}
 	
-	// ตรวจสอบกรณีเวลาหมด (ล้างสถานะ)
+	// ตรวจสอบกรณีเวลาหมด (ให้ล้างสถานะออก)
 	if (#VIP_TIME > 0 && #VIP_TIME <= gettimetick(2)) {
 		#VIP_TIME = 0;
 		sc_end SC_VIP_7D;
-		dispbottom "[ระบบ VIP] : สถานะ VIP 7 Day ของคุณหมดอายุแล้วครับ";
+		dispbottom "^FF0000[ระบบ VIP]^000000 สถานะ VIP 7 Day ของคุณหมดอายุแล้วครับ";
 	}
 	end;
 }

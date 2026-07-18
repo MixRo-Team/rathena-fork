@@ -1,0 +1,23 @@
+/*
+  _____              __             ____       ___         
+ / ___/_____ _____  / /  ___  ___  / __ \___  / (_)__  ___ 
+/ (_ / __/ // / _ \/ _ \/ _ \/ _ \/ /_/ / _ \/ / / _ \/ -_)
+\___/_/  \_, / .__/_//_/\___/_//_/\____/_//_/_/_/_//_/\__/ 
+        /___/_/                                            
+
+*/
+
+//============================================================
+//= Cash Coin Function
+//============================================================
+
+function	script	CC_Function	{
+
+	.CashCoin = 30001;
+	.Amounts = countitem(.CashCoin);
+	delitem .CashCoin,.Amounts;
+	.Counts = .Amounts+1;
+	#CASHPOINTS += .Amounts+1;
+	dispbottom "[ระบบ] : คุณได้รับ "+callfunc("F_InsertComma",.Counts)+" Cash Points | คงเหลือทั้งหมด "+callfunc("F_InsertComma",#CASHPOINTS)+" Cash Points.";
+	end;
+}

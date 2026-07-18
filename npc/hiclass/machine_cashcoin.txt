@@ -124,7 +124,7 @@ OnBuyItem:
 
 		case 2: 
 			close2; // ?? สั่งปิดหน้าต่าง NPC ทันที ??
-			atcommand "@iteminfo " + .@item; // ?? รันคำสั่งโชว์สเตตัส/หน้าต่าง Preview แทนผู้เล่น ??
+			atcommand "@preview " + .@item; // ?? รันคำสั่งโชว์สเตตัส/หน้าต่าง Preview แทนผู้เล่น ??
 			end;
 
 		case 3: 

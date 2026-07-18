@@ -53,7 +53,14 @@ OnBuyItem:
 	deletearray .@amount_quest;
 
 	// 1. ค้นหาไอเทมที่ผู้เล่นซื้อ ว่าอยู่ลำดับที่เท่าไหร่ในตาราง Array
-	.@idx = arrayfind(.item_id, .@item);
+	.@idx = -1;
+	for (.@i = 0; .@i < getarraysize(.item_id); .@i++) {
+		if (.item_id[.@i] == .@item) {
+			.@idx = .@i;
+			break;
+		}
+	}
+
 	if (.@idx == -1) {
 		mes "^FF3300[ Cash Coin ]^000000";
 		mes "ไอเทมนี้ยังไม่ได้ตั้งค่าราคาในระบบครับ";

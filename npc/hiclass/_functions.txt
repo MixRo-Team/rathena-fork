@@ -21,3 +21,27 @@ function	script	CC_Function	{
 	dispbottom "[ระบบ] : คุณได้รับ "+callfunc("F_InsertComma",.Counts)+" Cash Points | คงเหลือทั้งหมด "+callfunc("F_InsertComma",#CASHPOINTS)+" Cash Points.";
 	end;
 }
+
+// ==========================================
+// ฟังก์ชันเรียกใช้งาน VIP 7 วัน
+// ==========================================
+function	script	7d_vip_ticket	{
+	// 1. ตรวจสอบว่ายังมีเวลาเหลือไหม
+	if (#VIP_TIME > gettimetick(2)) {
+		dispbottom "[ระบบ VIP] : คุณยังมีสถานะ VIP ใช้งานอยู่ครับ ไม่สามารถกดใช้ซ้ำได้";
+		end;
+	}
+
+	// 2. บันทึกเวลาหมดอายุ (7 วัน = 604,800 วินาที)
+	#VIP_TIME = gettimetick(2) + 604800;
+
+	// 3. เริ่มสถานะ VIP_7D (ระยะเวลา 604,800,000 มิลลิวินาที)
+	// หมายเหตุ: SC_VIP_7D ต้องตรงกับที่จารประกาศใน status.hpp
+	sc_start SC_VIP_7D, 604800000, 0;
+
+	// 4. แจ้งเตือนผู้เล่น
+	specialeffect2 73;
+	dispbottom "[ระบบ VIP] : เปิดใช้งาน VIP 7 วันแล้ว! บัฟทำงานอัตโนมัติครับ";
+	
+	return;
+}

@@ -1,5 +1,5 @@
 // ==========================================
-// ร้านค้า Dummy สำหรับแสดงผลไอเทมแต่ละหมวดหมู่
+// ร้านค้า Dummy สำหรับแสดงผลไอเทม
 // ==========================================
 -	shop	cash_cat1	-1,501:-1
 -	shop	cash_cat2	-1,501:-1
@@ -11,27 +11,52 @@
 -	shop	cash_cat8	-1,501:-1
 
 // ==========================================
-// ตัว NPC หลัก (ตู้ Cash Coin) [SECURITY AUDITED]
+// ตัว NPC หลัก (ตู้ Cash Coin) [รุ่นสมบูรณ์แบบ]
 // ==========================================
 prontera,144,196,2	script	[ Cash Coin ]	2_VENDING_MACHINE1,{
+
 Start:
 	mes "^FF3300[ Cash Coin ]^000000";
 	mes "ยินดีต้อนรับสู่ตู้ Cash Coin";
-	mes "เลือกหมวดหมู่ไอเทมที่คุณต้องการได้เลยครับ";
+	mes "สามารถแลกเปลี่ยน Cash เป็นเหรียญจำนวนมากได้ที่นี่";
 	next;
 	
-	set .@cat, select("- ทั่วไป:- อาวุธตีคน:- อาวุธตีบอส:- หมวก:- ส่วนหู:- ส่วนปาก:- เครื่องประดับ:- ชุดสวมใส่");
-	callshop "cash_cat"+.@cat, 1;
-	npcshopattach "cash_cat"+.@cat;
-	end;
+	switch(select("- หมวดหมู่สินค้า (Shop):- แลกเหรียญจำนวนมาก (Mass Exchange)")) {
+		case 1:
+			set .@cat, select("- ทั่วไป:- อาวุธตีคน:- อาวุธตีบอส:- หมวก:- ส่วนหู:- ส่วนปาก:- เครื่องประดับ:- ชุดสวมใส่");
+			callshop "cash_cat"+.@cat, 1;
+			npcshopattach "cash_cat"+.@cat;
+			end;
+		case 2:
+			goto OnMassExchange;
+			end;
+	}
 
-OnBuyItem:
-	// [SECURITY] 1. ป้องกันการใช้โปรแกรม WPE ดัดแปลงจำนวนซื้อ
-	if (@bought_quantity > 1) {
-		mes "^FF3300[ Cash Coin ]^000000";
-		mes "ระบบป้องกัน: อนุญาตให้แลกเปลี่ยนได้ทีละ 1 ชิ้นเท่านั้นครับ";
+OnMassExchange:
+	mes "^FF3300[ Cash Coin ]^000000";
+	mes "คุณมีแต้ม: ^009900" + callfunc("F_InsertComma", #CASHPOINTS) + " Cash^000000";
+	mes "ต้องการแลก Cash Coin (ID:30001) กี่เหรียญครับ?";
+	mes "(อัตรา 1 Cash ต่อ 1 เหรียญ)";
+	input .@amount, 1, 10000; // แลกได้ครั้งละ 1 - 10,000 เหรียญ
+	
+	if (.@amount * 1 > #CASHPOINTS) {
+		mes "แต้มของคุณไม่เพียงพอครับ!";
 		close;
 	}
+	
+	if (checkweight(30001, .@amount) == 0) {
+		mes "น้ำหนักกระเป๋าคุณไม่พอครับ!";
+		close;
+	}
+	
+	#CASHPOINTS -= .@amount;
+	getitem 30001, .@amount;
+	mes "แลกเปลี่ยนสำเร็จ! ได้รับ Cash Coin จำนวน ^009900" + .@amount + " ชิ้น^000000";
+	close;
+
+OnBuyItem:
+	// [SECURITY] ดัก WPE
+	if (@bought_quantity > 1) { mes "^FF3300[ Cash Coin ]^000000"; mes "ระบบป้องกัน: แลกได้ทีละ 1 ชิ้นเท่านั้นครับ"; close; }
 
 	.@item = @bought_nameid;
 	.@rate_true = 100;
@@ -41,142 +66,55 @@ OnBuyItem:
 	deletearray .@amount_quest;
 
 	// ==========================================
-	// ตั้งค่าราคาไอเทมแต่ละชิ้น
+	// ตารางราคาไอเทม (เพิ่มไอเทมใหม่ได้ที่นี่)
 	// ==========================================
 	switch(.@item) {
-		case 5022: // ตัวอย่าง STR Invisible Cap
-			.@cash_use = 1000;
-			// ตัวอย่างการตั้งเรทเปอร์เซ็นต์ (ถ้าสำเร็จ 100% ไม่ต้องใส่บรรทัดนี้ก็ได้ครับ)
-			.@rate_true = 50; 
-			break;
-
-		case 1234: // ตัวอย่างไอเทมทั่วไป
-			.@cash_use = 500;
-			.@zeny_use = 10000;
-			// ตัวอย่างการใช้วัตถุดิบ ลบ // ออกเพื่อใช้งาน
-			// setarray .@item_quest[0], 909, 1300085;
-			// setarray .@amount_quest[0], 10, 5;
-			break;
-
+		// หมวดเหรียญ (ถ้าผู้เล่นกดซื้อผ่านหน้าร้าน)
+		case 30001: .@cash_use = 1; break;
+		case 33006: .@cash_use = 1000; break;
+		
+		// หมวดหมวกตัวอย่าง
+		case 5022: .@cash_use = 1000; break;
+		
 		default:
-			mes "^FF3300[ Cash Coin ]^000000";
 			mes "ไอเทมนี้ยังไม่ได้ตั้งค่าราคาครับ";
 			close;
 	}
 
+	// [โชว์หน้าต่างคอนเฟิร์มเหมือนเดิม]
 	mes "รายการ ที่เลือกคุณได้เลือก: ^0000FF" + getitemname(.@item) + "^000000";
-	mes "รายการที่ คุณต้องมีเพื่อแลกเปลี่ยน:";
-
-	// แสดงผลจำนวนที่ต้องการ (หน้าต่าง Preview)
 	if (.@cash_use > 0) {
-		if (#CASHPOINTS >= .@cash_use) {
-			mes "^009900• " + callfunc("F_InsertComma", .@cash_use) + " Cash Points (" + callfunc("F_InsertComma", #CASHPOINTS) + "/" + callfunc("F_InsertComma", .@cash_use) + ")^000000";
-		} else {
-			mes "^FF0000• " + callfunc("F_InsertComma", .@cash_use) + " Cash Points (" + callfunc("F_InsertComma", #CASHPOINTS) + "/" + callfunc("F_InsertComma", .@cash_use) + ")^000000";
-		}
+		if (#CASHPOINTS >= .@cash_use) { mes "^00FF00• ใช้ " + callfunc("F_InsertComma", .@cash_use) + " Cash (" + #CASHPOINTS + "/" + .@cash_use + ")^000000"; } 
+		else { mes "^FF0000• ใช้ " + callfunc("F_InsertComma", .@cash_use) + " Cash (" + #CASHPOINTS + "/" + .@cash_use + ")^000000"; }
 	}
-
-	if (.@zeny_use > 0) {
-		if (Zeny >= .@zeny_use) {
-			mes "^009900• " + callfunc("F_InsertComma", .@zeny_use) + " Zeny (" + callfunc("F_InsertComma", Zeny) + "/" + callfunc("F_InsertComma", .@zeny_use) + ")^000000";
-		} else {
-			mes "^FF0000• " + callfunc("F_InsertComma", .@zeny_use) + " Zeny (" + callfunc("F_InsertComma", Zeny) + "/" + callfunc("F_InsertComma", .@zeny_use) + ")^000000";
-		}
-	}
-
-	for ( .@i = 0; .@i < getarraysize(.@item_quest); .@i ++ ) {
-		.@have = countitem(.@item_quest[.@i]);
-		if (.@have >= .@amount_quest[.@i]) {
-			mes "^009900• " + getitemname(.@item_quest[.@i]) + " (" + callfunc("F_InsertComma", .@have) + "/" + callfunc("F_InsertComma", .@amount_quest[.@i]) + ") ea^000000";
-		} else {
-			mes "^FF0000• " + getitemname(.@item_quest[.@i]) + " (" + callfunc("F_InsertComma", .@have) + "/" + callfunc("F_InsertComma", .@amount_quest[.@i]) + ") ea^000000";
-		}
-	}
-
-	if (.@rate_true < 100) {
-		mes " ";
-		mes "^FF9900โอกาสแลกเปลี่ยนสำเร็จ: " + .@rate_true + "%^000000";
-	}
-
 	next;
 
-	.@menu$ = "- แลกเปลี่ยน " + getitemname(.@item) + ":- ทดลองใส่:- ยกเลิก";
-	switch(select(.@menu$)) {
-		
+	// เมนูอัจฉริยะ (แยกของสวมใส่/ของทั่วไป)
+	.@type = getiteminfo(.@item, ITEMINFO_TYPE);
+	if (.@type == 4 || .@type == 5) { .@s = select("- แลกเปลี่ยน " + getitemname(.@item) + ":- ทดลองใส่:- ยกเลิก"); } 
+	else { .@s = select("- แลกเปลี่ยน " + getitemname(.@item) + ":- ยกเลิก"); if(.@s==2) .@s=3; }
+
+	switch(.@s) {
 		case 1:
-			// [SECURITY] 2. เช็กของ "หลัง" จากผู้เล่นกดยืนยันแล้ว ป้องกันบั๊กโยนของลงพื้น
-			if (.@cash_use > 0 && #CASHPOINTS < .@cash_use) {
-				mes "^FF3300[ Cash Coin ]^000000"; mes "Cash Points ของคุณไม่เพียงพอครับ!"; close;
-			}
-			if (.@zeny_use > 0 && Zeny < .@zeny_use) {
-				mes "^FF3300[ Cash Coin ]^000000"; mes "Zeny ของคุณไม่เพียงพอครับ!"; close;
-			}
-			for ( .@i = 0; .@i < getarraysize(.@item_quest); .@i ++ ) {
-				if (countitem(.@item_quest[.@i]) < .@amount_quest[.@i]) {
-					mes "^FF3300[ Cash Coin ]^000000"; mes "วัตถุดิบ " + getitemname(.@item_quest[.@i]) + " ของคุณไม่เพียงพอครับ!"; close;
-				}
-			}
-
-			// [SECURITY] 3. ป้องกันช่องเก็บของเต็ม หรือ น้ำหนักเกิน (กันของตกพื้น)
-			if (checkweight(.@item, 1) == 0) {
-				mes "^FF3300[ Cash Coin ]^000000";
-				mes "น้ำหนัก หรือ ช่องเก็บของของคุณเต็มครับ";
-				mes "กรุณาเคลียร์กระเป๋าให้เรียบร้อยก่อนคราฟครับ";
-				close;
-			}
-
-			// เข้าสู่ขั้นตอนหักของ
-			if (.@cash_use > 0) { #CASHPOINTS -= .@cash_use; }
-			if (.@zeny_use > 0) { Zeny -= .@zeny_use; }
-			for ( .@i = 0; .@i < getarraysize(.@item_quest); .@i ++ ) { delitem .@item_quest[.@i], .@amount_quest[.@i]; }
-
-			// เช็กเรทเปอร์เซ็นต์สำเร็จ
-			if (rand(1, 100) > .@rate_true) {
-				mes "^FF3300[ Cash Coin ]^000000";
-				mes "เสียใจด้วย การแลกเปลี่ยนไอเทม ^FF0000ล้มเหลว^000000";
-				specialeffect2 155;
-				close;
-			}
-
-			// กรณีสำเร็จ
+			// เช็กของกันบั๊ก
+			if (.@cash_use > 0 && #CASHPOINTS < .@cash_use) { close; }
+			if (checkweight(.@item, 1) == 0) { mes "น้ำหนักเต็มครับ!"; close; }
+			
+			// หักเงิน
+			#CASHPOINTS -= .@cash_use;
 			getitem .@item, 1;
-			
-			// ----- ระบบ Random Option -----
-			// ถ้าจารต้องการสุ่มออฟชั่นด้วย ให้ลบบรรทัด getitem .@item, 1; ด้านบนทิ้ง
-			// แล้วลบ // ข้างหน้าโค้ดชุดด้านล่างนี้ออกครับ
-			
-			// .@randomoption = rand(1,48);
-			// if(.@randomoption == 1){ .@opt01 = 259; .@val01 = rand(1,5); }
-			// setarray .@OptID[0],.@opt01,300,300,300,300;
-			// setarray .@OptVal[0],.@val01,0,0,0,0;
-			// getitem3 .@item, 1, 1, 0, 0, 0, 0, 0, 0, .@OptID, .@OptVal, 0;
-			// ------------------------------
-
 			specialeffect2 154;
-			mes "^FF3300[ Cash Coin ]^000000";
-			mes "ยินดีด้วย คุณได้รับ ^009900" + getitemname(.@item) + "^000000";
-			if (.@rate_true < 100) { announce "["+strnpcinfo(0)+"] : ยินดีด้วย คุณ "+strcharinfo(0)+" ได้รับ "+getitemname(.@item)+" สำเร็จ!", bc_all, 0xFFFF00; }
+			mes "ได้รับ ^009900" + getitemname(.@item) + "^000000 สำเร็จ!";
 			close;
-
 		case 2:
-			mes "^FF3300[ Cash Coin ]^000000";
-			mes "คุณสามารถตรวจสอบไอเทมได้ด้วยคำสั่งนี้ครับ";
-			mes "^0000FF@iteminfo " + .@item + "^000000";
-			close;
-
-		case 3:
+			mes "@iteminfo " + .@item;
 			close;
 	}
 	end;
 
 OnInit:
-	npcshopadditem "cash_cat1", 1234, -1; 
-	// npcshopadditem "cash_cat2", 1114, -1;
-	// npcshopadditem "cash_cat3", 1129, -1;
-	npcshopadditem "cash_cat4", 5022, -1;
-	// npcshopadditem "cash_cat5", 2202, -1;
-	// npcshopadditem "cash_cat6", 2220, -1;
-	// npcshopadditem "cash_cat7", 2601, -1;
-	// npcshopadditem "cash_cat8", 2352, -1;
+	npcshopadditem "cash_cat1", 30001, -1; // Cash Coin
+	npcshopadditem "cash_cat1", 33006, -1; // Bag of Cash Coins
+	npcshopadditem "cash_cat4", 5022, -1;  // STR Invisible Cap
 	end;
 }

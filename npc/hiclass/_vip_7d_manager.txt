@@ -7,13 +7,16 @@ OnPCLoginEvent:
 OnPCStatCalcEvent:
 	// ตรวจสอบเวลา ถ้ายังมีเวลาเหลือและบัฟยังไม่ติด ให้เติมบัฟให้
 	if (#VIP_TIME > gettimetick(2)) {
-		if (!sc_check(2005)) {
+		if (!getstatus(SC_VIP_7D)) {
 			.@time_left = (#VIP_TIME - gettimetick(2)) * 1000;
 			sc_start SC_VIP_7D, .@time_left, 0;
 		}
 	} else {
 		// ถ้าเวลาหมด ให้ล้างบัฟออก
-		sc_end SC_VIP_7D;
+		if (#VIP_TIME > 0) {
+			#VIP_TIME = 0;
+			sc_end SC_VIP_7D;
+		}
 	}
 	end;
 }

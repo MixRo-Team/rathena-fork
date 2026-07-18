@@ -15,11 +15,11 @@
 // ==========================================
 prontera,144,196,2	script	[ Cash Coin ]	2_VENDING_MACHINE1,{
 Start:
-//	mes "^FF3300[ Cash Coin ]^000000";
-//	mes "ยินดีต้อนรับสู่ตู้ Cash Coin";
-//	mes "เลือกหมวดหมู่ไอเทมที่คุณต้องการได้เลยครับ";
-//	next;
-
+	mes "^FF3300[ Cash Coin ]^000000";
+	mes "ยินดีต้อนรับสู่ตู้ Cash Coin";
+	mes "เลือกหมวดหมู่ไอเทมที่คุณต้องการได้เลยครับ";
+	next;
+	
 	// เข้าสู่ 8 หมวดหมู่ทันทีเมื่อคุยกับ NPC
 	set .@cat, select("- ทั่วไป:- อาวุธตีคน:- อาวุธตีบอส:- หมวก:- ส่วนหู:- ส่วนปาก:- เครื่องประดับ:- ชุดสวมใส่");
 	callshop "cash_cat"+.@cat, 1;
@@ -100,7 +100,7 @@ OnBuyItem:
 
 	switch(.@s) {
 		case 1:
-			// เช็กความปลอดภัยก่อนหักของ
+			// เช็กกันบั๊กโยนของลงพื้น
 			if (.@cash_use > 0 && #CASHPOINTS < .@cash_use) { mes "^FF3300[ Cash Coin ]^000000"; mes "Cash Points ของคุณไม่เพียงพอครับ!"; close; }
 			if (.@zeny_use > 0 && Zeny < .@zeny_use) { mes "^FF3300[ Cash Coin ]^000000"; mes "Zeny ของคุณไม่เพียงพอครับ!"; close; }
 			for ( .@i = 0; .@i < getarraysize(.@item_quest); .@i ++ ) {
@@ -113,52 +113,21 @@ OnBuyItem:
 			if (.@zeny_use > 0) { Zeny -= .@zeny_use; }
 			for ( .@i = 0; .@i < getarraysize(.@item_quest); .@i ++ ) { delitem .@item_quest[.@i], .@amount_quest[.@i]; }
 
-			// ระบบสุ่มสำเร็จ/ล้มเหลว
 			if (rand(1, 100) > .@rate_true) { mes "^FF3300[ Cash Coin ]^000000"; mes "การแลกเปลี่ยน ^FF0000ล้มเหลว^000000"; specialeffect2 155; close; }
 
-			// สำเร็จ แจกของ + เอฟเฟกต์ Level Up (73)
+			// แจกของ
 			getitem .@item, .@qty;
 			specialeffect2 73; 
 			dispbottom "ได้รับ " + callfunc("F_InsertComma", .@qty) + "x " + getitemname(.@item) + " สำเร็จ! (ใช้ไป " + callfunc("F_InsertComma", .@cash_use) + " Cash)";
 			if (.@rate_true < 100) { announce "["+strnpcinfo(0)+"] : ยินดีด้วย คุณ "+strcharinfo(0)+" ได้รับ "+getitemname(.@item)+" สำเร็จ!", bc_all, 0xFFFF00; }
 			end;
 
-		case 2: // ?? ระบบ Fitting Room (สวมใส่จำลอง) ??
-			// 1. ดึงตำแหน่งที่สวมใส่ และ View ID ของไอเทม
-			.@loc = getiteminfo(.@item, ITEMINFO_LOC);
-			.@view = getiteminfo(.@item, ITEMINFO_VIEW);
+		case 2: 
+			close2; // ?? สั่งปิดหน้าต่าง NPC ทันที ??
+			atcommand "@iteminfo " + .@item; // ?? รันคำสั่งโชว์สเตตัส/หน้าต่าง Preview แทนผู้เล่น ??
+			end;
 
-			// 2. แอบจำรูปลักษณ์เดิมของผู้เล่นไว้ก่อน
-			.@old_top = getlook(4); // 4 = หมวกบน
-			.@old_mid = getlook(5); // 5 = หมวกกลาง
-			.@old_low = getlook(3); // 3 = หมวกล่าง
-			.@old_wep = getlook(2); // 2 = อาวุธ
-			.@old_shi = getlook(8); // 8 = โล่
-
-			// 3. สวมใส่ไอเทมชิ้นใหม่ให้ดูบนแผนที่แบบ Real-time
-			if (.@loc & 256) { setlook 4, .@view; }
-			if (.@loc & 512) { setlook 5, .@view; }
-			if (.@loc & 1)   { setlook 3, .@view; }
-			if (.@loc & 2)   { setlook 2, .@view; }
-			if (.@loc & 32)  { setlook 8, .@view; }
-
-			mes "^FF3300[ Cash Coin ]^000000";
-			mes "ระบบได้สวมใส่ ^009900" + getitemname(.@item) + "^000000 ให้คุณดูแล้วครับ!";
-			mes "จารสามารถคลิกลากหน้าต่างนี้หลบ เพื่อดูตัวละครได้เลยครับ";
-			mes " ";
-			mes "พอดูเสร็จแล้ว ให้กดปุ่ม ^0000FF[ Next ]^000000";
-			mes "เพื่อคืนร่างเดิม และปิดหน้าต่างครับ";
-			next;
-
-			// 4. พอผู้เล่นกด Next จะคืนร่างเดิมให้ทันที
-			setlook 4, .@old_top;
-			setlook 5, .@old_mid;
-			setlook 3, .@old_low;
-			setlook 2, .@old_wep;
-			setlook 8, .@old_shi;
-			close;
-
-		case 3:
+		case 3: 
 			close;
 	}
 	end;
@@ -172,7 +141,7 @@ OnInit:
 	setarray .item_cat[0],     1,           1,          6;       // [2] หมวดหมู่ตู้ (1-8)
 	setarray .item_cash[0],    1,           1000,       1000;    // [3] ราคา Cash
 	setarray .item_zeny[0],    0,           0,          0;       // [4] ราคา Zeny
-	setarray .item_rate[0],    100,         100,        100;      // [5] โอกาสสำเร็จ (%)
+	setarray .item_rate[0],    100,         100,        50;      // [5] โอกาสสำเร็จ (%)
 	
 	setarray .item_req_id[0],  0,           0,          0;       // [6] รหัสวัตถุดิบเสริม (ถ้ามี)
 	setarray .item_req_am[0],  0,           0,          0;       // [7] จำนวนวัตถุดิบเสริม (ถ้ามี)

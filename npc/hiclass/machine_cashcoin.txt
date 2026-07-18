@@ -11,15 +11,15 @@
 -	shop	cash_cat8	-1,501:-1
 
 // ==========================================
-// ตัว NPC หลัก (ตู้ Cash Coin) [V. Final Instant Buy]
+// ตัว NPC หลัก (ตู้ Cash Coin) [V. Final - แก้ไขปุ่มทดลองใส่]
 // ==========================================
 prontera,144,196,2	script	[ Cash Coin ]	2_VENDING_MACHINE1,{
 Start:
-	mes "^FF3300[ Cash Coin ]^000000";
-	mes "ยินดีต้อนรับสู่ตู้ Cash Coin";
-	mes "เลือกหมวดหมู่ไอเทมที่คุณต้องการได้เลยครับ";
-	next;
-	
+//	mes "^FF3300[ Cash Coin ]^000000";
+//	mes "ยินดีต้อนรับสู่ตู้ Cash Coin";
+//	mes "เลือกหมวดหมู่ไอเทมที่คุณต้องการได้เลยครับ";
+//	next;
+
 	// เข้าสู่ 8 หมวดหมู่ทันทีเมื่อคุยกับ NPC
 	set .@cat, select("- ทั่วไป:- อาวุธตีคน:- อาวุธตีบอส:- หมวก:- ส่วนหู:- ส่วนปาก:- เครื่องประดับ:- ชุดสวมใส่");
 	callshop "cash_cat"+.@cat, 1;
@@ -80,32 +80,57 @@ OnBuyItem:
 		close;
 	}
 
-	// 4. หักเงิน / หักของ
-	if (.@cash_use > 0) { #CASHPOINTS -= .@cash_use; }
-	if (.@zeny_use > 0) { Zeny -= .@zeny_use; }
-	for ( .@i = 0; .@i < getarraysize(.@item_quest); .@i ++ ) { delitem .@item_quest[.@i], .@amount_quest[.@i]; }
+	// 4. หน้าต่างยืนยัน และ ทดลองใส่
+	mes "รายการ ที่เลือกคุณได้เลือก: ^0000FF" + callfunc("F_InsertComma", .@qty) + "x " + getitemname(.@item) + "^000000";
+	mes "รายการที่ คุณต้องมีเพื่อแลกเปลี่ยน:";
 
-	// กรณีแลกเปลี่ยนล้มเหลว (ถ้าตั้งเรทไว้ต่ำกว่า 100)
-	if (rand(1, 100) > .@rate_true) {
-		mes "^FF3300[ Cash Coin ]^000000";
-		mes "เสียใจด้วย การแลกเปลี่ยน ^FF0000ล้มเหลว^000000";
-		specialeffect2 155;
-		close;
+	if (.@cash_use > 0) { mes "^00FF00• " + callfunc("F_InsertComma", .@cash_use) + " Cash Points (" + callfunc("F_InsertComma", #CASHPOINTS) + "/" + callfunc("F_InsertComma", .@cash_use) + ")^000000"; }
+	if (.@zeny_use > 0) { mes "^00FF00• " + callfunc("F_InsertComma", .@zeny_use) + " Zeny (" + callfunc("F_InsertComma", Zeny) + "/" + callfunc("F_InsertComma", .@zeny_use) + ")^000000"; }
+	for ( .@i = 0; .@i < getarraysize(.@item_quest); .@i ++ ) {
+		.@have = countitem(.@item_quest[.@i]);
+		mes "^00FF00• " + getitemname(.@item_quest[.@i]) + " (" + callfunc("F_InsertComma", .@have) + "/" + callfunc("F_InsertComma", .@amount_quest[.@i]) + ") ea^000000";
 	}
+	if (.@rate_true < 100) { mes " "; mes "^FF9900โอกาสแลกเปลี่ยนสำเร็จ: " + .@rate_true + "%^000000"; }
+	next;
 
-	// 5. แจกของ + ปิดระบบแบบเนียนๆ (ไม่เด้งหน้าต่าง)
-	getitem .@item, .@qty;
-	specialeffect2 73; 
-	
-	// สรุปยอดลงช่องแชท
-	dispbottom "ได้รับ " + callfunc("F_InsertComma", .@qty) + "x " + getitemname(.@item) + " สำเร็จ! (ใช้ไป " + callfunc("F_InsertComma", .@cash_use) + " Cash)";
-	
-	// ประกาศทั้งเซิร์ฟเวอร์กรณีเป็นของแรร์
-	if (.@rate_true < 100) { 
-		announce "["+strnpcinfo(0)+"] : ยินดีด้วย คุณ "+strcharinfo(0)+" ได้รับ "+getitemname(.@item)+" สำเร็จ!", bc_all, 0xFFFF00; 
+	// เช็กว่าเป็นของสวมใส่หรือไม่
+	.@type = getiteminfo(.@item, ITEMINFO_TYPE);
+	if (.@type == 4 || .@type == 5) { .@s = select("- แลกเปลี่ยน ^0000FF" + getitemname(.@item) + "^000000:- ทดลองใส่:- ^FF0000ยกเลิก^000000"); } 
+	else { .@s = select("- แลกเปลี่ยน ^0000FF" + getitemname(.@item) + "^000000:- ^FF0000ยกเลิก^000000"); if (.@s == 2) { .@s = 3; } }
+
+	switch(.@s) {
+		case 1:
+			// เช็กกันบั๊กโยนของลงพื้น
+			if (.@cash_use > 0 && #CASHPOINTS < .@cash_use) { mes "^FF3300[ Cash Coin ]^000000"; mes "Cash Points ของคุณไม่เพียงพอครับ!"; close; }
+			if (.@zeny_use > 0 && Zeny < .@zeny_use) { mes "^FF3300[ Cash Coin ]^000000"; mes "Zeny ของคุณไม่เพียงพอครับ!"; close; }
+			for ( .@i = 0; .@i < getarraysize(.@item_quest); .@i ++ ) {
+				if (countitem(.@item_quest[.@i]) < .@amount_quest[.@i]) { mes "^FF3300[ Cash Coin ]^000000"; mes "วัตถุดิบไม่พอครับ!"; close; }
+			}
+			if (checkweight(.@item, .@qty) == 0) { mes "^FF3300[ Cash Coin ]^000000"; mes "น้ำหนัก หรือช่องเก็บของเต็มครับ!"; close; }
+
+			// หักของ
+			if (.@cash_use > 0) { #CASHPOINTS -= .@cash_use; }
+			if (.@zeny_use > 0) { Zeny -= .@zeny_use; }
+			for ( .@i = 0; .@i < getarraysize(.@item_quest); .@i ++ ) { delitem .@item_quest[.@i], .@amount_quest[.@i]; }
+
+			if (rand(1, 100) > .@rate_true) { mes "^FF3300[ Cash Coin ]^000000"; mes "การแลกเปลี่ยน ^FF0000ล้มเหลว^000000"; specialeffect2 155; close; }
+
+			// แจกของ
+			getitem .@item, .@qty;
+			specialeffect2 73; 
+			dispbottom "ได้รับ " + callfunc("F_InsertComma", .@qty) + "x " + getitemname(.@item) + " สำเร็จ! (ใช้ไป " + callfunc("F_InsertComma", .@cash_use) + " Cash)";
+			if (.@rate_true < 100) { announce "["+strnpcinfo(0)+"] : ยินดีด้วย คุณ "+strcharinfo(0)+" ได้รับ "+getitemname(.@item)+" สำเร็จ!", bc_all, 0xFFFF00; }
+			end;
+
+		case 2: 
+			close2; // ?? สั่งปิดหน้าต่าง NPC ทันที ??
+			atcommand "@iteminfo " + .@item; // ?? รันคำสั่งโชว์สเตตัส/หน้าต่าง Preview แทนผู้เล่น ??
+			end;
+
+		case 3: 
+			close;
 	}
-	
-	end; // ใช้ end; เพื่อจบการทำงานทันทีโดยไม่ต้องกด Close
+	end;
 
 OnInit:
 	// =========================================================================
@@ -114,18 +139,15 @@ OnInit:
 	//                        (Cash Coin)  (Bag Cash)  (หมวกตัวอย่าง)
 	setarray .item_id[0],      30001,       33006,      5022;    // [1] รหัสไอเทมที่จะขาย
 	setarray .item_cat[0],     1,           1,          4;       // [2] หมวดหมู่ตู้ (1-8)
-	setarray .item_cash[0],    1,           1000,       1000;    // [3] ราคา Cash (และราคาป้าย Zeny หลอก)
-	setarray .item_zeny[0],    0,           0,          0;       // [4] ราคา Zeny เพิ่มเติม
+	setarray .item_cash[0],    1,           1000,       1000;    // [3] ราคา Cash
+	setarray .item_zeny[0],    0,           0,          0;       // [4] ราคา Zeny
 	setarray .item_rate[0],    100,         100,        50;      // [5] โอกาสสำเร็จ (%)
 	
 	setarray .item_req_id[0],  0,           0,          0;       // [6] รหัสวัตถุดิบเสริม (ถ้ามี)
 	setarray .item_req_am[0],  0,           0,          0;       // [7] จำนวนวัตถุดิบเสริม (ถ้ามี)
 
 	// =========================================================================
-	// ระบบอัตโนมัติ: ลบขยะ และ นำไอเทมจากตารางด้านบนขึ้นชั้นวางโชว์
-	// =========================================================================
 	for (.@i = 1; .@i <= 8; .@i++) { npcshopdelitem "cash_cat"+.@i, 501; }
-	
 	for (.@i = 0; .@i < getarraysize(.item_id); .@i++) {
 		npcshopadditem "cash_cat" + .item_cat[.@i], .item_id[.@i], .item_cash[.@i];
 	}

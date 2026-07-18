@@ -28,17 +28,17 @@ function	script	CC_Function	{
 function	script	7d_vip_ticket	{
 	// 1. เช็คว่ามี VIP อยู่แล้วหรือไม่
 	if (#VIP_TIME > gettimetick(2)) {
-		dispbottom "[ระบบ VIP] : คุณยังมีสถานะ VIP ใช้งานอยู่ครับ";
+		dispbottom "[ระบบ VIP] : คุณยังมีสถานะ VIP ใช้งานอยู่ครับ!";
 		end;
 	}
 
-	// 2. บันทึกเวลาหมดอายุ (7 วัน = 604,800 วินาที)
+	// 2. บันทึกเวลา 7 วัน (604,800 วินาที)
 	#VIP_TIME = gettimetick(2) + 604800;
 
-	// 3. รันสถานะ SC_VIP_7D (ที่จารคอมไพล์ C++ ไว้แล้ว)
+	// 3. รันสถานะ SC_VIP_7D
 	sc_start SC_VIP_7D, 604800000, 0;
 
-	specialeffect2 73; // เอฟเฟกต์วิ้งๆ
-	dispbottom "^00FF00[ระบบ VIP]^000000 เปิดใช้งาน VIP 7 วันเรียบร้อยแล้วครับ!";
+	specialeffect2 73;
+	dispbottom "^00FF00[ระบบ VIP]^000000 เปิดใช้งาน VIP 7 วันเรียบร้อยแล้ว!";
 	return;
 }

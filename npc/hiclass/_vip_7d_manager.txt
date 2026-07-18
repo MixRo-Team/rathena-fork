@@ -1,22 +1,19 @@
 // ==========================================
-// ระบบคุมสถานะ VIP 7 วัน แบบเดี่ยว (Standalone)
+// ระบบ VIP 7 วัน (Standalone)
 // ==========================================
--	script	VIP_Manager	-1,{
+-	script	VIP_7D_Manager	-1,{
 
 OnPCLoginEvent:
 OnPCStatCalcEvent:
-	// ตรวจสอบว่าเวลา VIP ยังเหลืออยู่ และยังไม่มีบัฟติดตัว
-	if (#VIP_TIME > gettimetick(2) && !sc_check(SC_VIP_7D)) {
-		// คำนวณเวลาที่เหลือเป็นมิลลิวินาที
-		.@time_left = (#VIP_TIME - gettimetick(2)) * 1000;
-		sc_start SC_VIP_7D, .@time_left, 0;
-	}
-	
-	// ตรวจสอบกรณีเวลาหมด (ให้ล้างสถานะออก)
-	if (#VIP_TIME > 0 && #VIP_TIME <= gettimetick(2)) {
-		#VIP_TIME = 0;
+	// ตรวจสอบเวลา ถ้ายังมีเวลาเหลือและบัฟยังไม่ติด ให้เติมบัฟให้
+	if (#VIP_TIME > gettimetick(2)) {
+		if (!sc_check(SC_VIP_7D)) {
+			.@time_left = (#VIP_TIME - gettimetick(2)) * 1000;
+			sc_start SC_VIP_7D, .@time_left, 0;
+		}
+	} else {
+		// ถ้าเวลาหมด ให้ล้างบัฟออก
 		sc_end SC_VIP_7D;
-		dispbottom "^FF0000[ระบบ VIP]^000000 สถานะ VIP 7 Day ของคุณหมดอายุแล้วครับ";
 	}
 	end;
 }

@@ -32,10 +32,13 @@ function	script	7d_vip_ticket	{
 		end;
 	}
 
-	// 2. บันทึกเวลา 7 วัน (604,800 วินาที)
+	// 2. หักบัตร VIP ออกจากตัว 1 ชิ้น 
+	delitem 41015, 1;
+
+	// 3. บันทึกเวลา 7 วัน (604,800 วินาที)
 	#VIP_TIME = gettimetick(2) + 604800;
 
-	// 3. รันสถานะ SC_VIP_7D
+	// 4. รันสถานะ SC_VIP_7D
 	sc_start SC_VIP_7D, 604800000, 0;
 
 	specialeffect2 73;

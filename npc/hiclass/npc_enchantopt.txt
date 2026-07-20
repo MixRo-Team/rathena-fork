@@ -205,8 +205,8 @@ Select_Row:
 OnInit:
 	.req_cash = 100;
 	.req_zeny = 1000000;
-	.req_item1 = 7179; .req_amt1 = 5;
-	.req_item2 = 6735; .req_amt2 = 10;
+	.req_item1 = 61502; .req_amt1 = 10;
+	.req_item2 = 61509; .req_amt2 = 2;
 
 	setarray .eq_map[1], 
 		EQI_HEAD_TOP, EQI_HEAD_MID, EQI_HEAD_LOW, EQI_ARMOR, EQI_HAND_R, 

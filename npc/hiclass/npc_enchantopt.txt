@@ -174,4 +174,191 @@ OnInit:
 	setarray .opt_min[0],   500,      50,       1,     1,     1,     1,     1,     1; 
 	setarray .opt_max[0],   2500,     300,      5,     5,     5,     5,     5,     5; 
 	end;
+}// =====================================================================
+// Custom Random Option (Enchant System) by Gemini
+// รองรับระบบ 5 แถวตามมาตรฐาน rAthena ล่าสุด (MAX_ITEM_RDM_OPT 5)
+// =====================================================================
+prt_in,63,69,3	script	EnchantOption#01	4_F_FAIRYKID3,{
+	
+	// ==========================================
+	// 1. หน้าต่างพูดคุยหลัก
+	// ==========================================
+	mes "[ระบบเสริมพลัง]";
+	mes "คุณสามารถเลือกสุ่มแถวใดก็ได้ที่ต้องการ";
+	mes "เงื่อนไข:";
+	mes "^FF2525ต้องมีออฟชั่นในแถวก่อนหน้าก่อนเสมอ^000000";
+	next;
+	
+	.@menu = select(" • เริ่มการสุ่มสเตตัส"," • ตรวจสอบรายการออฟชั่น"," • ยกเลิก");
+	if (.@menu == 3) close;
+	
+	if (.@menu == 2) {
+		mes "[รายการออฟชั่นที่สุ่มได้]";
+		mes "ค่าพลังที่สุ่มได้มีดังนี้:";
+		mes "----------------------------------";
+		for (.@i = 0; .@i < getarraysize(.opt_id); .@i++) {
+			mes " • " + .opt_name$[.@i] + " + (สุ่ม " + .opt_min[.@i] + " ~ " + .opt_max[.@i] + ")";
+		}
+		close;
+	}
+
+	// ==========================================
+	// 2. เลือกชิ้นส่วนอุปกรณ์
+	// ==========================================
+	mes "[เลือกอุปกรณ์]";
+	mes "เลือกชิ้นส่วนที่ต้องการ:";
+	next;
+	
+	.@eq_menu = select(
+		" [ปกติ] หมวก (บน)",       // 1. EQI_HEAD_TOP
+		" [ปกติ] หู (กลาง)",        // 2. EQI_HEAD_MID
+		" [ปกติ] ปาก (ล่าง)",       // 3. EQI_HEAD_LOW
+		" [ปกติ] ชุดเกราะ",         // 4. EQI_ARMOR
+		" [ปกติ] อาวุธ (มือขวา)",    // 5. EQI_HAND_R
+		" [ปกติ] โล่ (มือซ้าย)",      // 6. EQI_HAND_L
+		" [ปกติ] ผ้าคลุม",          // 7. EQI_GARMENT
+		" [ปกติ] รองเท้า",          // 8. EQI_SHOES
+		" [ปกติ] ประดับขวา",        // 9. EQI_ACC_R
+		" [ปกติ] ประดับซ้าย",        // 10. EQI_ACC_L
+		" [คอสตูม] หมวก (บน)",      // 11. EQI_COSTUME_HEAD_TOP
+		" [คอสตูม] หู (กลาง)",       // 12. EQI_COSTUME_HEAD_MID
+		" [คอสตูม] ปาก (ล่าง)",      // 13. EQI_COSTUME_HEAD_LOW
+		" [คอสตูม] ผ้าคลุม",        // 14. EQI_COSTUME_GARMENT
+		" [ชาโดว์] อาวุธ",          // 15. EQI_SHADOW_WEAPON
+		" [ชาโดว์] โล่",            // 16. EQI_SHADOW_SHIELD
+		" [ชาโดว์] ชุดเกราะ",        // 17. EQI_SHADOW_ARMOR
+		" [ชาโดว์] รองเท้า",        // 18. EQI_SHADOW_SHOES
+		" [ชาโดว์] ประดับขวา",      // 19. EQI_SHADOW_ACC_R
+		" [ชาโดว์] ประดับซ้าย",      // 20. EQI_SHADOW_ACC_L
+		" • ยกเลิก"
+	);
+	
+	if (.@eq_menu == 21) close;
+	
+	// แมปปิ้งลำดับเมนูให้ตรงกับค่า Constant ของ rAthena
+	.@eq_idx = .eq_map[.@eq_menu];
+	
+	// Safety Check 1: ตรวจสอบว่าผู้เล่นใส่ไอเทมชิ้นนั้นอยู่หรือไม่
+	if (getequipid(.@eq_idx) <= 0) {
+		mes "[ระบบเสริมพลัง]";
+		mes "คุณไม่ได้สวมใส่อุปกรณ์ในตำแหน่งนี้ครับ";
+		close;
+	}
+
+Select_Row:
+	// ==========================================
+	// 3. เลือกแถว (Slot) ที่ต้องการสุ่ม
+	// ==========================================
+	// Safety Check 2: ดักคนถอดของระหว่างทำรายการ
+	if (getequipid(.@eq_idx) <= 0) {
+		mes "[ระบบเสริมพลัง]";
+		mes "ตรวจพบความผิดปกติ กรุณาทำรายการใหม่ครับ";
+		close;
+	}
+
+	mes "[เลือกอุปกรณ์]";
+	mes "เลือกชิ้นส่วนที่ต้องการ:";
+	mes "[เลือกแถวที่ต้องการสุ่ม]";
+	mes "อุปกรณ์: ^3F28FF<ITEM>" + getitemname(getequipid(.@eq_idx)) + "<INFO>" + getequipid(.@eq_idx) + "</INFO></ITEM>^000000";
+	mes "----------------------------------";
+	next;
+	
+	// สร้างเมนูตามสถานะของแถว (1-5) โดยใช้คำสั่ง getequipoptinfo ที่ถูกต้อง
+	.@menu_row$ = "";
+	for (.@i = 1; .@i <= 5; .@i++) {
+		// ประเภท 0 = ตรวจสอบ Option ID
+		if (getequipoptinfo(.@eq_idx, .@i, 0) > 0)
+			.@menu_row$ += " • แถวที่ " + .@i + " • (มีออฟชั่นแล้ว):";
+		else
+			.@menu_row$ += " • แถวที่ " + .@i + " • (ยังว่าง):";
+	}
+	.@menu_row$ += " • ยกเลิก";
+	
+	.@slot = select(.@menu_row$);
+	if (.@slot == 6) close;
+
+	// Safety Check 3: บังคับแถวก่อนหน้าต้องมีออฟชั่นก่อน
+	if (.@slot > 1) {
+		if (getequipoptinfo(.@eq_idx, .@slot - 1, 0) <= 0) {
+			mes "[ระบบเสริมพลัง]";
+			mes "^FF2525คุณไม่สามารถสุ่มแถวที่ " + .@slot + " ได้^000000";
+			mes "เนื่องจากแถวที่ " + (.@slot - 1) + " ยังว่างอยู่ครับ";
+			close;
+		}
+	}
+
+	// ==========================================
+	// 4. หน้าต่างยืนยัน และหักทรัพยากร
+	// ==========================================
+	mes "[ยืนยันการสุ่มแถวที่ " + .@slot + "]";
+	mes "ค่าใช้จ่ายต่อครั้ง:";
+	if (.req_cash > 0)  mes " • Cash Point: " + F_InsertComma(.req_cash);
+	if (.req_zeny > 0)  mes " • Zeny: " + F_InsertComma(.req_zeny);
+	if (.req_amt1 > 0)  mes " • " + .req_amt1 + " x <ITEM>" + getitemname(.req_item1) + "<INFO>" + .req_item1 + "</INFO></ITEM>";
+	if (.req_amt2 > 0)  mes " • " + .req_amt2 + " x <ITEM>" + getitemname(.req_item2) + "<INFO>" + .req_item2 + "</INFO></ITEM>";
+	next;
+
+	.@confirm = select(" • ยืนยันการสุ่ม"," • เลือกแถวใหม่"," • ยกเลิก");
+	if (.@confirm == 3) close;
+	if (.@confirm == 2) goto Select_Row; 
+
+	// Safety Check 4: เช็กทรัพยากรทั้งหมดว่าพอหรือไม่
+	if (Zeny < .req_zeny || #CASHPOINTS < .req_cash || countitem(.req_item1) < .req_amt1 || countitem(.req_item2) < .req_amt2) {
+		mes "[ระบบเสริมพลัง]";
+		mes "^FF2525ทรัพยากรของคุณไม่เพียงพอครับ^000000";
+		close;
+	}
+	
+	// Safety Check 5: ดักถอดของ/โยนของลงพื้นครั้งสุดท้ายก่อนหักทรัพยากร
+	if (getequipid(.@eq_idx) <= 0) close;
+
+	// หักทรัพยากร
+	if (.req_zeny > 0)  Zeny -= .req_zeny;
+	if (.req_cash > 0)  #CASHPOINTS -= .req_cash;
+	if (.req_amt1 > 0)  delitem .req_item1, .req_amt1;
+	if (.req_amt2 > 0)  delitem .req_item2, .req_amt2;
+
+	// ==========================================
+	// 5. สุ่มสเตตัส และสวมใส่ออฟชั่น
+	// ==========================================
+	.@rand_idx = rand(getarraysize(.opt_id));
+	
+	.@set_id = .opt_id[.@rand_idx];
+	.@set_val = rand(.opt_min[.@rand_idx], .opt_max[.@rand_idx]);
+
+	// ใส่ Option ลงอุปกรณ์
+	setequipoption .@eq_idx, .@slot, .@set_id, .@set_val;
+	
+	specialeffect 154; // เอฟเฟกต์แสงตีบวก
+	mes "[ระบบเสริมพลัง]";
+	mes "ยินดีด้วย! คุณได้รับ ^0000FF" + .opt_name$[.@rand_idx] + " + " + .@set_val + "^000000";
+	mes "ในแถวที่ " + .@slot + " เรียบร้อยแล้วครับ!";
+	close;
+
+
+// =======================================================
+// ตั้งค่าตัวแปรทั้งหมด (รันครั้งเดียวตอนโหลด NPC)
+// =======================================================
+OnInit:
+	// --- การตั้งค่าทรัพยากรที่ใช้สุ่ม ---
+	.req_cash = 100;         // ใช้ Cash Point
+	.req_zeny = 1000000;     // ใช้ Zeny
+	
+	.req_item1 = 7179;       // ใช้ไอเทม 1
+	.req_amt1  = 5;          // จำนวนชิ้น
+	
+	.req_item2 = 6735;       // ใช้ไอเทม 2
+	.req_amt2  = 10;         // จำนวนชิ้น
+
+	// --- แมปปิ้งตำแหน่งอุปกรณ์ ---
+	setarray .eq_map[1], EQI_HEAD_TOP, EQI_HEAD_MID, EQI_HEAD_LOW, EQI_ARMOR, EQI_HAND_R, EQI_SHOES, EQI_GARMENT, EQI_ACC_L, EQI_ACC_R, EQI_COSTUME_GARMENT;
+
+	// --- พูลรายการออฟชั่นที่จะสุ่มออก (ตั้งค่าได้อย่างอิสระ) ---
+	setarray .opt_name$[0], "MAX HP", "MAX SP", "STR", "AGI", "VIT", "INT", "DEX", "LUK";
+	setarray .opt_id[0],    1,        2,        3,     4,     5,     6,     7,     8;
+	
+	// ตั้งค่าสุ่มพลังของแต่ละ ID ต่ำสุด-สูงสุด
+	setarray .opt_min[0],   500,      50,       1,     1,     1,     1,     1,     1; 
+	setarray .opt_max[0],   2500,     300,      5,     5,     5,     5,     5,     5; 
+	end;
 }

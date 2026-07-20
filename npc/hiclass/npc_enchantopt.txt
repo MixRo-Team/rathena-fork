@@ -1,6 +1,7 @@
 // =====================================================================
 // Custom Random Option (Enchant System) by Gemini
-// รองรับอุปกรณ์ 20 ช่อง | ระบบสุ่ม 4 ระดับ (No Class 4 Stats) | โชว์ไอคอน/ชื่อออฟชั่น
+// รองรับอุปกรณ์ 20 ช่อง | ระบบสุ่ม 4 ระดับ (No Class 4 Stats)
+// โชว์ไอคอนไอเทม | โชว์ชื่อออฟชั่นพร้อมสีตามระดับแรร์ในเมนู
 // ใช้คำสั่งเฉพาะของระบบ Napster (getequiprandomoption / setrandomoption)
 // =====================================================================
 prt_in,63,69,3	script	EnchantOption#01	4_F_FAIRY,{
@@ -105,7 +106,11 @@ Select_Row:
 			.@opt_val = getequiprandomoption(.@eq_idx, .@i - 1, 1);
 			.@opt_name_str$ = (.id2name$[.@opt_id] != "") ? .id2name$[.@opt_id] : "สเตตัสพิเศษ";
 			
-			.@menu_row$ += " • แถวที่ " + .@i + " • (" + .@opt_name_str$ + " +" + .@opt_val + "):";
+			// ดึงโค้ดสีตามระดับออฟชั่น (ถ้าหาไม่เจอให้ใช้สีดำปกติ)
+			.@opt_color$ = (.id2color$[.@opt_id] != "") ? .id2color$[.@opt_id] : "^000000";
+			
+			// ประกอบข้อความ พร้อมยัดโค้ดสีเข้าไปที่ชื่อออฟชั่น
+			.@menu_row$ += " • แถวที่ " + .@i + " • (" + .@opt_color$ + .@opt_name_str$ + " +" + .@opt_val + "^000000):";
 		} else {
 			.@menu_row$ += " • แถวที่ " + .@i + " • (ยังว่าง):";
 		}
@@ -295,12 +300,24 @@ OnInit:
 	}
 
 	// ---------------------------------------------------------
-	// ระบบจดจำชื่อออฟชั่น (Dictionary) สำหรับดึงไปโชว์ในหน้าเมนู
+	// ระบบจดจำชื่อออฟชั่นและโค้ดสี (Dictionary) สำหรับดึงไปโชว์ในหน้าเมนู
 	// ---------------------------------------------------------
-	for(.@i = 0; .@i < getarraysize(.opt_n_id); .@i++) { .id2name$[.opt_n_id[.@i]] = .opt_n_name$[.@i]; }
-	for(.@i = 0; .@i < getarraysize(.opt_r_id); .@i++) { .id2name$[.opt_r_id[.@i]] = .opt_r_name$[.@i]; }
-	for(.@i = 0; .@i < getarraysize(.opt_e_id); .@i++) { .id2name$[.opt_e_id[.@i]] = .opt_e_name$[.@i]; }
-	for(.@i = 0; .@i < getarraysize(.opt_g_id); .@i++) { .id2name$[.opt_g_id[.@i]] = .opt_g_name$[.@i]; }
+	for(.@i = 0; .@i < getarraysize(.opt_n_id); .@i++) { 
+		.id2name$[.opt_n_id[.@i]] = .opt_n_name$[.@i]; 
+		.id2color$[.opt_n_id[.@i]] = "^A0A0A0"; // สีเทา (ทั่วไป)
+	}
+	for(.@i = 0; .@i < getarraysize(.opt_r_id); .@i++) { 
+		.id2name$[.opt_r_id[.@i]] = .opt_r_name$[.@i]; 
+		.id2color$[.opt_r_id[.@i]] = "^0055FF"; // สีฟ้า (แรร์หายาก)
+	}
+	for(.@i = 0; .@i < getarraysize(.opt_e_id); .@i++) { 
+		.id2name$[.opt_e_id[.@i]] = .opt_e_name$[.@i]; 
+		.id2color$[.opt_e_id[.@i]] = "^FF8800"; // สีส้มทอง (ตำนาน)
+	}
+	for(.@i = 0; .@i < getarraysize(.opt_g_id); .@i++) { 
+		.id2name$[.opt_g_id[.@i]] = .opt_g_name$[.@i]; 
+		.id2color$[.opt_g_id[.@i]] = "^FF0000"; // สีแดง (เทพเจ้า)
+	}
 
 	end;
 }

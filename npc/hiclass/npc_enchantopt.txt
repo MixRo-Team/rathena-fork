@@ -1,9 +1,9 @@
 // =====================================================================
 // Custom Random Option (Enchant System) by Gemini
-// รองรับอุปกรณ์ 20 ช่อง | ระบบสุ่ม 4 ระดับ (All Options) | โชว์ไอคอนไอเทม
+// รองรับอุปกรณ์ 20 ช่อง | ระบบสุ่ม 4 ระดับ (No Class 4 Stats) | โชว์ไอคอน/ชื่อออฟชั่น
 // ใช้คำสั่งเฉพาะของระบบ Napster (getequiprandomoption / setrandomoption)
 // =====================================================================
-prt_in,63,69,3	script	EnchantOption#01	114,{
+prt_in,63,69,3	script	EnchantOption#01	4_F_FAIRY,{
 	
 	// ==========================================
 	// 1. หน้าต่างพูดคุยหลัก
@@ -97,11 +97,18 @@ Select_Row:
 	
 	.@menu_row$ = "";
 	for (.@i = 1; .@i <= 5; .@i++) {
-		// Index ของ Random Option เริ่มที่ 0 ถึง 4
-		if (getequiprandomoption(.@eq_idx, .@i - 1, ROA_ID) > 0)
-			.@menu_row$ += " • แถวที่ " + .@i + " • (มีออฟชั่นแล้ว):";
-		else
+		// ดึง ID ของออฟชั่นในแถวนั้นออกมา (Index เริ่ม 0 ถึง 4 / ROA_ID = 0)
+		.@opt_id = getequiprandomoption(.@eq_idx, .@i - 1, 0);
+		
+		if (.@opt_id > 0) {
+			// ดึง Value ออกมา (ROA_VALUE = 1)
+			.@opt_val = getequiprandomoption(.@eq_idx, .@i - 1, 1);
+			.@opt_name_str$ = (.id2name$[.@opt_id] != "") ? .id2name$[.@opt_id] : "สเตตัสพิเศษ";
+			
+			.@menu_row$ += " • แถวที่ " + .@i + " • (" + .@opt_name_str$ + " +" + .@opt_val + "):";
+		} else {
 			.@menu_row$ += " • แถวที่ " + .@i + " • (ยังว่าง):";
+		}
 	}
 	.@menu_row$ += " • ยกเลิก";
 	
@@ -109,7 +116,7 @@ Select_Row:
 	if (.@slot == 6) close;
 
 	if (.@slot > 1) {
-		if (getequiprandomoption(.@eq_idx, .@slot - 2, ROA_ID) <= 0) {
+		if (getequiprandomoption(.@eq_idx, .@slot - 2, 0) <= 0) {
 			mes "[ระบบเสริมพลัง]";
 			mes "^FF2525คุณไม่สามารถสุ่มแถวที่ " + .@slot + " ได้^000000";
 			mes "เนื่องจากแถวที่ " + (.@slot - 1) + " ยังว่างอยู่ครับ";
@@ -155,21 +162,21 @@ Select_Row:
 		.@set_id = .opt_g_id[.@idx];
 		.@set_val = rand(.opt_g_min[.@idx], .opt_g_max[.@idx]);
 		.@opt_name$ = "^FF0000[เทพเจ้า] " + .opt_g_name$[.@idx];
-		specialeffect 743; // เอฟเฟกต์เสาแสงสีแดง
+		specialeffect 743; 
 	}
 	else if (.@gacha_rate <= 1500) { // 10.00% ตำนาน (Epic)
 		.@idx = rand(getarraysize(.opt_e_id));
 		.@set_id = .opt_e_id[.@idx];
 		.@set_val = rand(.opt_e_min[.@idx], .opt_e_max[.@idx]);
 		.@opt_name$ = "^FF8800[ตำนาน] " + .opt_e_name$[.@idx];
-		specialeffect 734; // เอฟเฟกต์เสาแสงสีทอง
+		specialeffect 734; 
 	}
 	else if (.@gacha_rate <= 4000) { // 25.00% แรร์หายาก (Rare)
 		.@idx = rand(getarraysize(.opt_r_id));
 		.@set_id = .opt_r_id[.@idx];
 		.@set_val = rand(.opt_r_min[.@idx], .opt_r_max[.@idx]);
 		.@opt_name$ = "^0055FF[แรร์] " + .opt_r_name$[.@idx];
-		specialeffect 154; // เอฟเฟกต์ตีบวกแสงสีฟ้า
+		specialeffect 154; 
 	}
 	else { // 60.00% ทั่วไป (Normal)
 		.@idx = rand(getarraysize(.opt_n_id));
@@ -198,8 +205,8 @@ Select_Row:
 OnInit:
 	.req_cash = 100;
 	.req_zeny = 1000000;
-	.req_item1 = 61502; .req_amt1 = 10;
-	.req_item2 = 61509; .req_amt2 = 5;
+	.req_item1 = 7179; .req_amt1 = 5;
+	.req_item2 = 6735; .req_amt2 = 10;
 
 	setarray .eq_map[1], 
 		EQI_HEAD_TOP, EQI_HEAD_MID, EQI_HEAD_LOW, EQI_ARMOR, EQI_HAND_R, 
@@ -221,10 +228,10 @@ OnInit:
 	}
 
 	// ---------------------------------------------------------
-	// 2. ระดับแรร์หายาก (Rare) - 25%
+	// 2. ระดับแรร์หายาก (Rare) - 25% (ลบสเตตัส Class 4 ออก)
 	// ---------------------------------------------------------
-	setarray .opt_r_id[0], 9, 10, 13, 14, 15, 16, 17, 19, 23, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254;
-	setarray .opt_r_name$[0], "Max HP %", "Max SP %", "ATK %", "MATK %", "ASPD", "ASPD %", "ATK", "MATK", "Perfect Dodge", "POW", "SPL", "STA", "WIS", "CON", "CRT", "P.ATK", "S.MATK", "RES", "MRES", "Heal Plus", "C.Rate";
+	setarray .opt_r_id[0], 9, 10, 13, 14, 15, 16, 17, 19, 23;
+	setarray .opt_r_name$[0], "Max HP %", "Max SP %", "ATK %", "MATK %", "ASPD", "ASPD %", "ATK", "MATK", "Perfect Dodge";
 	
 	for(.@i = 0; .@i < getarraysize(.opt_r_id); .@i++) {
 		.opt_r_min[.@i] = 1; .opt_r_max[.@i] = 5; 
@@ -286,5 +293,14 @@ OnInit:
 			.opt_g_min[.@i] = 5; .opt_g_max[.@i] = 15;
 		}
 	}
+
+	// ---------------------------------------------------------
+	// ระบบจดจำชื่อออฟชั่น (Dictionary) สำหรับดึงไปโชว์ในหน้าเมนู
+	// ---------------------------------------------------------
+	for(.@i = 0; .@i < getarraysize(.opt_n_id); .@i++) { .id2name$[.opt_n_id[.@i]] = .opt_n_name$[.@i]; }
+	for(.@i = 0; .@i < getarraysize(.opt_r_id); .@i++) { .id2name$[.opt_r_id[.@i]] = .opt_r_name$[.@i]; }
+	for(.@i = 0; .@i < getarraysize(.opt_e_id); .@i++) { .id2name$[.opt_e_id[.@i]] = .opt_e_name$[.@i]; }
+	for(.@i = 0; .@i < getarraysize(.opt_g_id); .@i++) { .id2name$[.opt_g_id[.@i]] = .opt_g_name$[.@i]; }
+
 	end;
 }

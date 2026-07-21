@@ -53,7 +53,7 @@ prontera,150,190,4	script	Kafra Service#Main	4_KAFRA4,{
 				close;
 			}
 			close2;
-			openguildstorage;
+			guildopenstorage;
 			end;
 
 		case 4: // √–∫∫°‘≈¥Ï (·®°À‘π°‘≈¥Ï)

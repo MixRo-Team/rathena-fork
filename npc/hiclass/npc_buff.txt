@@ -24,13 +24,13 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		sc_start SC_ITEMBOOST, 1800000, 1;       // Drop Boost
 
 		// บัพจัดเต็ม VIP (30 นาที = 1800000 ms)
-		sc_start SC_STRFood,1800000,7;
-		sc_start SC_AGIFood,1800000,7;
-		sc_start SC_VITFood,1800000,7;
-		sc_start SC_INTFood,1800000,7;
-		sc_start SC_DEXFood,1800000,7;
-		sc_start SC_LUKFood,1800000,7;
-		specialeffect2 593;
+//=		sc_start SC_STRFood,1800000,7;
+//=		sc_start SC_AGIFood,1800000,7;
+//=		sc_start SC_VITFood,1800000,7;
+//=		sc_start SC_INTFood,1800000,7;
+//=		sc_start SC_DEXFood,1800000,7;
+//=		sc_start SC_LUKFood,1800000,7;
+//=		specialeffect2 593;
 
 		// --- บัพอาหารและสเตตัส (เน้นเอฟเฟกต์เพิ่มพลัง) ---
 		specialeffect EF_POTION_BERSERK; 

@@ -277,8 +277,11 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 				mes "^FF0000คุณยังไม่ได้ฟักสัตว์เลี้ยงเลยค่ะ^000000";
 				close;
 			}
-			setpetinfo PETINFO_INTIMATE, 1000;
-			specialeffect 338; // เอฟเฟกต์หัวใจ
+			
+			// ใช้คำสั่ง atcommand สั่งปรับความสนิทแทน เนื่องจากไม่มีคำสั่ง setpetinfo
+			atcommand "@petfriendly 1000"; 
+			
+			specialeffect 338; // เอฟเฟกต์รูปหัวใจ
 			mes "สัตว์เลี้ยงของคุณรู้สึก ^0055FFสนิทสนม^000000 กับคุณเต็มที่แล้วค่ะ!";
 			close;
 

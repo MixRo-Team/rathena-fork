@@ -132,10 +132,10 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 	sc_start SC_KAIZEL, 1800000, 7;
 	sc_start SC_KAITE, 1800000, 7;
 	sc_start SC_KAUPE, 1800000, 7;
-	specialeffect2 503; // Effect 9: Soul Link Word
+	//specialeffect2 503; // Effect 9: Soul Link Word
 
 	// ==========================================
-	// 4. ระบบแจกบัพโซลิ้งจำแนกตามอาชีพ (อ้างอิงตาม skill_db.yml)
+	// 4. ระบบแจกบัพโซลิ้งจำแนกตามอาชีพ (เปิดไอคอน SOUL LINK โซ่ม่วงชัวร์ 100%)
 	// ==========================================
 	.@link_skill = 0;
 	if (BaseClass == Job_Alchemist) .@link_skill = SL_ALCHEMIST;
@@ -155,7 +155,11 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 	else if (BaseClass == Job_StarGladiator) .@link_skill = SL_STAR;
 
 	if (.@link_skill > 0) {
+		// เปิดสถานะ SC_SPIRIT เพื่อเรียกไอคอน EFST_SOULLINK (โซ่ม่วง) ขึ้นบนจอ
+		sc_start SC_SPIRIT, 1800000, 5;
+		// สั่งร่ายสกิลวิญญาณประจำอาชีพเพื่อให้ระบบบันทึกผลของอาชีพนั้นๆ
 		atcommand "@useskill " + .@link_skill + " 5 " + strcharinfo(0);
+		specialeffect2 503; // เอฟเฟกต์แสง Soul Link
 	}
 
 	// ==========================================

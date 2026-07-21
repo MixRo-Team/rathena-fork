@@ -165,28 +165,29 @@ Select_Row:
 	if (.@gacha_rate <= 500) { // 5.00% เทพเจ้า (God)
 		.@idx = rand(getarraysize(.opt_g_id));
 		.@set_id = .opt_g_id[.@idx];
-		.@set_val = rand(.opt_g_min[.@idx], .opt_g_max[.@idx]);
+		// ดักบัค: ถ้า Min เท่ากับ Max ให้ใช้ค่านั้นเลย ถ้าไม่เท่าค่อยใช้ rand()
+		.@set_val = (.opt_g_min[.@idx] == .opt_g_max[.@idx]) ? .opt_g_min[.@idx] : rand(.opt_g_min[.@idx], .opt_g_max[.@idx]);
 		.@opt_name$ = "^FF0000[เทพเจ้า] " + .opt_g_name$[.@idx];
 		specialeffect 743; 
 	}
 	else if (.@gacha_rate <= 1500) { // 10.00% ตำนาน (Epic)
 		.@idx = rand(getarraysize(.opt_e_id));
 		.@set_id = .opt_e_id[.@idx];
-		.@set_val = rand(.opt_e_min[.@idx], .opt_e_max[.@idx]);
+		.@set_val = (.opt_e_min[.@idx] == .opt_e_max[.@idx]) ? .opt_e_min[.@idx] : rand(.opt_e_min[.@idx], .opt_e_max[.@idx]);
 		.@opt_name$ = "^FF8800[ตำนาน] " + .opt_e_name$[.@idx];
 		specialeffect 734; 
 	}
 	else if (.@gacha_rate <= 4000) { // 25.00% แรร์หายาก (Rare)
 		.@idx = rand(getarraysize(.opt_r_id));
 		.@set_id = .opt_r_id[.@idx];
-		.@set_val = rand(.opt_r_min[.@idx], .opt_r_max[.@idx]);
+		.@set_val = (.opt_r_min[.@idx] == .opt_r_max[.@idx]) ? .opt_r_min[.@idx] : rand(.opt_r_min[.@idx], .opt_r_max[.@idx]);
 		.@opt_name$ = "^0055FF[แรร์] " + .opt_r_name$[.@idx];
 		specialeffect 154; 
 	}
 	else { // 60.00% ทั่วไป (Normal)
 		.@idx = rand(getarraysize(.opt_n_id));
 		.@set_id = .opt_n_id[.@idx];
-		.@set_val = rand(.opt_n_min[.@idx], .opt_n_max[.@idx]);
+		.@set_val = (.opt_n_min[.@idx] == .opt_n_max[.@idx]) ? .opt_n_min[.@idx] : rand(.opt_n_min[.@idx], .opt_n_max[.@idx]);
 		.@opt_name$ = "^A0A0A0[ทั่วไป] " + .opt_n_name$[.@idx];
 		specialeffect 154; 
 	}

@@ -1,12 +1,6 @@
-/*
-  _____              __              ____       ___         
- / ___/_____ _____  / /  ___  ___  / __ \___  / (_)__  ___  
-/ (_ / __/ // / _ \/ _ \/ _ \/ _ \/ /_/ / _ \/ / / _ \/ -_)
-\___/_/  \_, / .__/_//_/\___/_//_/\____/_//_/_/_/_//_/\__/  
-        /___/_/                                             
-
-*/
-// ชื่อ NPC: Buff Master
+// =====================================================================
+// Custom Buff Master & Soul Linker System (High Class Edition) by Gemini
+// =====================================================================
 prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 	
 	// ==========================================
@@ -20,12 +14,12 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 	// ==========================================
 	// 2. แยกสายรับบัพ VIP กับ ผู้เล่นธรรมดา
 	// ==========================================
-	if (getgroupid() >= 5) { 
+	if (getgroupid() >= 5) {	
 
 		// ------------------------------------
 		// กรณีเป็นผู้เล่น VIP
 		// ------------------------------------
-		specialeffect EF_HOLY_LIGHT;          // เอฟเฟกต์แสงศักดิ์สิทธิ์
+		specialeffect EF_HOLY_LIGHT;         // เอฟเฟกต์แสงศักดิ์สิทธิ์
 		sc_start SC_EXPBOOST, 1800000, 1;        // Exp Boost
 		sc_start SC_ITEMBOOST, 1800000, 1;       // Drop Boost
 
@@ -38,13 +32,7 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		sc_start SC_LUKFood,1800000,7;
 		specialeffect2 593;
 
-		// --- บัพโซลลิ้งเกอร์ ---
-		sc_start SC_KAIZEL, 1800000, 7;
-		sc_start SC_KAITE, 1800000, 7;
-		sc_start SC_KAUPE, 1800000, 7;
-		specialeffect2 503; // Effect 9: Soul Link Word
-
-		// --- 1. บัฟอาหารและสเตตัส (เน้นเอฟเฟกต์เพิ่มพลัง) ---
+		// --- บัฟอาหารและสเตตัส (เน้นเอฟเฟกต์เพิ่มพลัง) ---
 		specialeffect EF_POTION_BERSERK; 
 		sc_start SC_HITFOOD, 1800000, 10;      // เพิ่ม Hit
 		sc_start SC_FLEEFOOD, 1800000, 10;     // เพิ่ม Flee
@@ -52,7 +40,7 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		sc_start SC_MATKPOTION, 1800000, 10;  // เพิ่มค่า MATK
 		sc_start SC_TRUESIGHT, 1800000, 10;      // True Sight
 
-		// --- 2. บัฟสกิลอาชีพ (เน้นเอฟเฟกต์วิ้งๆ ของ Blessing) ---
+		// --- บัฟสกิลอาชีพ (เน้นเอฟเฟกต์วิ้งๆ ของ Blessing) ---
 		specialeffect EF_BLESSING;
 		sc_start SC_ENDURE, 1800000, 10;         // Endure
 		sc_start SC_WINDWALK, 1800000, 10;       // Wind Walk
@@ -62,7 +50,7 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		sc_start SC_GLORIA, 1800000, 5;          // Gloria
 		sc_start SC_ANGELUS, 1800000, 10;        // Angelus
 
-		// --- 3. บัฟกลุ่ม Chemical Protection (เน้นเอฟเฟกต์โล่ป้องกัน) ---
+		// --- บัฟกลุ่ม Chemical Protection (เน้นเอฟเฟกต์โล่ป้องกัน) ---
 		specialeffect EF_SHIELD;
 		sc_start SC_WEAPONPERFECTION, 1800000, 10; // Weapon Perfection
 		sc_start SC_CP_WEAPON, 1800000, 5;   // Chemical Protection Weapon
@@ -74,7 +62,7 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		sc_start SC_ASSUMPTIO, 1800000, 5;      // เพิ่มพลังป้องกัน (Def/Mdef)
 		sc_start SC_ENERGYCOAT, 1800000, 5;     // ลดดาเมจ (ซับ SP)
 
-		// --- 4. บัฟสนับสนุนอาชีพ (เน้นเอฟเฟกต์ดนตรีและเวทย์) ---
+		// --- บัฟสนับสนุนอาชีพ (เน้นเอฟเฟกต์ดนตรีและเวทย์) ---
 		specialeffect EF_MUSIC;
 		sc_start SC_POEMBRAGI, 1800000, 5;           // Poem of Bragi
 		sc_start SC_SERVICE4U, 1800000, 1;         // Service for You
@@ -90,21 +78,15 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		sc_start SC_ADRENALINE, 1800000, 5;     // เพิ่มความเร็วการโจมตี (ASPD)
 
 		specialeffect2 EF_ANGEL2;
-		dispbottom "[ Buff Master ] : ท่านได้รับบัพ VIP 30 นาทีเรียบร้อยแล้ว";
+		dispbottom "[ Buff Master ] : ท่านได้รับบัพ VIP และโซลิ้งประจำอาชีพ 30 นาทีเรียบร้อยแล้ว";
 
-	} else { 
+	} else {	
 
 		// ------------------------------------
 		// กรณีเป็นผู้เล่นธรรมดา (Normal)
 		// ------------------------------------
 
-		// --- บัพโซลลิ้งเกอร์ ---
-		sc_start SC_KAIZEL, 1800000, 7;
-		sc_start SC_KAITE, 1800000, 7;
-		sc_start SC_KAUPE, 1800000, 7;
-		specialeffect2 503; // Effect 9: Soul Link Word
-
-		// --- 1. บัฟอาหารและสเตตัส (เน้นเอฟเฟกต์เพิ่มพลัง) ---
+		// --- บัฟอาหารและสเตตัส (เน้นเอฟเฟกต์เพิ่มพลัง) ---
 		specialeffect EF_POTION_BERSERK; 
 		sc_start SC_HITFOOD, 1800000, 10;      // เพิ่ม Hit
 		sc_start SC_FLEEFOOD, 1800000, 10;     // เพิ่ม Flee
@@ -112,7 +94,7 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		sc_start SC_MATKPOTION, 1800000, 10;  // เพิ่มค่า MATK
 		sc_start SC_TRUESIGHT, 1800000, 10;      // True Sight
 
-		// --- 2. บัฟสกิลอาชีพ (เน้นเอฟเฟกต์วิ้งๆ ของ Blessing) ---
+		// --- บัฟสกิลอาชีพ (เน้นเอฟเฟกต์วิ้งๆ ของ Blessing) ---
 		specialeffect EF_BLESSING;
 		sc_start SC_ENDURE, 1800000, 10;         // Endure
 		sc_start SC_WINDWALK, 1800000, 10;       // Wind Walk
@@ -122,7 +104,7 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		sc_start SC_GLORIA, 1800000, 5;          // Gloria
 		sc_start SC_ANGELUS, 1800000, 10;        // Angelus
 
-		// --- 3. บัฟกลุ่ม Chemical Protection (เน้นเอฟเฟกต์โล่ป้องกัน) ---
+		// --- บัฟกลุ่ม Chemical Protection (เน้นเอฟเฟกต์โล่ป้องกัน) ---
 		specialeffect EF_SHIELD;
 		sc_start SC_WEAPONPERFECTION, 1800000, 10; // Weapon Perfection
 		sc_start SC_CP_WEAPON, 1800000, 5;   // Chemical Protection Weapon
@@ -132,7 +114,7 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		sc_start SC_KYRIE, 1800000, 10;      // Kyrie Eleison
 		sc_start SC_SLOWPOISON, 1800000, 10; // Slow Poison
 
-		// --- 4. บัฟสนับสนุนอาชีพ (เน้นเอฟเฟกต์ดนตรีและเวทย์) ---
+		// --- บัฟสนับสนุนอาชีพ (เน้นเอฟเฟกต์ดนตรีและเวทย์) ---
 		specialeffect EF_MUSIC;
 		sc_start SC_POEMBRAGI, 1800000, 5;           // Poem of Bragi
 		sc_start SC_SERVICE4U, 1800000, 5;         // Service for You
@@ -141,11 +123,34 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 		sc_start SC_SUFFRAGIUM, 1800000, 3;      // Suffragium
 		sc_start SC_MAGNIFICAT, 1800000, 5;      // Magnificat
 
-
-		dispbottom "[ Buff Master ] : ท่านได้รับบัพ 30 นาทีเรียบร้อยแล้ว";
+		dispbottom "[ Buff Master ] : ท่านได้รับบัพและโซลิ้งประจำอาชีพ 30 นาทีเรียบร้อยแล้วครับ";
 	}
+
 	// ==========================================
-	//  ระบบพื้นฐานที่ได้รับทุกคน (ล้างบัพ/ฮีล/ซ่อม)
+	// 3. ระบบแจกบัพโซลิ้งจำแนกตามอาชีพ (ครอบคลุม High Class ครบถ้วน)
+	// ==========================================
+	.@link_id = 0;
+	if (BaseClass == Job_Alchemist) .@link_id = 445;
+	else if (BaseClass == Job_Monk) .@link_id = 446;
+	else if (BaseClass == Job_Taekwon) .@link_id = 447;
+	else if (BaseClass == Job_Sage) .@link_id = 448;
+	else if (BaseClass == Job_Crusader) .@link_id = 449;
+	else if (BaseClass == Job_Novice) .@link_id = 450;
+	else if (BaseClass == Job_Knight) .@link_id = 451;
+	else if (BaseClass == Job_Wizard) .@link_id = 452;
+	else if (BaseClass == Job_Priest) .@link_id = 453;
+	else if (BaseClass == Job_Bard || BaseClass == Job_Dancer) .@link_id = 454;
+	else if (BaseClass == Job_Rogue) .@link_id = 455;
+	else if (BaseClass == Job_Assassin) .@link_id = 456;
+	else if (BaseClass == Job_Blacksmith) .@link_id = 457;
+	else if (BaseClass == Job_Hunter) .@link_id = 458;
+
+	if (.@link_id > 0) {
+		atcommand "@useskill " + .@link_id + " 5 " + strcharinfo(0);
+	}
+
+	// ==========================================
+	// 4. ระบบพื้นฐานที่ได้รับทุกคน (ล้างบัพ/ฮีล/ซ่อม)
 	// ==========================================
 	repairall;
 	identifyall;
@@ -164,5 +169,4 @@ prontera,154,190,4	script	Healer & Buff	4_M_FAIRYKID4,{
 	// เซ็ตเวลาหน่วงหลังกดรับบัพ
 	set #BuffDelay, gettimetick(2) + 5;
 	end;
-
 }

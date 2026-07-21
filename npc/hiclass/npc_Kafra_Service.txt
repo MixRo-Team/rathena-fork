@@ -1,11 +1,11 @@
 // =====================================================================
 // Custom Kafra Corporation (All-in-One Service) by Gemini
-// ฟีเจอร์ครบครัน | โค้ดสะอาด | ปลอดภัยไร้บัค | สีสันตรงตามแบบรูปภาพ
+// โค้ดสมบูรณ์ | ตัดโซลิ้งออก | เพิ่มค่ารีเซตสเตตัส 1m Zeny
 // =====================================================================
-prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
+prontera,150,190,4	script	Kafra Service#Main	114,{
 
 	// ==========================================
-	// 1. หน้าต่างต้อนรับ และแสดงข้อมูลตัวละคร (ตรงตามรูป)
+	// 1. หน้าต่างต้อนรับ และแสดงข้อมูลตัวละคร
 	// ==========================================
 	mes "[ Kafra Corporation ]";
 	mes "ยินดีต้อนรับคุณ : ^FF0000" + strcharinfo(0) + "^000000";
@@ -14,21 +14,19 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 	mes " "; // เว้นบรรทัดให้สวยงาม
 
 	// ==========================================
-	// 2. เมนูเลือกใช้งาน (เรียงตามรูปภาพเป๊ะๆ)
+	// 2. เมนูเลือกใช้งาน (ตัดโซลิ้งออกแล้ว)
 	// ==========================================
 	.@menu = select(
 		" ~ ^0055FFบันทึกจุดเกิด^000000",
-		" ~ ^0055FFเปิดคลังเก็บของ^000000",
+		" ~ ^FF7700เปิดคลังเก็บของ^000000",
 		" ~ ^FF7700เปิดคลังกิลด์^000000",
 		" ~ ^FF7700ระบบกิลด์^000000",
 		" ~ ^990099แต่งตัวละคร^000000",
-		" ~ ^008800รับสกิลเสริมอาชีพ^000000",
-		" ~ ^008800รีเซ็ต สเตตัส^000000",
+		" ~ ^008800รีเซ็ต สเตตัส (1m)^000000",
 		" ~ ^008800รีเซ็ต สกิล^000000",
 		" ~ ^007799เช่าทุกอย่าง^000000",
 		" ~ ^007799แก้บัค^000000",
 		" ~ ^007799เคลือบธาตุ^000000",
-		" ~ ^007799บัพโซลิ้ง^000000",
 		" ~ ^007799ก็อบปี้สกิล^000000",
 		" ~ ^007799เพิ่มน้ำหนัก^000000",
 		" ~ ^8B4513สัตว์เลี้ยงสนิททันที^000000",
@@ -38,12 +36,11 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 
 	switch(.@menu) {
 		case 1: // บันทึกจุดเกิด
-			// ดึงพิกัดของ NPC ตัวนี้เลย (Type 1)
 			getmapxy(.@map$, .@x, .@y, 1); 
 			savepoint .@map$, .@x, .@y;
 			
-			specialeffect 17; // เอฟเฟกต์แสงวาบ (เหมือนตอนเซฟ Kafra ปกติ)
-			mes "ระบบได้ทำการ ^0055FFบันทึกจุดเกิด^000000 ให้คุณเรียบร้อยแล้วค่ะ";
+			specialeffect 17; 
+			mes "ระบบได้ทำการ ^000099บันทึกจุดเกิด^000000 ให้คุณเรียบร้อยแล้วค่ะ";
 			mes "ไว้เจอกันใหม่นะคะ";
 			close;
 
@@ -61,7 +58,7 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 			guildopenstorage;
 			end;
 
-		case 4: // ระบบกิลด์ (หัก 100k Zeny ถาวร ไม่มีการคืนเงิน ป้องกันการปั๊มระบบ)
+		case 4: // ระบบกิลด์ (หัก 100k Zeny ถาวร สร้างกิลด์ให้ทันที)
 			mes "[ ระบบกิลด์ ]";
 			if (getcharid(2) > 0) {
 				mes "คุณมีกิลด์อยู่แล้วค่ะ สามารถกด ^0055FF[ Alt+G ]^000000 เพื่อจัดการกิลด์ได้เลย";
@@ -77,14 +74,12 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 				close;
 			}
 			
-			// เช็กเงินในตัวผู้เล่นว่าพอไหม
 			if (Zeny < 100000) {
 				mes "[ ระบบกิลด์ ]";
 				mes "^FF0000Zeny ของคุณไม่พอค่ะ!^000000 ต้องการใช้ 100,000 Zeny ในการสร้างกิลด์";
 				close;
 			}
 			
-			// หักเงิน 100,000 Zeny ถาวรทันที
 			Zeny -= 100000;
 			
 			mes "[ ระบบกิลด์ ]";
@@ -93,16 +88,14 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 			
 			input .@guild_name$;
 			
-			// ป้องกันช่องว่างหรือชื่อว่างเปล่า (หักเงินไปแล้ว แต่ถ้าไม่ใส่ชื่อ จะถือว่ายกเลิกและเสียเงินฟรีตามกฎ)
 			if (.@guild_name$ == "") {
 				mes "คุณไม่ได้ระบุชื่อกิลด์ ระบบได้หักค่าธรรมเนียม ^FF7700100,000 Zeny^000000 เรียบร้อยแล้วค่ะ";
 				close;
 			}
 			
-			// สั่งสร้างกิลด์ผ่านระบบ atcommand
 			atcommand "@guild \"" + .@guild_name$ + "\"";
 			
-			specialeffect 734; // เอฟเฟกต์แสงสำเร็จ
+			specialeffect 734;
 			mes "สร้างกิลด์ ^0055FF" + .@guild_name$ + "^000000 สำเร็จเรียบร้อยแล้วค่ะ!";
 			close;
 
@@ -110,37 +103,45 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 			mes "[ แต่งตัวละคร ]";
 			mes "เชิญเลือกสไตล์ที่คุณชื่นชอบจากหน้าต่าง UI ได้เลยค่ะ";
 			next;
-			
-			// ปิดหน้าต่างสนทนาชั่วคราวเพื่อให้ UI Stylist เด้งขึ้นมาทำงานได้อย่างสมบูรณ์
 			close2;
-			
-			// เรียกใช้งาน Stylist UI แท้ของ rAthena (รองรับแพทช์ 2015 ขึ้นไป)
 			openstylist();
 			end;
 
-		case 6: // รับสกิลเสริมอาชีพ (Platinum Skills)
-			atcommand "@questskill";
-			mes "ระบบได้ทำการปลดล็อก ^0055FFสกิลเสริม^000000 ให้เรียบร้อยแล้วค่ะ";
-			close;
-
-		case 7: // รีเซ็ต สเตตัส
+		case 6: // รีเซ็ต สเตตัส (คิดค่าบริการ 1,000,000 Zeny)
+			mes "[ รีเซ็ตสเตตัส ]";
+			mes "การรีเซ็ตสเตตัสมีค่าใช้จ่าย ^FF77001,000,000 Zeny^000000 ค่ะ";
+			mes "ต้องการดำเนินการต่อหรือไม่คะ?";
+			next;
+			
+			if (select(" • ตกลง (รีเซ็ตสเตตัส)", " • ยกเลิก") == 2) {
+				close;
+			}
+			
+			if (Zeny < 1000000) {
+				mes "[ รีเซ็ตสเตตัส ]";
+				mes "^FF0000Zeny ของคุณไม่พอค่ะ!^000000 ต้องการใช้ 1,000,000 Zeny";
+				close;
+			}
+			
+			Zeny -= 1000000;
 			ResetStatus;
-			mes "รีเซ็ต ^0055FFสเตตัส^000000 เรียบร้อยแล้วค่ะ อัพใหม่ได้เลย!";
+			
+			specialeffect 154;
+			mes "รีเซ็ต ^0055FFสเตตัส^000000 เรียบร้อยแล้วค่ะ หักค่าบริการ 1,000,000 Zeny อัพใหม่ได้เลย!";
 			close;
 
-		case 8: // รีเซ็ต สกิล
+		case 7: // รีเซ็ต สกิล (ฟรีตามเดิม หรือปรับแก้ได้ตามต้องการ)
 			ResetSkill;
 			mes "รีเซ็ต ^0055FFสกิล^000000 เรียบร้อยแล้วค่ะ อัพใหม่ได้เลย!";
 			close;
 
-		case 9: // เช่าทุกอย่าง (Cart, Peco, Dragon, Falcon, Warg, Mado)
+		case 8: // เช่าทุกอย่าง (Cart, Peco, Dragon, Falcon, Warg, Mado)
 			mes "[ บริการให้เช่า ]";
 			if (ismounting()) {
 				mes "^FF0000กรุณาลงจากสัตว์ขี่ของท่านก่อนทำการเช่าใหม่ค่ะ^000000";
 				close;
 			}
 			
-			// เช็กสายอาชีพ Ranger (เลือกระหว่าง นก กับ หมาป่า)
 			if (((eaclass() & EAJ_THIRDMASK) == EAJ_RANGER) && !countitem(6124)) {
 				if (!checkfalcon() && getskilllv("HT_FALCON") && !checkwug()) {
 					mes "คุณมีทักษะทั้ง 2 แบบ ต้องการเช่าอะไรคะ?";
@@ -149,7 +150,7 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 						setfalcon;
 						mes "รับ ^0055FFนกฟอลคอน^000000 เรียบร้อยแล้วค่ะ";
 					} else {
-						getitem 6124, 1; // ขลุ่ยเรียกหมาป่า (Wolf's Flute)
+						getitem 6124, 1;
 						mes "รับ ^0055FFWolf's Flute^000000 สำหรับเรียกหมาป่าเรียบร้อยแล้วค่ะ";
 					}
 				} else {
@@ -157,7 +158,6 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 					mes "รับ ^0055FFWolf's Flute^000000 สำหรับเรียกหมาป่าเรียบร้อยแล้วค่ะ";
 				}
 			}
-			// เช็กสายอาชีพ Mechanic (เลือกระหว่าง รถเข็น กับ หุ่นยนต์)
 			else if (((eaclass() & EAJ_THIRDMASK) == EAJ_MECHANIC) && !checkcart() && getskilllv("MC_PUSHCART")) {
 				if (!checkmadogear() && getskilllv("NC_MADOLICENCE")) {
 					mes "คุณมีทักษะทั้ง 2 แบบ ต้องการเช่าอะไรคะ?";
@@ -174,17 +174,14 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 					mes "รับ ^0055FFรถเข็น^000000 เรียบร้อยแล้วค่ะ";
 				}
 			}
-			// เช็กรถเข็นทั่วไป (Merchant Class)
 			else if (!checkcart() && getskilllv("MC_PUSHCART")) {
 				setcart;
 				mes "รับ ^0055FFรถเข็น^000000 เรียบร้อยแล้วค่ะ";
 			}
-			// เช็กนกฟอลคอนทั่วไป (Hunter Class)
 			else if (!checkfalcon() && getskilllv("HT_FALCON") && !checkwug()) {
 				setfalcon;
 				mes "รับ ^0055FFนกฟอลคอน^000000 เรียบร้อยแล้วค่ะ";
 			}
-			// เช็กสัตว์ขี่ทั่วไป & มังกร (Rune Knight)
 			else if (!checkriding() && !checkdragon() && getskilllv("KN_RIDING")) {
 				if ((eaclass() & EAJ_THIRDMASK) == EAJ_RUNE_KNIGHT) {
 					setdragon;
@@ -194,35 +191,97 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 					mes "รับ ^0055FFสัตว์ขี่ (Peco Peco)^000000 เรียบร้อยแล้วค่ะ";
 				}
 			}
-			// เช็กหุ่น Mado Gear ทั่วไป (สำหรับคนที่ยังไม่ได้เช่า)
 			else if (!checkmadogear() && getskilllv("NC_MADOLICENCE")) {
 				setmadogear;
 				mes "รับ ^0055FFหุ่นยนต์ (Mado Gear)^000000 เรียบร้อยแล้วค่ะ";
 			}
-			// หากไม่มีสกิล หรือเช่าไปแล้ว
 			else {
 				mes "^FF0000เจ้ามีคุณสมบัติไม่ตรงตามข้อกำหนดในการเช่า^000000";
 				mes "หรืออาจจะทำการเช่าสิ่งนั้นไปแล้วค่ะ";
 				close;
 			}
 			
-			specialeffect 154; // เอฟเฟกต์แสงหมุนสวยๆ แสดงความสำเร็จ
+			specialeffect 154;
 			close;
 
-		case 10: // แก้บัค (ส่งกลับจุดเซฟ)
-			mes "ระบบจะทำการส่งคุณกลับจุดเซฟ เพื่อแก้ไขอาการบัคค้างค่ะ";
+		case 9: // แก้บัคตัวละคร (ระบบจัดการตัวละครและไอดีอื่น)
+			mes "[ แก้บัคตัวละคร ]";
+			mes "สวัสดีครับ ยินดีให้บริการครับ";
+			mes "เลือกเมนูที่คุณต้องการครับ";
 			next;
-			warp "SavePoint", 0, 0;
-			end;
+			
+			.@bug_menu = select(
+				" • แก้บัคตัวละคร (ดึงกลับจุดเซฟ)",
+				" • เปลี่ยน Pass",
+				" • Reset การแต่งกาย",
+				" • ยกเลิก"
+			);
+			
+			switch(.@bug_menu) {
+				case 1: // ใส่ชื่อตัวละครที่ต้องการ Reset
+					mes "[ แก้บัคตัวละคร ]";
+					mes "ใส่ชื่อตัวละครที่ต้องการ Reset";
+					next;
+					
+					input .@target_char$;
+					
+					if (.@target_char$ == "") {
+						mes "คุณไม่ได้ระบุชื่อตัวละครครับ";
+						close;
+					}
+					
+					warpchar "SavePoint", 0, 0, .@target_char$;
+					
+					specialeffect 734;
+					mes "ระบบได้ทำการ Reset และส่งตัวละคร ^0055FF" + .@target_char$ + "^000000 กลับจุดเซฟเรียบร้อยแล้วครับ!";
+					close;
+					
+				case 2: // ใส่ ID ที่ต้องการเปลี่ยน Pass
+					mes "[ แก้บัคตัวละคร ]";
+					mes "ใส่ ID ที่ต้องการเปลี่ยน Pass";
+					next;
+					
+					input .@target_id$;
+					
+					if (.@target_id$ == "") {
+						mes "คุณไม่ได้ระบุ Account ID ครับ";
+						close;
+					}
+					
+					close2;
+					atcommand "@changepass " + .@target_id$;
+					end;
+					
+				case 3: // Reset การแต่งกาย (สำหรับตัวละครอื่น)
+					mes "[ แก้บัคตัวละคร ]";
+					mes "ใส่ชื่อตัวละครที่ต้องการ Reset การแต่งกาย";
+					next;
+					
+					input .@target_char$;
+					
+					if (.@target_char$ == "") {
+						mes "คุณไม่ได้ระบุชื่อตัวละครครับ";
+						close;
+					}
+					
+					close2;
+					atcommand "@changelook " + .@target_char$ + " 1 0"; 
+					atcommand "@changelook " + .@target_char$ + " 2 0"; 
+					atcommand "@changelook " + .@target_char$ + " 3 0"; 
+					end;
+					
+				case 4: // ยกเลิก
+					close;
+			}
+			close;
 
-		case 11: // เคลือบธาตุ (Endows)
+		case 10: // เคลือบธาตุ (Endows)
 			mes "[ ระบบเคลือบธาตุอาวุธ ]";
 			mes "เลือกธาตุที่ต้องการเคลือบได้เลยค่ะ (ระยะเวลา 30 นาที)";
 			next;
 			.@ele = select(" • ธาตุไฟ (Fire)"," • ธาตุน้ำ (Water)"," • ธาตุดิน (Earth)"," • ธาตุลม (Wind)"," • ธาตุพิษ (Poison)"," • ธาตุศักดิ์สิทธิ์ (Holy)"," • ยกเลิก");
 			if (.@ele == 7) close;
 			
-			// รหัสสกิลบัพธาตุของ Sage / Priest / Assassin
 			if (.@ele == 1) sc_start SC_FIREWEAPON, 1800000, 5;
 			if (.@ele == 2) sc_start SC_WATERWEAPON, 1800000, 5;
 			if (.@ele == 3) sc_start SC_EARTHWEAPON, 1800000, 5;
@@ -234,33 +293,7 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 			mes "เคลือบธาตุเสร็จสิ้น ขอให้สนุกกับการล่ามอนสเตอร์นะคะ!";
 			close;
 
-		case 12: // บัพโซลิ้ง (Soul Link)
-			// ปิดรอยรั่ว: ใช้คำสั่งเสกสกิล Link ใส่ตัวเองโดยตรงตามสายอาชีพ (รหัสสกิล 445-458)
-			.@link_id = 0;
-			if (BaseClass == Job_Alchemist) .@link_id = 445;
-			else if (BaseClass == Job_Monk) .@link_id = 446;
-			else if (BaseClass == Job_Taekwon) .@link_id = 447;
-			else if (BaseClass == Job_Sage) .@link_id = 448;
-			else if (BaseClass == Job_Crusader) .@link_id = 449;
-			else if (BaseClass == Job_Novice) .@link_id = 450;
-			else if (BaseClass == Job_Knight) .@link_id = 451;
-			else if (BaseClass == Job_Wizard) .@link_id = 452;
-			else if (BaseClass == Job_Priest) .@link_id = 453;
-			else if (BaseClass == Job_Bard || BaseClass == Job_Dancer) .@link_id = 454;
-			else if (BaseClass == Job_Rogue) .@link_id = 455;
-			else if (BaseClass == Job_Assassin) .@link_id = 456;
-			else if (BaseClass == Job_Blacksmith) .@link_id = 457;
-			else if (BaseClass == Job_Hunter) .@link_id = 458;
-
-			if (.@link_id > 0) {
-				atcommand "@useskill " + .@link_id + " 5 " + strcharinfo(0);
-				mes "มอบวิญญาณแห่ง ^0055FFSoul Linker^000000 ให้เรียบร้อยแล้วค่ะ";
-			} else {
-				mes "^FF0000สายอาชีพของคุณไม่มีบัพวิญญาณรองรับค่ะ^000000";
-			}
-			close;
-
-		case 13: // ก็อบปี้สกิล (Plagiarism)
+		case 11: // ก็อบปี้สกิล (Plagiarism)
 			mes "[ ก็อบปี้สกิลสำหรับ Rogue / Shadow Chaser ]";
 			if (BaseClass != Job_Rogue) {
 				mes "^FF0000ฟีเจอร์นี้สงวนไว้สำหรับสายอาชีพ Rogue ขึ้นไปเท่านั้นค่ะ^000000";
@@ -271,30 +304,26 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 			next;
 			input .@copy_id;
 			
-			// ปิดรอยรั่ว: บังคับให้ NPC เสกมอนสเตอร์ล่องหนมาใช้สกิลใส่ผู้เล่น เพื่อให้จำสกิลได้ 100% ตามหลักเกม
 			atcommand "@useskill " + .@copy_id + " 10 " + strcharinfo(0);
 			mes "ส่งสกิล ID: " + .@copy_id + " ให้คุณจำเรียบร้อยแล้วค่ะ";
 			close;
 
-		case 14: // เพิ่มน้ำหนัก (Max Weight)
+		case 12: // เพิ่มน้ำหนัก (Max Weight)
 			mes "[ บริการขยายกระเป๋า ]";
 			if (gympassmemory >= 10) {
 				mes "น้ำหนักของคุณถูกขยายจนเต็ม ^FF0000(ระดับ 10)^000000 แล้วค่ะ";
 				close;
 			}
 			
-			// เพิ่มการตรวจสอบไอเทม Gym Pass (ID: 7776)
 			if (countitem(7776) < 1) {
 				mes "คุณไม่มีไอเทม ^FF0000Gym Pass^000000 ค่ะ";
 				mes "จำเป็นต้องใช้ 1 ชิ้น ต่อการขยายกระเป๋า 1 ระดับนะคะ";
 				close;
 			}
 			
-			// หักไอเทมและเพิ่มระดับทีละ 1
 			delitem 7776, 1;
 			gympassmemory++;
 			
-			// มอบสกิลเพิ่มน้ำหนัก (Enlarge Weight Limit) แบบถาวร
 			skill "ALL_INCCARRY", gympassmemory, SKILL_PERM_GRANT; 
 			
 			specialeffect 734;
@@ -305,20 +334,19 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 			}
 			close;
 
-		case 15: // สัตว์เลี้ยงสนิททันที
+		case 13: // สัตว์เลี้ยงสนิททันที
 			if (getpetinfo(PETINFO_ID) == 0) {
 				mes "^FF0000คุณยังไม่ได้ฟักสัตว์เลี้ยงเลยค่ะ^000000";
 				close;
 			}
 			
-			// ใช้คำสั่ง atcommand สั่งปรับความสนิทแทน เนื่องจากไม่มีคำสั่ง setpetinfo
 			atcommand "@petfriendly 1000"; 
 			
-			specialeffect 338; // เอฟเฟกต์รูปหัวใจ
+			specialeffect 338;
 			mes "สัตว์เลี้ยงของคุณรู้สึก ^0055FFสนิทสนม^000000 กับคุณเต็มที่แล้วค่ะ!";
 			close;
 
-		case 16: // โฮมุนครุส (Homunculus)
+		case 14: // โฮมุนครุส (Homunculus)
 			mes "[ ระบบจัดการ Homunculus ]";
 			if (BaseClass != Job_Alchemist) {
 				mes "^FF0000ฟีเจอร์นี้สำหรับอาชีพสาย Alchemist เท่านั้นค่ะ^000000";
@@ -327,8 +355,8 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 			.@hom = select(" • เรียกโฮมุนครุส (Call)", " • ชุบชีวิต (Resurrect)", " • สนิทสนมทันที (Intimacy Max)", " • ยกเลิก");
 			if (.@hom == 4) close;
 
-			if (.@hom == 1) { skill 247, 1, 0; } // Call Homun
-			if (.@hom == 2) { skill 243, 1, 0; } // Resurrect Homun
+			if (.@hom == 1) { skill 247, 1, 0; }
+			if (.@hom == 2) { skill 243, 1, 0; }
 			if (.@hom == 3) { 
 				if (gethominfo(0) > 0) {
 					atcommand "@homintimacy 100000";
@@ -339,7 +367,7 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 			}
 			close;
 
-		case 17: // เอาไว้คราวหน้า !!
+		case 15: // เอาไว้คราวหน้า !!
 			mes "ขอบคุณที่ใช้บริการ ^0055FFKafra Corporation^000000 ค่ะ";
 			mes "เดินทางปลอดภัยนะคะ!";
 			close;

@@ -244,15 +244,32 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 			close;
 
 		case 14: // เพิ่มน้ำหนัก (Max Weight)
-			// ใช้ตัวแปร Gym_Pass เพื่อขยายช่องน้ำหนักแบบถาวรและถูกต้องที่สุดในระบบ rAthena
-			if (Gym_Pass >= 10) {
+			mes "[ บริการขยายกระเป๋า ]";
+			if (gympassmemory >= 10) {
 				mes "น้ำหนักของคุณถูกขยายจนเต็ม ^FF0000(ระดับ 10)^000000 แล้วค่ะ";
 				close;
 			}
-			Gym_Pass = 10; 
-			status_calc_pc(); // บังคับรีเฟรชสเตตัสให้ค่าน้ำหนักเด้งทันที
+			
+			// เพิ่มการตรวจสอบไอเทม Gym Pass (ID: 7776)
+			if (countitem(7776) < 1) {
+				mes "คุณไม่มีไอเทม ^FF0000Gym Pass^000000 ค่ะ";
+				mes "จำเป็นต้องใช้ 1 ชิ้น ต่อการขยายกระเป๋า 1 ระดับนะคะ";
+				close;
+			}
+			
+			// หักไอเทมและเพิ่มระดับทีละ 1
+			delitem 7776, 1;
+			gympassmemory++;
+			
+			// มอบสกิลเพิ่มน้ำหนัก (Enlarge Weight Limit) แบบถาวร
+			skill "ALL_INCCARRY", gympassmemory, SKILL_PERM_GRANT; 
+			
 			specialeffect 734;
-			mes "ทำการ ^0055FFขยายกระเป๋าน้ำหนัก^000000 ของคุณให้สูงสุดเรียบร้อยแล้วค่ะ!";
+			mes "ทำการ ^0055FFขยายกระเป๋าน้ำหนัก^000000 ขึ้นเป็นระดับ " + gympassmemory + " เรียบร้อยแล้วค่ะ!";
+			
+			if (gympassmemory < 10) {
+				mes "เหลือโควตาขยายได้อีก ^FF0000" + (10 - gympassmemory) + "^000000 ครั้งค่ะ";
+			}
 			close;
 
 		case 15: // สัตว์เลี้ยงสนิททันที

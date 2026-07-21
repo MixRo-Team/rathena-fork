@@ -2,7 +2,7 @@
 // Custom Kafra Corporation (All-in-One Service) by Gemini
 // ฟีเจอร์ครบครัน | โค้ดสะอาด | ปลอดภัยไร้บัค | สีสันตรงตามแบบรูปภาพ
 // =====================================================================
-prontera,150,190,4	script	Kafra Service#Main	4_KAFRA4,{
+prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 
 	// ==========================================
 	// 1. หน้าต่างต้อนรับ และแสดงข้อมูลตัวละคร (ตรงตามรูป)
@@ -100,13 +100,80 @@ prontera,150,190,4	script	Kafra Service#Main	4_KAFRA4,{
 			mes "รีเซ็ต ^0055FFสกิล^000000 เรียบร้อยแล้วค่ะ อัพใหม่ได้เลย!";
 			close;
 
-		case 9: // เช่าทุกอย่าง (Cart, Peco, Falcon, etc.)
-			// ปิดรอยรั่ว: เช็กอาชีพก่อนให้เช่า
-			.@class = BaseClass;
-			if (.@class == Job_Merchant) { setcart; mes "รับรถเข็นเรียบร้อยแล้วค่ะ"; }
-			else if (.@class == Job_Swordman) { setpeco; mes "รับสัตว์ขี่เรียบร้อยแล้วค่ะ"; }
-			else if (.@class == Job_Archer) { setfalcon; mes "รับนกฟอลคอนเรียบร้อยแล้วค่ะ"; }
-			else { mes "^FF0000อาชีพของคุณไม่มีสิ่งที่สามารถเช่าได้ค่ะ^000000"; }
+		case 9: // เช่าทุกอย่าง (Cart, Peco, Dragon, Falcon, Warg, Mado)
+			mes "[ บริการให้เช่า ]";
+			if (ismounting()) {
+				mes "^FF0000กรุณาลงจากสัตว์ขี่ของท่านก่อนทำการเช่าใหม่ค่ะ^000000";
+				close;
+			}
+			
+			// เช็กสายอาชีพ Ranger (เลือกระหว่าง นก กับ หมาป่า)
+			if (((eaclass() & EAJ_THIRDMASK) == EAJ_RANGER) && !countitem(6124)) {
+				if (!checkfalcon() && getskilllv("HT_FALCON") && !checkwug()) {
+					mes "คุณมีทักษะทั้ง 2 แบบ ต้องการเช่าอะไรคะ?";
+					next;
+					if (select(" • นกฟอลคอน (Falcon)", " • หมาป่า (Warg)") == 1) {
+						setfalcon;
+						mes "รับ ^0055FFนกฟอลคอน^000000 เรียบร้อยแล้วค่ะ";
+					} else {
+						getitem 6124, 1; // ขลุ่ยเรียกหมาป่า (Wolf's Flute)
+						mes "รับ ^0055FFWolf's Flute^000000 สำหรับเรียกหมาป่าเรียบร้อยแล้วค่ะ";
+					}
+				} else {
+					getitem 6124, 1;
+					mes "รับ ^0055FFWolf's Flute^000000 สำหรับเรียกหมาป่าเรียบร้อยแล้วค่ะ";
+				}
+			}
+			// เช็กสายอาชีพ Mechanic (เลือกระหว่าง รถเข็น กับ หุ่นยนต์)
+			else if (((eaclass() & EAJ_THIRDMASK) == EAJ_MECHANIC) && !checkcart() && getskilllv("MC_PUSHCART")) {
+				if (!checkmadogear() && getskilllv("NC_MADOLICENCE")) {
+					mes "คุณมีทักษะทั้ง 2 แบบ ต้องการเช่าอะไรคะ?";
+					next;
+					if (select(" • รถเข็น (Cart)", " • หุ่นยนต์ (Mado Gear)") == 1) {
+						setcart;
+						mes "รับ ^0055FFรถเข็น^000000 เรียบร้อยแล้วค่ะ";
+					} else {
+						setmadogear;
+						mes "รับ ^0055FFหุ่นยนต์ (Mado Gear)^000000 เรียบร้อยแล้วค่ะ";
+					}
+				} else {
+					setcart;
+					mes "รับ ^0055FFรถเข็น^000000 เรียบร้อยแล้วค่ะ";
+				}
+			}
+			// เช็กรถเข็นทั่วไป (Merchant Class)
+			else if (!checkcart() && getskilllv("MC_PUSHCART")) {
+				setcart;
+				mes "รับ ^0055FFรถเข็น^000000 เรียบร้อยแล้วค่ะ";
+			}
+			// เช็กนกฟอลคอนทั่วไป (Hunter Class)
+			else if (!checkfalcon() && getskilllv("HT_FALCON") && !checkwug()) {
+				setfalcon;
+				mes "รับ ^0055FFนกฟอลคอน^000000 เรียบร้อยแล้วค่ะ";
+			}
+			// เช็กสัตว์ขี่ทั่วไป & มังกร (Rune Knight)
+			else if (!checkriding() && !checkdragon() && getskilllv("KN_RIDING")) {
+				if ((eaclass() & EAJ_THIRDMASK) == EAJ_RUNE_KNIGHT) {
+					setdragon;
+					mes "รับ ^0055FFมังกร (Dragon)^000000 เรียบร้อยแล้วค่ะ";
+				} else {
+					setriding;
+					mes "รับ ^0055FFสัตว์ขี่ (Peco Peco)^000000 เรียบร้อยแล้วค่ะ";
+				}
+			}
+			// เช็กหุ่น Mado Gear ทั่วไป (สำหรับคนที่ยังไม่ได้เช่า)
+			else if (!checkmadogear() && getskilllv("NC_MADOLICENCE")) {
+				setmadogear;
+				mes "รับ ^0055FFหุ่นยนต์ (Mado Gear)^000000 เรียบร้อยแล้วค่ะ";
+			}
+			// หากไม่มีสกิล หรือเช่าไปแล้ว
+			else {
+				mes "^FF0000เจ้ามีคุณสมบัติไม่ตรงตามข้อกำหนดในการเช่า^000000";
+				mes "หรืออาจจะทำการเช่าสิ่งนั้นไปแล้วค่ะ";
+				close;
+			}
+			
+			specialeffect 154; // เอฟเฟกต์แสงหมุนสวยๆ แสดงความสำเร็จ
 			close;
 
 		case 10: // แก้บัค (ส่งกลับจุดเซฟ)

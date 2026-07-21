@@ -38,8 +38,8 @@ prontera,150,190,4	script	Kafra Service#Main	4W_F_KAFRA2,{
 
 	switch(.@menu) {
 		case 1: // บันทึกจุดเกิด
-			// ดึงพิกัดของผู้เล่น (type 0) เพื่อความชัวร์ 100% ว่าเป็นจุดที่เดินได้แน่นอน
-			getmapxy(.@map$, .@x, .@y, 0); 
+			// ดึงพิกัดของ NPC ตัวนี้เลย (Type 1)
+			getmapxy(.@map$, .@x, .@y, 1); 
 			savepoint .@map$, .@x, .@y;
 			
 			specialeffect 17; // เอฟเฟกต์แสงวาบ (เหมือนตอนเซฟ Kafra ปกติ)

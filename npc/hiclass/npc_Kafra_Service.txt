@@ -275,13 +275,27 @@ prontera,150,190,4	script	Kafra Service#Main	114,{
 			}
 			close;
 
-		case 10: // เคลือบธาตุ (Endows)
+		case 10: // เคลือบธาตุ (Endows) - คิดค่าบริการ 20,000 Zeny
 			mes "[ ระบบเคลือบธาตุอาวุธ ]";
-			mes "เลือกธาตุที่ต้องการเคลือบได้เลยค่ะ (ระยะเวลา 30 นาที)";
+			mes "บริการเคลือบธาตุอาวุธ (ระยะเวลา 30 นาที)";
+			mes "มีค่าบริการครั้งละ ^FF770020,000 Zeny^000000 ครับ/ค่ะ";
+			mes "ต้องการเลือกธาตุอะไรดีคะ?";
 			next;
+			
 			.@ele = select(" • ธาตุไฟ (Fire)"," • ธาตุน้ำ (Water)"," • ธาตุดิน (Earth)"," • ธาตุลม (Wind)"," • ธาตุพิษ (Poison)"," • ธาตุศักดิ์สิทธิ์ (Holy)"," • ยกเลิก");
 			if (.@ele == 7) close;
 			
+			// ตรวจสอบ Zeny ของผู้เล่น
+			if (Zeny < 20000) {
+				mes "[ ระบบเคลือบธาตุอาวุธ ]";
+				mes "^FF0000Zeny ของคุณไม่พอค่ะ!^000000 ต้องการใช้ 20,000 Zeny ในการเคลือบธาตุ";
+				close;
+			}
+			
+			// หักเงินค่าบริการ
+			Zeny -= 20000;
+			
+			// ดำเนินการเคลือบธาตุตามที่เลือก
 			if (.@ele == 1) sc_start SC_FIREWEAPON, 1800000, 5;
 			if (.@ele == 2) sc_start SC_WATERWEAPON, 1800000, 5;
 			if (.@ele == 3) sc_start SC_EARTHWEAPON, 1800000, 5;
@@ -290,22 +304,124 @@ prontera,150,190,4	script	Kafra Service#Main	114,{
 			if (.@ele == 6) sc_start SC_ASPERSIO, 1800000, 5;
 			
 			specialeffect 154;
+			mes "[ ระบบเคลือบธาตุอาวุธ ]";
+			mes "หักค่าบริการ ^FF770020,000 Zeny^000000 เรียบร้อยแล้วค่ะ";
 			mes "เคลือบธาตุเสร็จสิ้น ขอให้สนุกกับการล่ามอนสเตอร์นะคะ!";
 			close;
 
 		case 11: // ก็อบปี้สกิล (Plagiarism)
-			mes "[ ก็อบปี้สกิลสำหรับ Rogue / Shadow Chaser ]";
 			if (BaseClass != Job_Rogue) {
-				mes "^FF0000ฟีเจอร์นี้สงวนไว้สำหรับสายอาชีพ Rogue ขึ้นไปเท่านั้นค่ะ^000000";
+				mes "[Kafra Service]";
+				mes "^FF0000ฟีเจอร์นี้สงวนไว้สำหรับสายอาชีพ Rogue และ Stalker ขึ้นไปเท่านั้นค่ะ^000000";
 				close;
 			}
-			mes "กรุณาใส่ ^0055FFID ของสกิล^000000 ที่คุณต้องการจำค่ะ";
-			mes "(เช่น 84 = Bowling Bash, 89 = Storm Gust)";
+
+			.@plag_lv = getskilllv("RG_PLAGIARISM");
+			if (.@plag_lv == 0) {
+				mes "[Kafra Service]";
+				mes "คุณลูกค้ายังไม่ได้เรียนทักษะ ^4d4dffPlagiarism^000000 เลยค่ะ";
+				mes "กรุณาอัปสกิลให้เรียบร้อยก่อนนะคะ";
+				close;
+			}
+
+			mes "[Kafra Service]";
+			mes "ยินดีต้อนรับสู่บริการบันทึกทักษะเงาค่ะ เลือกหมวดหมู่สกิลที่ต้องการจดจำ:";
+			mes "^777777--------------------------------^000000";
+			mes "ค่าธรรมเนียมสกิลคลาส 1 : ^4d4dff" + F_InsertComma(.costc1) + "^000000 Zeny";
+			mes "ค่าธรรมเนียมสกิลคลาส 2 : ^4d4dff" + F_InsertComma(.costc2) + "^000000 Zeny";
+			mes "ล้างประวัติสกิล : ^4d4dff" + F_InsertComma(.costresk) + "^000000 Zeny";
+			mes "^777777--------------------------------^000000";
 			next;
-			input .@copy_id;
+
+			.@choice = select("^ff0000ลบประวัติสกิลที่จดจำ^000000:เลือกก๊อบปี้สกิลคลาส 1:เลือกก๊อบปี้สกิลคลาส 2:ยกเลิก");
+
+			switch(.@choice) {
+				case 1: // ลบประวัติสกิลก๊อบ
+					mes "[Kafra Service]";
+					mes "^ff0000ล้างประวัติสกิล Plagiarism^000000";
+					mes "การกระทำนี้จะล้างสกิลที่เคยจดจำไว้ทั้งหมด และเคลียร์สถานะ ^ff0000PRESERVE^000000 ออกด้วยค่ะ";
+					mes "ต้องการดำเนินการต่อหรือไม่?";
+					next;
+					if (select("ยกเลิก:^ff0000ยืนยันลบ^000000") == 1) close;
+					
+					if (Zeny < .costresk) {
+						mes "[Kafra Service]";
+						mes "ยอด Zeny ของคุณลูกค้าไม่พอจ่ายค่าบริการค่ะ";
+						close;
+					}
+					
+					Zeny -= .costresk;
+					if (getstatus(SC_PRESERVE)) sc_end SC_PRESERVE;
+					
+					plagiarizeskillreset 1;
+					plagiarizeskillreset 2;
+					
+					specialeffect2 10;
+					mes "[Kafra Service]";
+					mes "ล้างความทรงจำสกิลเรียบร้อยแล้วค่ะ!";
+					close;
+
+				case 2: // สกิลคลาส 1
+					.@sub_choice = select("สกิลคลาส 1 ทั่วไป:สกิลเสริม/เบ็ดเตล็ด:ยกเลิก");
+					if (.@sub_choice == 1) {
+						.@s = select(.menu_c1nm$) - 1;
+						.@skid = atoi(.data_c1nm$[.@s * 2]);
+						.@skname$ = .data_c1nm$[.@s * 2 + 1];
+					} else if (.@sub_choice == 2) {
+						.@s = select(.menu_c1ex$) - 1;
+						.@skid = atoi(.data_c1ex$[.@s * 2]);
+						.@skname$ = .data_c1ex$[.@s * 2 + 1];
+					} else { close; }
+					
+					.@cost = .costc1;
+					break;
+
+				case 3: // สกิลคลาส 2
+					.@sub_choice = select("สกิลคลาส 2 สายแรก (2-1):สกิลคลาส 2 สายสอง (2-2):ยกเลิก");
+					if (.@sub_choice == 1) {
+						.@s = select(.menu_c21$) - 1;
+						.@skid = atoi(.data_c21$[.@s * 2]);
+						.@skname$ = .data_c21$[.@s * 2 + 1];
+					} else if (.@sub_choice == 2) {
+						.@s = select(.menu_c22$) - 1;
+						.@skid = atoi(.data_c22$[.@s * 2]);
+						.@skname$ = .data_c22$[.@s * 2 + 1];
+					} else { close; }
+					
+					.@cost = .costc2;
+					break;
+
+				default:
+					close;
+			}
+
+			mes "[Kafra Service]";
+			mes "คุณลูกค้าต้องการจดจำสกิล ^4d4dff" + .@skname$ + "^000000 ใช่หรือไม่คะ?";
+			next;
+			if (select("ใช่, บันทึกเลย:ไม่ใช่, เปลี่ยนใจ") == 2) close;
+
+			if (getstatus(SC_PRESERVE)) {
+				mes "[Kafra Service]";
+				mes "คุณลูกค้ากำลังติดสถานะ ^ff0000PRESERVE^000000 ป้องกันการถูกทับสกิลอยู่ค่ะ";
+				mes "กรุณาใช้เมนูล้างประวัติสกิลก่อนทำการบันทึกใหม่นะคะ";
+				close;
+			}
+
+			if (Zeny < .@cost) {
+				mes "[Kafra Service]";
+				mes "ยอด Zeny ของคุณลูกค้าไม่พอจ่ายค่าธรรมเนียมค่ะ";
+				close;
+			}
+
+			Zeny -= .@cost;
+			.@sklv = max(.@plag_lv, 1);
 			
-			atcommand "@useskill " + .@copy_id + " 10 " + strcharinfo(0);
-			mes "ส่งสกิล ID: " + .@copy_id + " ให้คุณจำเรียบร้อยแล้วค่ะ";
+			specialeffect2 10;
+			plagiarizeskill .@skid, .@sklv;
+			
+			mes "[Kafra Service]";
+			mes "จดจำสกิล ^4d4dff" + .@skname$ + "^000000 สำเร็จแล้วค่ะ!";
+			mes "สามารถใช้งานผ่านสกิล Plagiarism ได้ทันทีค่ะ";
 			close;
 
 		case 12: // เพิ่มน้ำหนัก (Max Weight)
@@ -372,4 +488,28 @@ prontera,150,190,4	script	Kafra Service#Main	114,{
 			mes "เดินทางปลอดภัยนะคะ!";
 			close;
 	}
+
+OnInit:
+	// ... (ข้อมูลตั้งต้นอื่นๆ ของ Kafra เดิมของจาร) ...
+
+	// --- ข้อมูลระบบ Skill Copy ---
+	.costc1 = 10000;   // ค่าธรรมเนียม สกิลคลาส 1
+	.costc2 = 50000;   // ค่าธรรมเนียม สกิลคลาส 2
+	.costresk = 10000; // ค่าธรรมเนียม ลบประวัติสกิล
+
+	// สกิลคลาส 1 ทั่วไป
+	setarray .data_c1nm$[0], "5","Bash", "7","Magnum Break", "11","Napalm Beat", "13","Soul Strike", "14","Cold Bolt", "15","Frost Diver", "17","Fire Ball", "18","Fire Wall", "19","Fire Bolt", "20","Lightning Bolt", "21","Thunderstorm", "24","Ruwach", "28","Heal", "42","Mammonite", "46","Double Strafe", "47","Arrow Shower", "52","Envenom";
+	.menu_c1nm$ = ""; for (.@i = 0; .@i < getarraysize(.data_c1nm$); .@i += 2) { .menu_c1nm$ += .data_c1nm$[.@i+1] + ":"; }
+
+	// สกิลเสริม / เบ็ดเตล็ด
+	setarray .data_c1ex$[0], "421","Flying Kick", "337","Throw Tomahawk";
+	.menu_c1ex$ = ""; for (.@i = 0; .@i < getarraysize(.data_c1ex$); .@i += 2) { .menu_c1ex$ += .data_c1ex$[.@i+1] + ":"; }
+
+	// สกิลคลาส 2-1
+	setarray .data_c21$[0], "62","Bowling Bash", "67","Suffragium", "70","Sanctuary", "77","Turn Undead", "79","Magnus Exorcismus", "80","Fire Pillar", "81","Sightrasher", "83","Meteor Storm", "84","Jupitel Thunder", "85","Lord of Vermilion", "86","Water Ball", "88","Frost Nova", "89","Storm Gust", "90","Earth Spike", "91","Heaven's Drive", "116","Land Mine", "122","Blast Mine", "123","Claymore Trap", "141","Venom Splasher", "1004","Throw Venom Knife";
+	.menu_c21$ = ""; for (.@i = 0; .@i < getarraysize(.data_c21$); .@i += 2) { .menu_c21$ += .data_c21$[.@i+1] + ":"; }
+
+	// สกิลคลาส 2-2
+	setarray .data_c22$[0], "212","Back Stab", "229","Bomb (Alchemist)", "230","Acid Terror", "250","Smite", "251","Shield Boomerang", "253","Holy Cross", "254","Grand Cross", "263","Raging Trifecta Blow", "266","Occult Impaction", "271","Asura Strike", "272","Raging Quadruple Blow";
+	.menu_c22$ = ""; for (.@i = 0; .@i < getarraysize(.data_c22$); .@i += 2) { .menu_c22$ += .data_c22$[.@i+1] + ":"; }
 }
